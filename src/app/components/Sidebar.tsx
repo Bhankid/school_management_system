@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Sidebar = () => {
   return (
-    <div className="w-64 h-screen bg-blue-900 text-white">
+    <div className="w-64  min-h-screen bg-blue-900 text-white sticky">
       <div className="bg-red-600 p-4 flex items-center justify-between">
         <Image
           src="/logo.png"

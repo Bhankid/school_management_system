@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import React from "react";
 
 function Header() {
   return (
@@ -10,14 +13,18 @@ function Header() {
       <div className="flex items-center ml-4 space-x-4">
         <i className="fas fa-envelope text-red-500"></i>
         <i className="fas fa-bell text-red-500"></i>
-        <i className="fas fa-caret-down text-gray-500"></i>
-        <Image
-          src="/profile-picture.png"
-          alt="User profile picture"
-          width={40}
-          height={40}
-          className="rounded-full"
-        />
+        <div className="border-l-2 border-red-500 h-8 mx-4"></div>
+
+        <div className="flex items-center">
+          <Image
+            src="/profile-picture.png"
+            alt="User profile picture"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+          <i className="fas fa-caret-down text-gray-500 ml-2"></i>
+        </div>
       </div>
     </div>
   );
