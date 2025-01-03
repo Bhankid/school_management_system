@@ -18,7 +18,7 @@ const Sidebar = () => {
           height={40}
           className="w-10 h-10"
         />
-        <i className="fas fa-bars"></i>
+        <i className="fas fa-bars cursor-pointer"></i>
       </div>
       <ul className="mt-4">
         <li className="flex items-center p-4 hover:bg-blue-800 cursor-pointer">
