@@ -14,9 +14,13 @@ const Dashboard = () => {
         <div className="p-6">
           <header className="mb-6">
             <h1 className="text-2xl font-bold text-black">Admin Dashboard</h1>
+
             <nav className="text-gray-600">Home</nav>
           </header>
+
+          {/* Statistics Cards Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            {/* Students Statistics Card */}
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="flex items-center">
                 <div className="bg-green-100 p-3 rounded-full relative">
@@ -29,6 +33,8 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+
+            {/* Teachers Statistics Card */}
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="flex items-center">
                 <div className="bg-blue-100 p-3 rounded-full relative">
@@ -41,6 +47,8 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+
+            {/* Parents Statistics Card */}
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="flex items-center">
                 <div className="bg-yellow-100 p-3 rounded-full relative">
@@ -53,6 +61,8 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+
+            {/* Earnings Statistics Card */}
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="flex items-center">
                 <div className="bg-red-100 p-3 rounded-full relative">
