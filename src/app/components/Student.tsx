@@ -1,138 +1,89 @@
-"use client";
-
-import React, { useState } from "react";
-
-interface StudentData {
-  id: number;
-  name: string;
-  gender: string;
-  class: number;
-  parents: string;
-  address: string;
-  dob: string;
-  phone: string;
-}
-
-const Student: React.FC = () => {
-  const data: StudentData[] = Array.from({ length: 34 }).map((_, index) => ({
-    id: 22 + index,
-    name: "Daniel Grant",
-    gender: "Male",
-    class: Math.floor(Math.random() * 5) + 1,
-    parents: "Kofi Grant",
-    address: "59 Australia, Sydney",
-    dob: "02/05/2001",
-    phone: "+123 9988568",
-  }));
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage: number = 10;
-
-  const handleClick = (page: number): void => {
-    setCurrentPage(page);
-  };
-
-  const indexOfLastItem: number = currentPage * itemsPerPage;
-  const indexOfFirstItem: number = indexOfLastItem - itemsPerPage;
-  const currentItems: StudentData[] = data.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-
-  const renderPageNumbers = (): React.ReactNode[] => {
-     const pageNumbers: React.ReactNode[] = [];
-    for (let i = 1; i <= Math.ceil(data.length / itemsPerPage); i++) {
-      pageNumbers.push(
-        <button
-          key={i}
-          onClick={() => handleClick(i)}
-          className={`px-3 py-1 rounded ${
-            currentPage === i
-              ? "bg-red-500 text-white"
-              : "bg-gray-200 text-gray-700"
-          }`}
-        >
-          {i}
-        </button>
-      );
-    }
-    return pageNumbers;
-  };
-
+const StudentsData = () => {
   return (
     <div className="p-6">
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold text-gray-800">Students</h1>
-        <div className="text-sm text-gray-500">
-          <span>Home</span> <i className="fas fa-chevron-right mx-2"></i>{" "}
-          <span className="text-red-500">All Students</span>
+      <div className="bg-white p-4 rounded shadow-md">
+        <div className="flex items-center mb-4">
+          <h1 className="text-xl font-bold text-gray-700">Students</h1>
+          <span className="mx-2 text-gray-500">/</span>
+          <h2 className="text-red-500">All Students</h2>
         </div>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">All Students Data</h2>
-        <div className="flex flex-col md:flex-row gap-4 mb-4">
-          <input
-            type="text"
-            placeholder="Search by name..."
-            className="flex-1 p-2 border border-gray-300 rounded"
-          />
-          <select className="flex-1 p-2 border border-gray-300 rounded">
-            <option>Select Class</option>
-          </select>
-          <button className="bg-red-500 text-white px-4 py-2 rounded">
-            SEARCH
-          </button>
-        </div>
-        <div className="overflow-x-auto">
+        <div className="bg-white p-6 rounded shadow-md">
+          <h2 className="text-2xl font-bold mb-4 text-gray-500">
+            All Students Data
+          </h2>
+          <div className="grid grid-cols-3 gap-6 mb-4">
+            <input
+              type="text"
+              placeholder="Search by name..."
+              className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
+            />
+            <select className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none">
+              <option>Select Class</option>
+            </select>
+            <button className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition-colors">
+              SEARCH
+            </button>
+          </div>
+
           <table className="min-w-full bg-white">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b">ID</th>
-                <th className="py-2 px-4 border-b">Name</th>
-                <th className="py-2 px-4 border-b">Gender</th>
-                <th className="py-2 px-4 border-b">Class</th>
-                <th className="py-2 px-4 border-b">Parents</th>
-                <th className="py-2 px-4 border-b">Address</th>
-                <th className="py-2 px-4 border-b">Date of Birth</th>
-                <th className="py-2 px-4 border-b">Phone</th>
+                <th className="py-2 px-4 border-b text-red-500">ID</th>
+                <th className="py-2 px-4 border-b text-red-500">Name</th>
+                <th className="py-2 px-4 border-b text-red-500">Gender</th>
+                <th className="py-2 px-4 border-b text-red-500">Class</th>
+                <th className="py-2 px-4 border-b text-red-500">Parents</th>
+                <th className="py-2 px-4 border-b text-red-500">Address</th>
+                <th className="py-2 px-4 border-b text-red-500">
+                  Date of Birth
+                </th>
+                <th className="py-2 px-4 border-b text-red-500">Phone</th>
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((item) => (
-                <tr key={item.id}>
-                  <td className="py-2 px-4 border-b">{item.id}</td>
-                  <td className="py-2 px-4 border-b">{item.name}</td>
-                  <td className="py-2 px-4 border-b">{item.gender}</td>
-                  <td className="py-2 px-4 border-b">{item.class}</td>
-                  <td className="py-2 px-4 border-b">{item.parents}</td>
-                  <td className="py-2 px-4 border-b">{item.address}</td>
-                  <td className="py-2 px-4 border-b">{item.dob}</td>
-                  <td className="py-2 px-4 border-b">{item.phone}</td>
+              {Array.from({ length: 13 }).map((_, index) => (
+                <tr key={index}>
+                  <td className="py-2 px-4 border-b text-gray-800">22</td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    Daniel Grant
+                  </td>
+                  <td className="py-2 px-4 border-b text-gray-800">Male</td>
+                  <td className="py-2 px-4 border-b text-gray-800">2</td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    Kofi Grant
+                  </td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    59 Australia, Sydney
+                  </td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    02/05/2001
+                  </td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    +23359988568
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <button
-            onClick={() => handleClick(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="text-gray-500 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <div className="flex space-x-2">{renderPageNumbers()}</div>
-          <button
-            onClick={() => handleClick(currentPage + 1)}
-            disabled={currentPage === Math.ceil(data.length / itemsPerPage)}
-            className="text-gray-500 disabled:opacity-50"
-          >
-            Next
-          </button>
+          <div className="flex justify-between items-center mt-4">
+            <button className="text-gray-500">Previous</button>
+            <div className="flex space-x-2">
+              <button className="bg-red-500 text-white px-3 py-1 rounded">
+                1
+              </button>
+              <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded">
+                2
+              </button>
+              <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded">
+                3
+              </button>
+            </div>
+            <button className="text-gray-500">Next</button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Student;
+export default StudentsData;

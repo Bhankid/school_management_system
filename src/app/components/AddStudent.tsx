@@ -3,13 +3,13 @@ function AddStudent() {
     <div className="p-8">
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <div className="mb-4">
-          <h1 className="text-xl font-bold">Students</h1>
+          <h1 className="text-xl font-bold text-gray-700 pb-4">Students</h1>
           <p className="text-sm text-gray-500">
             Home &gt; <span className="text-red-500">Student Admit Form</span>
           </p>
         </div>
         <div className="border-t border-gray-200 pt-4">
-          <h2 className="text-lg font-semibold mb-4">Add New Students</h2>
+          <h2 className="text-lg font-semibold mb-4 text-gray-500">Add New Students</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-gray-700">Name *</label>

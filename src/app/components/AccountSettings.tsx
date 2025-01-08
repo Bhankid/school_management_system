@@ -4,8 +4,8 @@ function AccountSettings() {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="bg-gray-200 p-4">
-          <h1 className="text-xl font-bold">Settings</h1>
+        <div className="bg-gray-100 p-4">
+          <h1 className="text-xl font-bold text-black">Settings</h1>
           <nav className="text-sm text-gray-600">
             <a href="#" className="hover:underline">
               Home
@@ -36,10 +36,10 @@ function AccountSettings() {
           </div>
         </div>
         <div className="p-6 pt-16">
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-xl font-semibold text-black">
             Prince Afful Quansah - Admin
           </h2>
-          <form className="mt-6 space-y-4">
+          <form className="mt-6 space-y-4 text-gray-800">
             <div>
               <label className="block text-sm font-medium">School Name *</label>
               <input

@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/sequelize": "^4.28.20",
+    "dotenv": "^16.4.7",
+    "mysql2": "^3.12.0",
     "next": "15.1.3",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

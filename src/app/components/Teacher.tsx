@@ -9,44 +9,47 @@ const Teacher = () => {
         </div>
       </div>
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">All Teachers Data</h2>
-        <div className="flex mb-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          All Teachers Data
+        </h2>
+        <div className="flex items-center space-x-4 mb-6">
           <input
             type="text"
             placeholder="Search by name..."
-            className="border border-gray-300 rounded-l-lg p-2 flex-grow"
+            className="border border-gray-300 rounded-lg p-3 flex-1 focus:ring-2 focus:ring-red-500 focus:outline-none"
           />
-          <select className="border border-gray-300 p-2">
+          <select className="border border-gray-300 rounded-lg p-3 w-48 focus:ring-2 focus:ring-red-500 focus:outline-none">
             <option>Select Class</option>
           </select>
-          <button className="bg-red-600 text-white p-2 rounded-r-lg">
+          <button className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors">
             SEARCH
           </button>
         </div>
+
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="py-2 px-4 border-b">ID</th>
-              <th className="py-2 px-4 border-b">Name</th>
-              <th className="py-2 px-4 border-b">Gender</th>
-              <th className="py-2 px-4 border-b">Class</th>
-              <th className="py-2 px-4 border-b">Subject</th>
-              <th className="py-2 px-4 border-b">Address</th>
-              <th className="py-2 px-4 border-b">Date of Birth</th>
-              <th className="py-2 px-4 border-b">Phone</th>
+              <th className="py-2 px-4 border-b text-red-500">ID</th>
+              <th className="py-2 px-4 border-b text-red-500">Name</th>
+              <th className="py-2 px-4 border-b text-red-500">Gender</th>
+              <th className="py-2 px-4 border-b text-red-500">Class</th>
+              <th className="py-2 px-4 border-b text-red-500">Subject</th>
+              <th className="py-2 px-4 border-b text-red-500">Address</th>
+              <th className="py-2 px-4 border-b text-red-500">Date of Birth</th>
+              <th className="py-2 px-4 border-b text-red-500">Phone</th>
             </tr>
           </thead>
           <tbody>
             {Array.from({ length: 13 }).map((_, index) => (
               <tr key={index}>
-                <td className="py-2 px-4 border-b">22</td>
-                <td className="py-2 px-4 border-b">Daniel Grant</td>
-                <td className="py-2 px-4 border-b">Male</td>
-                <td className="py-2 px-4 border-b">2</td>
-                <td className="py-2 px-4 border-b">English</td>
-                <td className="py-2 px-4 border-b">59 Australia, Sydney</td>
-                <td className="py-2 px-4 border-b">02/05/2001</td>
-                <td className="py-2 px-4 border-b">+123 9988568</td>
+                <td className="py-2 px-4 border-b text-gray-800">22</td>
+                <td className="py-2 px-4 border-b text-gray-800">Daniel Grant</td>
+                <td className="py-2 px-4 border-b text-gray-800">Male</td>
+                <td className="py-2 px-4 border-b text-gray-800">2</td>
+                <td className="py-2 px-4 border-b text-gray-800">English</td>
+                <td className="py-2 px-4 border-b text-gray-800">59 Australia, Sydney</td>
+                <td className="py-2 px-4 border-b text-gray-800">02/05/2001</td>
+                <td className="py-2 px-4 border-b text-gray-800">+123 9988568</td>
               </tr>
             ))}
           </tbody>

@@ -2,15 +2,15 @@ function StudentPromotion() {
   return (
     <div className="p-6">
       <div className="text-sm text-gray-500 mb-4">
-        <span className="font-bold text-black">Students</span>
+        <span className="font-bold text-gray-700">Students</span>
         <span className="mx-2">&gt;</span>
         <span className="text-red-500">Student Admit Form</span>
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-4">Student Promotion</h2>
+        <h2 className="text-xl font-bold mb-4 text-gray-500">Student Promotion</h2>
         <form className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-gray-700 mb-2">Name</label>
+            <label className="block text-gray-700 mb-2">Name *</label>
             <input
               type="text"
               className="w-full p-2 border border-gray-300 rounded"
@@ -19,7 +19,7 @@ function StudentPromotion() {
           <div>
             <label className="block text-gray-700 mb-2">Current Class</label>
             <select className="w-full p-2 border border-gray-300 rounded">
-              <option>Please Select Class</option>
+              <option>Please Select Class *</option>
             </select>
           </div>
           <div>

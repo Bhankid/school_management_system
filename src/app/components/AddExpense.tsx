@@ -3,14 +3,16 @@
               <div className="p-4 md:p-8">
                 <div className="bg-white p-4 md:p-8 rounded shadow-md">
                   <div className="mb-4">
-                    <h1 className="text-xl font-bold">Account</h1>
+                    <h1 className="text-xl font-bold text-gray-400 pb-4">Account</h1>
                     <div className="text-sm text-gray-500">
                       Home{" "}
                       <span className="text-red-500"> &gt; Add Expense</span>
                     </div>
                   </div>
                   <div className="bg-white p-4 md:p-8 rounded shadow-md">
-                    <h2 className="text-lg font-bold mb-4">Add New Expenses</h2>
+                    <h2 className="text-lg font-bold mb-4 text-gray-800">
+                      Add New Expenses
+                    </h2>
                     <form className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
