@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import EventCalendar from "../components/EventCalendar";
@@ -19,6 +18,21 @@ import AddTeacher from "../components/AddTeacher";
 import AccountSettings from "../components/AccountSettings";
 import Account from "../components/Account";
 import Parent from "../components/Parent";
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  Line,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell,
+  Pie,
+} from "recharts";
 
 type ActiveTab =
   | "dashboard"
@@ -35,8 +49,49 @@ type ActiveTab =
   | "add-expenses"
   | "add-teacher";
 
+
+  const earningsData = [
+    { day: "Mon", totalCollections: 85000, feesCollections: 70000 },
+    { day: "Tue", totalCollections: 88000, feesCollections: 72000 },
+    { day: "Wed", totalCollections: 86000, feesCollections: 71000 },
+    { day: "Thu", totalCollections: 89000, feesCollections: 73000 },
+    { day: "Fri", totalCollections: 87000, feesCollections: 74000 },
+    { day: "Sat", totalCollections: 90000, feesCollections: 75000 },
+    { day: "Sun", totalCollections: 92000, feesCollections: 76000 },
+  ];
+
+ const expensesData = [
+   { month: "April", expenses: 125000, color: "#0C9B40FF" },
+   { month: "May", expenses: 100000, color: "#0E25D5FF" },
+   { month: "June", expenses: 75000, color: "#D51212FF" },
+ ];
+
+
+const studentData = [
+  {
+    name: "Girls",
+    value: 20000,
+    fill: "#CB1212FF",
+  },
+  {
+    name: "Boys",
+    value: 30000,
+    fill: "#0E25D5FF",
+  },
+];
+
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("dashboard");
+  const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("activeTab") as ActiveTab;
+      return saved || "dashboard";
+    }
+    return "dashboard";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("activeTab", activeTab);
+  }, [activeTab]);
 
   const renderDashboardContent = () => (
     <>
@@ -102,32 +157,58 @@ const Dashboard: React.FC = () => {
         {/* Earnings Section */}
         <div className="bg-white p-4 rounded-lg shadow col-span-2">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">Earnings</h2>
-            <div className="text-gray-600">June 10, 2021</div>
+            <h2 className="text-lg font-bold text-gray-800">Earnings</h2>
+            <div className="text-gray-700">June 10, 2021</div>
           </div>
           <div className="flex justify-between items-center mb-4">
             <div>
-              <p className="text-gray-600">Total Collections</p>
-              <p className="text-2xl font-bold">$90,000</p>
+              <p className="text-gray-700">Total Collections</p>
+              <p className="text-2xl font-bold text-gray-500">$90,000</p>
             </div>
             <div>
-              <p className="text-gray-600">Fees Collections</p>
-              <p className="text-2xl font-bold">$75,000</p>
+              <p className="text-gray-700">Fees Collections</p>
+              <p className="text-2xl font-bold text-gray-500">$75,000</p>
             </div>
           </div>
-          <Image
-            src="/earnings-graph.png"
-            alt="Graph showing earnings over a week"
-            width={600}
-            height={300}
-            className="w-full"
-          />
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={earningsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip
+                  formatter={(value) => `$${value}`}
+                  contentStyle={{
+                    backgroundColor: "white",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="totalCollections"
+                  name="Total Collections"
+                  stroke="#0546D1FF"
+                  strokeWidth={2}
+                  dot={{ fill: "#074AD9FF" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="feesCollections"
+                  name="Fees Collections"
+                  stroke="#A31618FF"
+                  strokeWidth={2}
+                  dot={{ fill: "#B60B0BFF" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Expenses Section */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">Expenses</h2>
+            <h2 className="text-lg font-bold text-gray-800">Expenses</h2>
             <div className="text-gray-600">June 2021</div>
           </div>
           <div className="flex justify-between items-center mb-4">
@@ -144,35 +225,77 @@ const Dashboard: React.FC = () => {
               <p className="text-red-500">$75,000</p>
             </div>
           </div>
-          <Image
-            src="/expenses-graph.png"
-            alt="Graph showing expenses over three months"
-            width={300}
-            height={300}
-            className="w-full"
-          />
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={expensesData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip
+                  formatter={(value) => `$${value}`}
+                  contentStyle={{
+                    backgroundColor: "white",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Legend />
+                <Bar
+                  dataKey="expenses"
+                  name="Monthly Expenses"
+                  radius={[4, 4, 0, 0]}
+                  fill="#ef4444"
+                >
+                  {expensesData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Students Distribution Section */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">Students</h2>
+            <h2 className="text-lg font-bold text-gray-800">Students</h2>
           </div>
-          <Image
-            src="/students-chart.png"
-            alt="Pie chart showing student distribution"
-            width={300}
-            height={300}
-            className="w-full"
-          />
+          <div style={{ width: "100%", height: 300 }}>
+            <ResponsiveContainer>
+              <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                <Pie
+                  data={studentData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={5}
+                  label
+                >
+                  {studentData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value) => `${value} students`}
+                  contentStyle={{
+                    backgroundColor: "white",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Legend verticalAlign="bottom" height={36} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
           <div className="flex justify-between items-center mt-4">
             <div className="flex items-center">
               <div className="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
-              <p className="text-gray-600">30,000</p>
+              <p className="text-gray-600">30,000 Boys</p>
             </div>
             <div className="flex items-center">
               <div className="w-4 h-4 bg-red-500 rounded-full mr-2"></div>
-              <p className="text-gray-600">20,000</p>
+              <p className="text-gray-600">20,000 Girls</p>
             </div>
           </div>
         </div>
@@ -205,7 +328,7 @@ const Dashboard: React.FC = () => {
       case "student-promotion":
         return <StudentPromotion />;
       case "parents":
-        return <Parent/>;
+        return <Parent />;
       case "subjects":
         return <Subject />;
       case "teachers":
