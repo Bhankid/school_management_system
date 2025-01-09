@@ -7,15 +7,14 @@ import "./Calendar.css";
 
 function EventCalendar() {
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-4 bg-white shadow-md rounded-lg w-full">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Event Calendar</h2>
-        <i className="fas fa-ellipsis-h text-gray-400"></i>
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl w-full border border-gray-100">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-gray-800">Event Calendar</h2>
+        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+          <i className="fas fa-ellipsis-h text-gray-700"></i>
+        </button>
       </div>
-      <Calendar
-        defaultValue={new Date(2025, 0, 2)}
-        className="react-calendar w-full"
-      />
+      <Calendar defaultValue={new Date()} className="react-calendar w-full" />
     </div>
   );
 }
