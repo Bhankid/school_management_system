@@ -1,4 +1,45 @@
+"use client";
+import { useState } from "react";
+
+const ITEMS_PER_PAGE = 13;
+
 const StudentsData = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Sample data array - replace with your actual data
+  const allStudents = Array.from({ length: 50 }, (_, index) => ({
+    id: index + 1,
+    name: "Daniel Grant",
+    gender: "Male",
+    class: "2",
+    parents: "Kofi Grant",
+    address: "59 Australia, Sydney",
+    dateOfBirth: "02/05/2001",
+    phone: "+23359988568",
+  }));
+
+  // Calculate pagination
+  const totalPages = Math.ceil(allStudents.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentStudents = allStudents.slice(startIndex, endIndex);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="bg-white p-4 rounded shadow-md">
@@ -19,6 +60,12 @@ const StudentsData = () => {
             />
             <select className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none">
               <option>Select Class</option>
+              <option>Class 1</option>
+              <option>Class 2</option>
+              <option>Class 3</option>
+              <option>Class 4</option>
+              <option>Class 5</option>
+              <option>Class 6</option>
             </select>
             <button className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition-colors">
               SEARCH
@@ -41,44 +88,75 @@ const StudentsData = () => {
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: 13 }).map((_, index) => (
-                <tr key={index}>
-                  <td className="py-2 px-4 border-b text-gray-800">22</td>
+              {currentStudents.map((student) => (
+                <tr key={student.id}>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    Daniel Grant
-                  </td>
-                  <td className="py-2 px-4 border-b text-gray-800">Male</td>
-                  <td className="py-2 px-4 border-b text-gray-800">2</td>
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    Kofi Grant
+                    {student.id}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    59 Australia, Sydney
+                    {student.name}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    02/05/2001
+                    {student.gender}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    +23359988568
+                    {student.class}
+                  </td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    {student.parents}
+                  </td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    {student.address}
+                  </td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    {student.dateOfBirth}
+                  </td>
+                  <td className="py-2 px-4 border-b text-gray-800">
+                    {student.phone}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+
           <div className="flex justify-between items-center mt-4">
-            <button className="text-gray-500">Previous</button>
+            <button
+              className={`text-gray-500 ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
             <div className="flex space-x-2">
-              <button className="bg-red-500 text-white px-3 py-1 rounded">
-                1
-              </button>
-              <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded">
-                2
-              </button>
-              <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded">
-                3
-              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`px-3 py-1 rounded ${
+                      currentPage === page
+                        ? "bg-red-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
             </div>
-            <button className="text-gray-500">Next</button>
+            <button
+              className={`text-gray-500 ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>

@@ -1,8 +1,92 @@
+"use client";
+import { useState } from "react";
+
+const ITEMS_PER_PAGE = 5;
+
 const Account = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const allFeeGroups = [
+    {
+      id: 1,
+      name: "Creche Fees",
+      fees: [
+        { type: "Feeding Fee", amount: "GHS200.00" },
+        { type: "Maintenance", amount: "GHS100.00" },
+        { type: "Tuition", amount: "GHS250.00" },
+      ],
+      description: "To be paid every semester",
+    },
+    {
+      id: 2,
+      name: "Nurse Fee Group",
+      fees: [
+        { type: "Feeding Fee", amount: "GHS150.00" },
+        { type: "Maintenance", amount: "GHS100.00" },
+        { type: "Tuition", amount: "GHS450.00" },
+      ],
+      description: "To be paid every semester",
+    },
+    {
+      id: 3,
+      name: "Kindergarten Fee Group",
+      fees: [
+        { type: "Feeding Fee", amount: "GHS180.00" },
+        { type: "Maintenance", amount: "GHS120.00" },
+        { type: "Tuition", amount: "GHS500.00" },
+      ],
+      description: "To be paid every semester",
+    },
+    {
+      id: 4,
+      name: "Class 1 Fee Group",
+      fees: [
+        { type: "Feeding Fee", amount: "GHS100.00" },
+        { type: "PTA", amount: "GHS50.00" },
+        { type: "Computer Fees", amount: "GHS150.00" },
+        { type: "Tuition", amount: "GHS500.00" },
+      ],
+      description: "To be paid every semester",
+    },
+    {
+      id: 5,
+      name: "Class 2 Fee Group",
+      fees: [
+        { type: "Feeding Fee", amount: "GHS100.00" },
+        { type: "PTA", amount: "GHS50.00" },
+        { type: "Computer Fees", amount: "GHS150.00" },
+        { type: "Tuition", amount: "GHS500.00" },
+      ],
+      description: "To be paid every semester",
+    },
+  ];
+
+  const totalPages = Math.ceil(allFeeGroups.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentFeeGroups = allFeeGroups.slice(startIndex, endIndex);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
   return (
     <div className="p-4">
       <div className="text-lg font-bold mb-4 text-gray-800">Account</div>
       <div className="text-sm text-red-500 mb-4">Home &gt; Fees Group</div>
+
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-4">
           <div className="flex space-x-4">
@@ -21,6 +105,7 @@ const Account = () => {
             className="border rounded-lg px-4 py-2"
           />
         </div>
+
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-200 text-gray-800">
@@ -31,98 +116,66 @@ const Account = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="border p-2 text-center text-gray-800">1</td>
-              <td className="border p-2 text-gray-800">Creche Fees</td>
-              <td className="border p-2 text-gray-800">
-                Feeding Fee - GHS200.00
-                <br />
-                Maintenance - GHS100.00
-                <br />
-                Tuition - GHS250.00
-              </td>
-              <td className="border p-2 text-gray-800">
-                To be paid every semester
-              </td>
-            </tr>
-            <tr>
-              <td className="border p-2 text-center text-gray-800">2</td>
-              <td className="border p-2 text-gray-800">Nurse Fee Group</td>
-              <td className="border p-2 text-gray-800">
-                Feeding Fee - GHS150.00
-                <br />
-                Maintenance - GHS100.00
-                <br />
-                Tuition - GHS450.00
-              </td>
-              <td className="border p-2 text-gray-800">
-                To be paid every semester
-              </td>
-            </tr>
-            <tr>
-              <td className="border p-2 text-center">3</td>
-              <td className="border p-2 text-gray-800">
-                Kindergarten Fee Group
-              </td>
-              <td className="border p-2 text-gray-800">
-                Feeding Fee - GHS180.00
-                <br />
-                Maintenance - GHS120.00
-                <br />
-                Tuition - GHS500.00
-              </td>
-              <td className="border p-2 text-gray-800">
-                To be paid every semester
-              </td>
-            </tr>
-            <tr>
-              <td className="border p-2 text-center text-gray-800">4</td>
-              <td className="border p-2 text-gray-800">Class 1 Fee Group</td>
-              <td className="border p-2 text-gray-800">
-                Feeding Fee - GHS100.00
-                <br />
-                PTA - GHS50.00
-                <br />
-                Computer Fees - GHS150.00
-                <br />
-                Tuition - GHS500.00
-              </td>
-              <td className="border p-2 text-gray-800">
-                To be paid every semester
-              </td>
-            </tr>
-            <tr>
-              <td className="border p-2 text-center text-gray-800">5</td>
-              <td className="border p-2 text-gray-800">Class 2 Fee Group</td>
-              <td className="border p-2 text-gray-800">
-                Feeding Fee - GHS100.00
-                <br />
-                PTA - GHS50.00
-                <br />
-                Computer Fees - GHS150.00
-                <br />
-                Tuition - GHS500.00
-              </td>
-              <td className="border p-2 text-gray-800">
-                To be paid every semester
-              </td>
-            </tr>
+            {currentFeeGroups.map((group) => (
+              <tr key={group.id}>
+                <td className="border p-2 text-center text-gray-800">
+                  {group.id}
+                </td>
+                <td className="border p-2 text-gray-800">{group.name}</td>
+                <td className="border p-2 text-gray-800">
+                  {group.fees.map((fee, index) => (
+                    <div key={index}>
+                      {fee.type} - {fee.amount}
+                      {index < group.fees.length - 1 && <br />}
+                    </div>
+                  ))}
+                </td>
+                <td className="border p-2 text-gray-800">
+                  {group.description}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
+
         <div className="flex justify-between items-center mt-4">
-          <button className="text-gray-700">Previous</button>
+          <button
+            className={`text-gray-700 ${
+              currentPage === 1
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
+            onClick={handlePrevious}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
           <div className="flex space-x-2">
-            <button className="bg-red-500 text-white px-3 py-1 rounded">
-              1
-            </button>
-            <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded">
-              2
-            </button>
-            <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded">
-              3
-            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === page
+                    ? "bg-red-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
           </div>
-          <button className="text-gray-700">Next</button>
+          <button
+            className={`text-gray-700 ${
+              currentPage === totalPages
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

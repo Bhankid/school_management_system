@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 export type ActiveTab =
@@ -19,13 +19,32 @@ export type ActiveTab =
 
 interface SidebarProps {
   setActiveTab: (tab: ActiveTab) => void;
+  activeTab: ActiveTab;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
+const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
   const [isStudentsOpen, setIsStudentsOpen] = useState(false);
   const [isTeachersOpen, setIsTeachersOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  useEffect(() => {
+    const savedTab = localStorage.getItem("activeTab") as ActiveTab;
+    if (savedTab) {
+      setActiveTab(savedTab);
+    }
+  }, [setActiveTab]);
+
+  const handleTabClick = (tab: ActiveTab) => {
+    setActiveTab(tab);
+    localStorage.setItem("activeTab", tab);
+  };
+
+  const getActiveClass = (tab: ActiveTab) => {
+    return activeTab === tab
+      ? "bg-blue-950 border-l-4 border-red-500"
+      : "hover:bg-blue-800";
+  };
 
   return (
     <div
@@ -53,8 +72,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
 
       <ul className="mt-4">
         <li
-          onClick={() => setActiveTab("dashboard")}
-          className="flex items-center p-4 hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+          onClick={() => handleTabClick("dashboard")}
+          className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
+            "dashboard"
+          )}`}
         >
           <i className="fas fa-tachometer-alt mr-3"></i>
           {isSidebarOpen && <span>Dashboard</span>}
@@ -62,7 +83,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
 
         <div>
           <li
-            className="flex items-center p-4 hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
+              isStudentsOpen ? "bg-blue-800" : "hover:bg-blue-800"
+            }`}
             onClick={() => isSidebarOpen && setIsStudentsOpen(!isStudentsOpen)}
           >
             <i className="fas fa-users mr-3"></i>
@@ -86,22 +109,28 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
             >
               <ul className="bg-blue-800">
                 <li
-                  onClick={() => setActiveTab("students")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("students")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "students"
+                  )}`}
                 >
                   <i className="fas fa-user-graduate mr-3"></i>
                   <span>All Students</span>
                 </li>
                 <li
-                  onClick={() => setActiveTab("add-student")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("add-student")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "add-student"
+                  )}`}
                 >
                   <i className="fas fa-user-plus mr-3"></i>
                   <span>Add Students</span>
                 </li>
                 <li
-                  onClick={() => setActiveTab("student-promotion")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("student-promotion")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "student-promotion"
+                  )}`}
                 >
                   <i className="fas fa-level-up-alt mr-3"></i>
                   <span>Students Promotion</span>
@@ -112,8 +141,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
         </div>
 
         <li
-          onClick={() => setActiveTab("parents")}
-          className="flex items-center p-4 hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+          onClick={() => handleTabClick("parents")}
+          className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
+            "parents"
+          )}`}
         >
           <i className="fas fa-user-friends mr-3"></i>
           {isSidebarOpen && <span>Parents</span>}
@@ -121,7 +152,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
 
         <div>
           <li
-            className="flex items-center p-4 hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
+              isTeachersOpen ? "bg-blue-800" : "hover:bg-blue-800"
+            }`}
             onClick={() => isSidebarOpen && setIsTeachersOpen(!isTeachersOpen)}
           >
             <i className="fas fa-chalkboard-teacher mr-3"></i>
@@ -145,15 +178,19 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
             >
               <ul className="bg-blue-800">
                 <li
-                  onClick={() => setActiveTab("teachers")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("teachers")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "teachers"
+                  )}`}
                 >
                   <i className="fas fa-user-tie mr-3"></i>
                   <span>All Teachers</span>
                 </li>
                 <li
-                  onClick={() => setActiveTab("add-teacher")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("add-teacher")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "add-teacher"
+                  )}`}
                 >
                   <i className="fas fa-user-plus mr-3"></i>
                   <span>Add Teachers</span>
@@ -165,7 +202,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
 
         <div>
           <li
-            className="flex items-center p-4 hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
+              isAccountOpen ? "bg-blue-800" : "hover:bg-blue-800"
+            }`}
             onClick={() => isSidebarOpen && setIsAccountOpen(!isAccountOpen)}
           >
             <i className="fas fa-user-circle mr-3"></i>
@@ -189,29 +228,37 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
             >
               <ul className="bg-blue-800">
                 <li
-                  onClick={() => setActiveTab("fees-group")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("fees-group")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "fees-group"
+                  )}`}
                 >
                   <i className="fas fa-money-bill-wave mr-3"></i>
                   <span>Fees Group</span>
                 </li>
                 <li
-                  onClick={() => setActiveTab("student-fees")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("student-fees")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "student-fees"
+                  )}`}
                 >
                   <i className="fas fa-dollar-sign mr-3"></i>
                   <span>Student Fees</span>
                 </li>
                 <li
-                  onClick={() => setActiveTab("expenses")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("expenses")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "expenses"
+                  )}`}
                 >
                   <i className="fas fa-file-invoice-dollar mr-3"></i>
                   <span>Expenses</span>
                 </li>
                 <li
-                  onClick={() => setActiveTab("add-expenses")}
-                  className="flex items-center p-3 pl-12 hover:bg-blue-700 cursor-pointer transition-colors duration-300"
+                  onClick={() => handleTabClick("add-expenses")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "add-expenses"
+                  )}`}
                 >
                   <i className="fas fa-plus-circle mr-3"></i>
                   <span>Add Expenses</span>
@@ -222,16 +269,20 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab }) => {
         </div>
 
         <li
-          onClick={() => setActiveTab("subjects")}
-          className="flex items-center p-4 hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+          onClick={() => handleTabClick("subjects")}
+          className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
+            "subjects"
+          )}`}
         >
           <i className="fas fa-book mr-3"></i>
           {isSidebarOpen && <span>Subject</span>}
         </li>
 
         <li
-          onClick={() => setActiveTab("settings")}
-          className="flex items-center p-4 hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+          onClick={() => handleTabClick("settings")}
+          className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
+            "settings"
+          )}`}
         >
           <i className="fas fa-cog mr-3"></i>
           {isSidebarOpen && <span>Settings</span>}

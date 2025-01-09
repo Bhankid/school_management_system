@@ -13,7 +13,7 @@ import StudentPromotion from "../components/StudentPromotion";
 import Subject from "../components/Subject";
 import Teacher from "../components/Teacher";
 import Fees from "../components/Fees";
-import ExpensesCard from "../components/ExpensesCard";
+import Expense from "../components/Expense";
 import AddExpense from "../components/AddExpense";
 import AddTeacher from "../components/AddTeacher";
 import AccountSettings from "../components/AccountSettings";
@@ -215,7 +215,7 @@ const Dashboard: React.FC = () => {
       case "student-fees":
         return <Fees />;
       case "expenses":
-        return <ExpensesCard />;
+        return <Expense />;
       case "add-expenses":
         return <AddExpense />;
       case "add-teacher":
@@ -229,7 +229,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-blue-50">
-      <Sidebar setActiveTab={setActiveTab} />
+      <Sidebar setActiveTab={setActiveTab} activeTab={activeTab} />
       <div className="flex-1">
         <Header />
         <div className="p-6">{renderActiveComponent()}</div>

@@ -1,4 +1,45 @@
+"use client";
+import { useState } from "react";
+
+const ITEMS_PER_PAGE = 13;
+
 const Teacher = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Sample teacher data
+  const allTeachers = Array.from({ length: 50 }, (_, index) => ({
+    id: index + 1,
+    name: "Daniel Grant",
+    gender: "Male",
+    class: "2",
+    subject: "English",
+    address: "59 Australia, Sydney",
+    dateOfBirth: "02/05/2001",
+    phone: "+23359988568",
+  }));
+
+  // Calculate pagination
+  const totalPages = Math.ceil(allTeachers.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentTeachers = allTeachers.slice(startIndex, endIndex);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="mb-4">
@@ -8,6 +49,7 @@ const Teacher = () => {
           <span className="text-red-600">All Teachers</span>
         </div>
       </div>
+
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
           All Teachers Data
@@ -40,34 +82,75 @@ const Teacher = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.from({ length: 13 }).map((_, index) => (
-              <tr key={index}>
-                <td className="py-2 px-4 border-b text-gray-800">22</td>
-                <td className="py-2 px-4 border-b text-gray-800">Daniel Grant</td>
-                <td className="py-2 px-4 border-b text-gray-800">Male</td>
-                <td className="py-2 px-4 border-b text-gray-800">2</td>
-                <td className="py-2 px-4 border-b text-gray-800">English</td>
-                <td className="py-2 px-4 border-b text-gray-800">59 Australia, Sydney</td>
-                <td className="py-2 px-4 border-b text-gray-800">02/05/2001</td>
-                <td className="py-2 px-4 border-b text-gray-800">+123 9988568</td>
+            {currentTeachers.map((teacher) => (
+              <tr key={teacher.id}>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {teacher.id}
+                </td>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {teacher.name}
+                </td>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {teacher.gender}
+                </td>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {teacher.class}
+                </td>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {teacher.subject}
+                </td>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {teacher.address}
+                </td>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {teacher.dateOfBirth}
+                </td>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {teacher.phone}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+
         <div className="flex justify-between items-center mt-4">
-          <button className="text-gray-500">Previous</button>
+          <button
+            className={`text-gray-500 ${
+              currentPage === 1
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
+            onClick={handlePrevious}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
           <div className="flex space-x-2">
-            <button className="bg-red-600 text-white px-3 py-1 rounded">
-              1
-            </button>
-            <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded">
-              2
-            </button>
-            <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded">
-              3
-            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === page
+                    ? "bg-red-600 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
           </div>
-          <button className="text-gray-500">Next</button>
+          <button
+            className={`text-gray-500 ${
+              currentPage === totalPages
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>
