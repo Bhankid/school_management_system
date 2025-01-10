@@ -65,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
         <i
           className={`fas ${
             isSidebarOpen ? "fa-times" : "fa-bars"
-          } cursor-pointer ${!isSidebarOpen && "mx-auto"}`}
+          } cursor-pointer text-2xl font-bold ${!isSidebarOpen && "mx-auto"}`}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         ></i>
       </div>

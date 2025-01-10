@@ -85,7 +85,14 @@ const Account = () => {
   return (
     <div className="p-4">
       <div className="text-lg font-bold mb-4 text-gray-800">Account</div>
-      <div className="text-sm text-red-500 mb-4">Home &gt; Fees Group</div>
+      {/* <div className="text-sm text-red-500 mb-4">Home &gt; Fees Group</div> */}
+      <nav className="text-sm text-gray-600 mb-4">
+        <a href="#" className="text-black">
+          Home
+        </a>
+        <i className="fas fa-chevron-right mx-2"></i>
+        <span className="text-red-500">Fees Group</span>
+      </nav>
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-4">

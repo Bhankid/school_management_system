@@ -15,6 +15,19 @@ function AccountSettings() {
     language: "English",
   });
 
+  const [profileImage, setProfileImage] = useState("/profile-picture.png");
+
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -28,7 +41,7 @@ function AccountSettings() {
     <div className="max-w-4xl mx-auto p-4">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="bg-gray-100 p-4">
-          <h1 className="text-xl font-bold text-black">Settings</h1>
+          <h1 className="text-xl font-bold text-black pb-4">Settings</h1>
           <nav className="text-sm text-gray-600">
             <a href="#" className="hover:underline">
               Home
@@ -49,14 +62,23 @@ function AccountSettings() {
           <div className="absolute top-4 left-4 text-white text-lg font-bold">
             Account Setting
           </div>
-          <div className="absolute -bottom-12 left-4">
+          <div className="absolute -bottom-12 left-4 cursor-pointer group">
             <Image
-              src="/profile-picture.png"
+              src={profileImage}
               alt="Profile picture"
               width={96}
               height={96}
               className="rounded-full border-4 border-white"
             />
+            <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+              <i className="fas fa-camera text-white text-xl"></i>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleProfileImageChange}
+              />
+            </label>
           </div>
         </div>
 

@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
+import { addTeacher } from "../actions/teacherActions";
 
 function AddTeacher() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -13,6 +15,25 @@ function AddTeacher() {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleReset = () => {
+    if (formRef.current) {
+      formRef.current.reset();
+      setImagePreview(null);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      await addTeacher(formData);
+      handleReset();
+    } catch (error) {
+      console.error("Error adding teacher:", error);
     }
   };
 
@@ -27,63 +48,121 @@ function AddTeacher() {
         <h1 className="text-2xl font-bold mb-6 text-gray-500">
           Add New Teacher
         </h1>
-        <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           <div>
             <label className="block text-gray-700">First Name *</label>
-            <input type="text" className="w-full mt-1 p-2 border rounded" />
+            <input
+              type="text"
+              name="firstName"
+              required
+              className="w-full mt-1 p-2 border rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700">Last Name *</label>
-            <input type="text" className="w-full mt-1 p-2 border rounded" />
+            <input
+              type="text"
+              name="lastName"
+              required
+              className="w-full mt-1 p-2 border rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700">Gender *</label>
-            <select className="w-full mt-1 p-2 border rounded">
-              <option>Please Select Gender</option>
+            <select
+              name="gender"
+              required
+              className="w-full mt-1 p-2 border rounded"
+            >
+              <option value="">Please Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
             </select>
           </div>
           <div>
             <label className="block text-gray-700">Date Of Birth *</label>
             <input
-              type="text"
+              type="date"
+              name="dateOfBirth"
+              required
               className="w-full mt-1 p-2 border rounded"
-              placeholder="dd/mm/yy"
             />
           </div>
           <div>
             <label className="block text-gray-700">Blood group *</label>
-            <input type="text" className="w-full mt-1 p-2 border rounded" />
+            <input
+              type="text"
+              name="bloodGroup"
+              required
+              className="w-full mt-1 p-2 border rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700">Religion *</label>
-            <select className="w-full mt-1 p-2 border rounded">
-              <option>Please Select Religion</option>
+            <select
+              name="religion"
+              required
+              className="w-full mt-1 p-2 border rounded"
+            >
+              <option value="">Please Select Religion</option>
+              <option value="christianity">Christianity</option>
+              <option value="islam">Islam</option>
+              <option value="hinduism">Hinduism</option>
+              <option value="other">Other</option>
             </select>
           </div>
           <div>
             <label className="block text-gray-700">Email</label>
-            <input type="email" className="w-full mt-1 p-2 border rounded" />
+            <input
+              type="email"
+              name="email"
+              className="w-full mt-1 p-2 border rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700">Phone</label>
-            <input type="text" className="w-full mt-1 p-2 border rounded" />
+            <input
+              type="text"
+              name="phone"
+              className="w-full mt-1 p-2 border rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700">Class *</label>
-            <select className="w-full mt-1 p-2 border rounded">
-              <option>Please Select Class</option>
+            <select
+              name="class"
+              required
+              className="w-full mt-1 p-2 border rounded"
+            >
+              <option value="">Please Select Class</option>
+              <option value="1">Class 1</option>
+              <option value="2">Class 2</option>
+              <option value="3">Class 3</option>
+              <option value="4">Class 4</option>
+              <option value="5">Class 5</option>
+              <option value="6">Class 6</option>
             </select>
           </div>
           <div>
             <label className="block text-gray-700">Address *</label>
-            <input type="text" className="w-full mt-1 p-2 border rounded" />
+            <input
+              type="text"
+              name="address"
+              required
+              className="w-full mt-1 p-2 border rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700">Admission Date *</label>
             <input
-              type="text"
+              type="date"
+              name="admissionDate"
+              required
               className="w-full mt-1 p-2 border rounded"
-              placeholder="dd/mm/yy"
             />
           </div>
           <div className="col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center">
@@ -106,6 +185,7 @@ function AddTeacher() {
             </label>
             <input
               type="file"
+              name="photoUrl"
               className="mb-4"
               accept="image/*"
               onChange={handleImageChange}
@@ -114,13 +194,14 @@ function AddTeacher() {
           <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center space-x-4">
             <button
               type="submit"
-              className="bg-red-500 text-white px-6 py-2 rounded"
+              className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600"
             >
               Save
             </button>
             <button
-              type="reset"
-              className="bg-blue-700 text-white px-6 py-2 rounded"
+              type="button"
+              onClick={handleReset}
+              className="bg-blue-700 text-white px-6 py-2 rounded hover:bg-blue-800"
             >
               Reset
             </button>

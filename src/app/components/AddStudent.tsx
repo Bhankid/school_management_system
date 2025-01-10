@@ -1,12 +1,13 @@
 "use client";
 import { useFormStatus } from "react-dom";
 import { addStudent } from "../actions/studentActions";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 
 function AddStudent() {
   const { pending } = useFormStatus();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -19,8 +20,15 @@ function AddStudent() {
     }
   };
 
+  const handleReset = () => {
+    if (formRef.current) {
+      formRef.current.reset();
+      setImagePreview(null);
+    }
+  };
+
   return (
-    <form action={addStudent}>
+    <form ref={formRef} action={addStudent}>
       <div className="p-8">
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <div className="mb-4">
@@ -29,6 +37,7 @@ function AddStudent() {
               Home &gt; <span className="text-red-500">Student Admit Form</span>
             </p>
           </div>
+
           <div className="border-t border-gray-200 pt-4">
             <h2 className="text-lg font-semibold mb-4 text-gray-500">
               Add New Students
@@ -65,10 +74,10 @@ function AddStudent() {
                   <option value="">Please Select Class</option>
                   <option value="1">Class 1</option>
                   <option value="2">Class 2</option>
-                  <option value="2">Class 3</option>
-                  <option value="2">Class 4</option>
-                  <option value="2">Class 5</option>
-                  <option value="2">Class 6</option>
+                  <option value="3">Class 3</option>
+                  <option value="4">Class 4</option>
+                  <option value="5">Class 5</option>
+                  <option value="6">Class 6</option>
                 </select>
               </div>
               <div>
@@ -236,7 +245,8 @@ function AddStudent() {
               {pending ? "Saving..." : "Save"}
             </button>
             <button
-              type="reset"
+              type="button"
+              onClick={handleReset}
               className="bg-blue-500 text-white px-4 py-2 rounded"
             >
               Reset

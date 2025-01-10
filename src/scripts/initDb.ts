@@ -2,6 +2,7 @@ import sequelize from "../config/database";
 import "../models/Student";
 import "../models/Parent";
 import "../models/StudentPromotion";
+import "../models/Teacher";
 
 const initDatabase = async () => {
   try {

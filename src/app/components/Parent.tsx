@@ -61,6 +61,12 @@ const Parent = () => {
         />
         <select className="flex-1 min-w-[200px] p-2 border border-gray-300 rounded">
           <option>Select Class</option>
+          <option>Class 1</option>
+          <option>Class 2</option>
+          <option>Class 3</option>
+          <option>Class 4</option>
+          <option>Class 5</option>
+          <option>Class 6</option>
         </select>
         <button className="flex-1 min-w-[200px] p-2 bg-red-500 text-white rounded hover:bg-red-600">
           SEARCH
