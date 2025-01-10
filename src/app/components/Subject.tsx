@@ -1,85 +1,60 @@
 "use client";
-import { useState } from "react";
 
-const ITEMS_PER_PAGE = 8;
+import { useState, useEffect, useRef } from "react";
+import { createSubject, getAllSubjects } from "../actions/subjectActions";
+import { toast } from "react-hot-toast";
+
+interface SubjectType {
+  id?: number;
+  subjectName: string;
+  teacher: string;
+  classes: string;
+  days: string;
+}
 
 const Subject = () => {
+  const [subjects, setSubjects] = useState<SubjectType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const formRef = useRef<HTMLFormElement>(null);
+  const itemsPerPage = 5;
 
-  // Sample subject data
-  const allSubjects = [
-    {
-      subject: "English",
-      teacher: "Daniel Grant",
-      classes: "12&4",
-      days: "Mon, Tue and Fri",
-    },
-    {
-      subject: "Maths",
-      teacher: "Daniel Grant",
-      classes: "6&JH51",
-      days: "Mon, Tue and Fri",
-    },
-    {
-      subject: "French",
-      teacher: "Daniel Grant",
-      classes: "12&4",
-      days: "Mon, Tue and Fri",
-    },
-    {
-      subject: "Science",
-      teacher: "Daniel Grant",
-      classes: "6&JH51",
-      days: "Mon, Tue and Fri",
-    },
-    {
-      subject: "Arts",
-      teacher: "Daniel Grant",
-      classes: "12&4",
-      days: "Mon, Tue and Fri",
-    },
-    {
-      subject: "French",
-      teacher: "Daniel Grant",
-      classes: "12&4",
-      days: "Mon, Tue and Fri",
-    },
-    {
-      subject: "Science",
-      teacher: "Daniel Grant",
-      classes: "6&JH51",
-      days: "Mon, Tue and Fri",
-    },
-    {
-      subject: "Arts",
-      teacher: "Daniel Grant",
-      classes: "12&4",
-      days: "Mon, Tue and Fri",
-    },
-    // Add more subjects as needed
-  ];
+  useEffect(() => {
+    fetchSubjects();
+  }, []);
 
-  // Calculate pagination
-  const totalPages = Math.ceil(allSubjects.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentSubjects = allSubjects.slice(startIndex, endIndex);
+  const fetchSubjects = async () => {
+    try {
+      const subjects = await getAllSubjects();
+      setSubjects(subjects);
+    } catch {
+      toast.error("Failed to fetch subjects");
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      await createSubject(formData);
+      toast.success("Subject added successfully");
+      await fetchSubjects();
+      formRef.current?.reset();
+    } catch {
+      toast.error("Failed to add subject");
+    }
+  };
+
+  const totalPages = Math.ceil(subjects.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = subjects.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className="p-6">
@@ -123,9 +98,12 @@ const Subject = () => {
             </tr>
           </thead>
           <tbody>
-            {currentSubjects.map((item, index) => (
-              <tr key={index} className="border-t">
-                <td className="border p-2 text-gray-800">{item.subject}</td>
+            {currentItems.map((item, index) => (
+              <tr
+                key={index}
+                className="border-t transition-colors duration-200 ease-in-out hover:bg-gray-50"
+              >
+                <td className="border p-2 text-gray-800">{item.subjectName}</td>
                 <td className="border p-2 text-gray-800">{item.teacher}</td>
                 <td className="border p-2 text-gray-800">{item.classes}</td>
                 <td className="border p-2 text-gray-800">{item.days}</td>
@@ -136,39 +114,41 @@ const Subject = () => {
 
         <div className="flex justify-between items-center mt-4">
           <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
             className={`text-gray-500 ${
               currentPage === 1
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
+                ? "cursor-not-allowed opacity-50"
+                : "hover:text-gray-700"
             }`}
-            onClick={handlePrevious}
-            disabled={currentPage === 1}
           >
             Previous
           </button>
+
           <div className="flex space-x-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {pageNumbers.map((number) => (
               <button
-                key={page}
-                onClick={() => handlePageChange(page)}
+                key={number}
+                onClick={() => handlePageChange(number)}
                 className={`px-3 py-1 rounded ${
-                  currentPage === page
+                  currentPage === number
                     ? "bg-red-500 text-white"
-                    : "bg-white border border-gray-300 text-gray-500"
+                    : "bg-white border border-gray-300 text-gray-500 hover:bg-gray-100"
                 }`}
               >
-                {page}
+                {number}
               </button>
             ))}
           </div>
+
           <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
             className={`text-gray-500 ${
               currentPage === totalPages
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
+                ? "cursor-not-allowed opacity-50"
+                : "hover:text-gray-700"
             }`}
-            onClick={handleNext}
-            disabled={currentPage === totalPages}
           >
             Next
           </button>
@@ -177,34 +157,49 @@ const Subject = () => {
 
       <div className="bg-white p-6 rounded-lg shadow-md mt-6">
         <h2 className="text-xl font-bold mb-4 text-black">Add New Subject</h2>
-        <div className="grid grid-cols-4 gap-4">
-          <input
-            type="text"
-            placeholder="Subject Name *"
-            className="border border-gray-300 p-2 rounded text-gray-800"
-          />
-          <input
-            type="text"
-            placeholder="Teacher"
-            className="border border-gray-300 p-2 rounded text-gray-800"
-          />
-          <input
-            type="text"
-            placeholder="Classes"
-            className="border border-gray-300 p-2 rounded text-gray-800"
-          />
-          <input
-            type="text"
-            placeholder="Days"
-            className="border border-gray-300 p-2 rounded text-gray-800"
-          />
-        </div>
-        <div className="flex mt-4">
-          <button className="bg-red-500 text-white p-2 rounded mr-2">
-            Save
-          </button>
-          <button className="bg-blue-500 text-white p-2 rounded">Reset</button>
-        </div>
+        <form ref={formRef} onSubmit={handleSubmit}>
+          <div className="grid grid-cols-4 gap-4">
+            <input
+              type="text"
+              name="subjectName"
+              placeholder="Subject Name *"
+              required
+              className="border border-gray-300 p-2 rounded text-gray-800"
+            />
+            <input
+              type="text"
+              name="teacher"
+              placeholder="Teacher"
+              required
+              className="border border-gray-300 p-2 rounded text-gray-800"
+            />
+            <input
+              type="text"
+              name="classes"
+              placeholder="Classes"
+              required
+              className="border border-gray-300 p-2 rounded text-gray-800"
+            />
+            <input
+              type="text"
+              name="days"
+              placeholder="Days"
+              required
+              className="border border-gray-300 p-2 rounded text-gray-800"
+            />
+          </div>
+          <div className="flex mt-4">
+            <button
+              type="submit"
+              className="bg-red-500 text-white p-2 rounded mr-2"
+            >
+              Save
+            </button>
+            <button type="reset" className="bg-blue-500 text-white p-2 rounded">
+              Reset
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import "../models/Student";
 import "../models/Parent";
 import "../models/StudentPromotion";
 import "../models/Teacher";
+import "../models/Subject";
 
 const initDatabase = async () => {
   try {
