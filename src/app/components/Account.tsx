@@ -1,12 +1,25 @@
 "use client";
 import { useState } from "react";
 
+interface Fee {
+  type: string;
+  amount: string;
+}
+
+interface FeeGroup {
+  id: number;
+  name: string;
+  fees: Fee[];
+  description: string;
+}
+
 const ITEMS_PER_PAGE = 5;
 
 const Account = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const allFeeGroups = [
+  const allFeeGroups: FeeGroup[] = [
     {
       id: 1,
       name: "Creche Fees",
@@ -61,10 +74,30 @@ const Account = () => {
     },
   ];
 
-  const totalPages = Math.ceil(allFeeGroups.length / ITEMS_PER_PAGE);
+  const filteredFeeGroups = allFeeGroups.filter((group) => {
+    const searchLower = searchTerm.toLowerCase();
+    const hasMatchingFees = group.fees.some(
+      (fee) =>
+        fee.type.toLowerCase().includes(searchLower) ||
+        fee.amount.toLowerCase().includes(searchLower)
+    );
+
+    return (
+      group.name.toLowerCase().includes(searchLower) ||
+      group.description.toLowerCase().includes(searchLower) ||
+      hasMatchingFees
+    );
+  });
+
+  const totalPages = Math.ceil(filteredFeeGroups.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentFeeGroups = allFeeGroups.slice(startIndex, endIndex);
+  const currentFeeGroups = filteredFeeGroups.slice(startIndex, endIndex);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -85,7 +118,6 @@ const Account = () => {
   return (
     <div className="p-4">
       <div className="text-lg font-bold mb-4 text-gray-800">Account</div>
-      {/* <div className="text-sm text-red-500 mb-4">Home &gt; Fees Group</div> */}
       <nav className="text-sm text-gray-600 mb-4">
         <a href="#" className="text-black">
           Home
@@ -97,11 +129,11 @@ const Account = () => {
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-4">
           <div className="flex space-x-4">
-            <button className="flex items-center space-x-2 text-gray-700">
+            <button className="flex items-center space-x-2 text-gray-700 hover:text-red-500 transition-colors">
               <i className="fas fa-list"></i>
               <span>Fees Group List</span>
             </button>
-            <button className="flex items-center space-x-2 text-gray-700">
+            <button className="flex items-center space-x-2 text-gray-700 hover:text-red-500 transition-colors">
               <i className="fas fa-plus"></i>
               <span>Add Fees Group</span>
             </button>
@@ -109,7 +141,9 @@ const Account = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="border rounded-lg px-4 py-2"
+            className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none"
+            value={searchTerm}
+            onChange={handleSearch}
           />
         </div>
 
@@ -123,31 +157,42 @@ const Account = () => {
             </tr>
           </thead>
           <tbody>
-            {currentFeeGroups.map((group) => (
-              <tr key={group.id}>
-                <td className="border p-2 text-center text-gray-800">
-                  {group.id}
-                </td>
-                <td className="border p-2 text-gray-800">{group.name}</td>
-                <td className="border p-2 text-gray-800">
-                  {group.fees.map((fee, index) => (
-                    <div key={index}>
-                      {fee.type} - {fee.amount}
-                      {index < group.fees.length - 1 && <br />}
-                    </div>
-                  ))}
-                </td>
-                <td className="border p-2 text-gray-800">
-                  {group.description}
+            {currentFeeGroups.length > 0 ? (
+              currentFeeGroups.map((group) => (
+                <tr
+                  key={group.id}
+                  className="hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <td className="border p-2 text-center text-gray-800">
+                    {group.id}
+                  </td>
+                  <td className="border p-2 text-gray-800">{group.name}</td>
+                  <td className="border p-2 text-gray-800">
+                    {group.fees.map((fee, index) => (
+                      <div key={index}>
+                        {fee.type} - {fee.amount}
+                        {index < group.fees.length - 1 && <br />}
+                      </div>
+                    ))}
+                  </td>
+                  <td className="border p-2 text-gray-800">
+                    {group.description}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="text-center py-4 text-gray-500">
+                  No matching fee groups found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
 
         <div className="flex justify-between items-center mt-4">
           <button
-            className={`text-gray-700 ${
+            className={`text-gray-700 hover:text-red-500 transition-colors ${
               currentPage === 1
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer"
@@ -162,10 +207,10 @@ const Account = () => {
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`px-3 py-1 rounded ${
+                className={`px-3 py-1 rounded transition-colors ${
                   currentPage === page
                     ? "bg-red-500 text-white"
-                    : "bg-gray-200 text-gray-700"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
                 {page}
@@ -173,7 +218,7 @@ const Account = () => {
             ))}
           </div>
           <button
-            className={`text-gray-700 ${
+            className={`text-gray-700 hover:text-red-500 transition-colors ${
               currentPage === totalPages
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer"

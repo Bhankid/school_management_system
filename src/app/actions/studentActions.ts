@@ -42,3 +42,44 @@ export async function addStudent(formData: FormData): Promise<void> {
     throw new Error("Failed to add student");
   }
 }
+
+interface StudentWithParent extends Student {
+  Parent?: {
+    fatherName: string;
+    motherName: string;
+    address: string;
+    phone: string;
+  };
+}
+
+export async function getAllStudents() {
+  try {
+    const students = (await Student.findAll({
+      include: [
+        {
+          model: Parent,
+          as: "Parent",
+          attributes: ["fatherName", "motherName", "address", "phone"],
+        },
+      ],
+      attributes: ["id", "name", "gender", "class", "dateOfBirth"],
+      order: [["createdAt", "DESC"]],
+    })) as StudentWithParent[];
+
+    const transformedStudents = students.map((student) => ({
+      id: student.id,
+      name: student.name,
+      gender: student.gender,
+      class: student.class,
+      parents: `${student.Parent?.fatherName}, ${student.Parent?.motherName}`,
+      address: student.Parent?.address,
+      dateOfBirth: new Date(student.dateOfBirth).toISOString().split("T")[0],
+      phone: student.Parent?.phone,
+    }));
+
+    return transformedStudents;
+  } catch (err) {
+    console.error("Failed to fetch students:", err);
+    throw new Error("Failed to fetch students");
+  }
+}

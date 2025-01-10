@@ -1,28 +1,61 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getAllStudents } from "../actions/studentActions";
+
+interface StudentType {
+  id: number;
+  name: string;
+  gender: string;
+  class: string;
+  dateOfBirth: string;
+  Parent?: {
+    fatherName: string;
+    motherName: string;
+    phone: string;
+    address: string;
+  };
+}
 
 const ITEMS_PER_PAGE = 13;
 
 const StudentsData = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [students, setStudents] = useState<StudentType[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [filteredResults, setFilteredResults] = useState<StudentType[]>([]);
 
-  // Sample data array - replace with your actual data
-  const allStudents = Array.from({ length: 50 }, (_, index) => ({
-    id: index + 1,
-    name: "Daniel Grant",
-    gender: "Male",
-    class: "2",
-    parents: "Kofi Grant",
-    address: "59 Australia, Sydney",
-    dateOfBirth: "02/05/2001",
-    phone: "+23359988568",
-  }));
+  useEffect(() => {
+    const loadStudents = async () => {
+      const data = await getAllStudents();
+      setStudents(data);
+      setFilteredResults(data);
+    };
+    loadStudents();
+  }, []);
 
-  // Calculate pagination
-  const totalPages = Math.ceil(allStudents.length / ITEMS_PER_PAGE);
+  const handleSearch = () => {
+    const filtered = students.filter((student) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (student.Parent?.fatherName + " " + student.Parent?.motherName)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+      const matchesClass =
+        selectedClass === "" || student.class === selectedClass;
+
+      return matchesSearch && matchesClass;
+    });
+    setFilteredResults(filtered);
+    setCurrentPage(1);
+  };
+
+  const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentStudents = allStudents.slice(startIndex, endIndex);
+  const currentStudents = filteredResults.slice(startIndex, endIndex);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -48,26 +81,35 @@ const StudentsData = () => {
           <span className="mx-2 text-gray-500">/</span>
           <h2 className="text-red-500">All Students</h2>
         </div>
-        <div className="bg-white p-6 rounded shadow-md">
+        <div className="bg-white p-6 rounded shadow-sm">
           <h2 className="text-2xl font-bold mb-4 text-gray-500">
             All Students Data
           </h2>
+
           <div className="grid grid-cols-3 gap-6 mb-4">
             <input
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by name or parent..."
               className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <select className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none">
-              <option>Select Class</option>
-              <option>Class 1</option>
-              <option>Class 2</option>
-              <option>Class 3</option>
-              <option>Class 4</option>
-              <option>Class 5</option>
-              <option>Class 6</option>
+            <select
+              className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+            >
+              <option value="">Select Class</option>
+              {[1, 2, 3, 4, 5, 6].map((num) => (
+                <option key={num} value={num.toString()}>
+                  Class {num}
+                </option>
+              ))}
             </select>
-            <button className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition-colors">
+            <button
+              onClick={handleSearch}
+              className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition-colors"
+            >
               SEARCH
             </button>
           </div>
@@ -89,7 +131,10 @@ const StudentsData = () => {
             </thead>
             <tbody>
               {currentStudents.map((student) => (
-                <tr key={student.id}>
+                <tr
+                  key={student.id}
+                  className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-sm hover:scale-[1.01] cursor-pointer"
+                >
                   <td className="py-2 px-4 border-b text-gray-800">
                     {student.id}
                   </td>
@@ -103,16 +148,16 @@ const StudentsData = () => {
                     {student.class}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    {student.parents}
+                    {`${student.Parent?.fatherName}, ${student.Parent?.motherName}`}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    {student.address}
+                    {student.Parent?.address}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    {student.dateOfBirth}
+                    {new Date(student.dateOfBirth).toLocaleDateString()}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    {student.phone}
+                    {student.Parent?.phone}
                   </td>
                 </tr>
               ))}

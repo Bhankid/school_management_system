@@ -99,9 +99,9 @@ const Dashboard: React.FC = () => {
         {/* Students Statistics Card */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex items-center">
-            <div className="bg-green-100 p-3 rounded-full relative">
+            <div className="bg-green-100 p-3 rounded-full w-10 h-10 flex items-center justify-center  relative">
               <i className="fas fa-users text-green-500"></i>
-              <div className="absolute left-[60px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
+              <div className="absolute left-[50px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
             </div>
             <div className="ml-6">
               <p className="text-gray-800 font-medium">Students</p>
@@ -113,9 +113,9 @@ const Dashboard: React.FC = () => {
         {/* Teachers Statistics Card */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex items-center">
-            <div className="bg-blue-100 p-3 rounded-full relative">
+            <div className="bg-blue-100 p-3 rounded-full w-10 h-10 flex items-center justify-center  relative">
               <i className="fas fa-chalkboard-teacher text-blue-500"></i>
-              <div className="absolute left-[60px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
+              <div className="absolute left-[50px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
             </div>
             <div className="ml-6">
               <p className="text-gray-800 font-medium">Teachers</p>
@@ -127,9 +127,9 @@ const Dashboard: React.FC = () => {
         {/* Parents Statistics Card */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex items-center">
-            <div className="bg-yellow-100 p-3 rounded-full relative">
+            <div className="bg-yellow-100 p-3 rounded-full w-10 h-10 flex items-center justify-center relative">
               <i className="fas fa-user-friends text-yellow-500"></i>
-              <div className="absolute left-[60px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
+              <div className="absolute left-[50px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
             </div>
             <div className="ml-6">
               <p className="text-gray-800 font-medium">Parents</p>
@@ -141,7 +141,7 @@ const Dashboard: React.FC = () => {
         {/* Earnings Statistics Card */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex items-center">
-            <div className="bg-red-100 p-3 rounded-full relative">
+            <div className="bg-red-100 p-3 rounded-full w-10 h-10 flex items-center justify-center relative">
               <i className="fas fa-dollar-sign text-red-500"></i>
               <div className="absolute left-[50px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
             </div>

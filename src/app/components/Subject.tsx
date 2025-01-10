@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import { createSubject, getAllSubjects } from "../actions/subjectActions";
 import { toast } from "react-hot-toast";
@@ -15,6 +14,9 @@ interface SubjectType {
 const Subject = () => {
   const [subjects, setSubjects] = useState<SubjectType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [filteredResults, setFilteredResults] = useState<SubjectType[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const itemsPerPage = 5;
 
@@ -26,9 +28,26 @@ const Subject = () => {
     try {
       const subjects = await getAllSubjects();
       setSubjects(subjects);
+      setFilteredResults(subjects);
     } catch {
       toast.error("Failed to fetch subjects");
     }
+  };
+
+  const handleSearch = () => {
+    const filtered = subjects.filter((subject) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        subject.subjectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        subject.teacher.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesClass =
+        selectedClass === "" || subject.classes.includes(selectedClass);
+
+      return matchesSearch && matchesClass;
+    });
+    setFilteredResults(filtered);
+    setCurrentPage(1);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,10 +64,10 @@ const Subject = () => {
     }
   };
 
-  const totalPages = Math.ceil(subjects.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = subjects.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredResults.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -71,19 +90,29 @@ const Subject = () => {
         <div className="flex mb-4">
           <input
             type="text"
-            placeholder="Search by subject name..."
+            placeholder="Search by subject name or teacher..."
             className="border border-gray-300 p-2 rounded mr-2 flex-1"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <select className="border border-gray-300 p-2 rounded mr-2">
-            <option>Select Class</option>
-            <option>Basic 1</option>
-            <option>Basic 2</option>
-            <option>Basic 3</option>
-            <option>Basic 4</option>
-            <option>Basic 5</option>
-            <option>Basic 6</option>
+          <select
+            className="border border-gray-300 p-2 rounded mr-2"
+            value={selectedClass}
+            onChange={(e) => setSelectedClass(e.target.value)}
+          >
+            <option value="">Select Class</option>
+            {[1, 2, 3, 4, 5, 6].map((num) => (
+              <option key={num} value={`Basic ${num}`}>
+                Basic {num}
+              </option>
+            ))}
           </select>
-          <button className="bg-red-500 text-white p-2 rounded">SEARCH</button>
+          <button
+            className="bg-red-500 text-white p-2 rounded"
+            onClick={handleSearch}
+          >
+            SEARCH
+          </button>
         </div>
 
         <table className="w-full border-collapse">

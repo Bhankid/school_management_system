@@ -1,27 +1,58 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getAllParents } from "../actions/parentActions";
+
+interface ParentType {
+  id: number;
+  fatherName: string;
+  motherName: string;
+  email: string;
+  phone: string;
+  fatherOccupation: string;
+  address: string;
+  religion: string;
+}
 
 const ITEMS_PER_PAGE = 13;
 
 const Parent = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [parents, setParents] = useState<ParentType[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [filteredResults, setFilteredResults] = useState<ParentType[]>([]);
 
-  // Sample parent data - replace with your actual data
-  const allParents = Array.from({ length: 50 }, (_, index) => ({
-    id: index + 1,
-    name: "Daniel Grant",
-    gender: "Male",
-    occupation: "Banker",
-    address: "59 Australia, Sydney",
-    email: "arabagrant@gmail.com",
-    phone: "+23359988568",
-  }));
+  useEffect(() => {
+    const loadParents = async () => {
+      try {
+        const parentsData = await getAllParents();
+        setParents(parentsData);
+        setFilteredResults(parentsData);
+      } catch (error) {
+        console.error("Failed to load parents:", error);
+      }
+    };
+    loadParents();
+  }, []);
 
-  // Calculate pagination
-  const totalPages = Math.ceil(allParents.length / ITEMS_PER_PAGE);
+  const handleSearch = () => {
+    const filtered = parents.filter((parent) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        parent.fatherName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        parent.motherName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        parent.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+      return matchesSearch;
+    });
+    setFilteredResults(filtered);
+    setCurrentPage(1);
+  };
+
+  const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentParents = allParents.slice(startIndex, endIndex);
+  const currentParents = filteredResults.slice(startIndex, endIndex);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -56,19 +87,27 @@ const Parent = () => {
       <div className="flex flex-wrap gap-4 mb-4">
         <input
           type="text"
-          placeholder="Search by name..."
+          placeholder="Search by name or email..."
           className="flex-1 min-w-[200px] p-2 border border-gray-300 rounded"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <select className="flex-1 min-w-[200px] p-2 border border-gray-300 rounded">
-          <option>Select Class</option>
-          <option>Class 1</option>
-          <option>Class 2</option>
-          <option>Class 3</option>
-          <option>Class 4</option>
-          <option>Class 5</option>
-          <option>Class 6</option>
+        <select
+          className="flex-1 min-w-[200px] p-2 border border-gray-300 rounded"
+          value={selectedClass}
+          onChange={(e) => setSelectedClass(e.target.value)}
+        >
+          <option value="">Select Class</option>
+          {[1, 2, 3, 4, 5, 6].map((num) => (
+            <option key={num} value={num.toString()}>
+              Class {num}
+            </option>
+          ))}
         </select>
-        <button className="flex-1 min-w-[200px] p-2 bg-red-500 text-white rounded hover:bg-red-600">
+        <button
+          className="flex-1 min-w-[200px] p-2 bg-red-500 text-white rounded hover:bg-red-600"
+          onClick={handleSearch}
+        >
           SEARCH
         </button>
       </div>
@@ -78,28 +117,36 @@ const Parent = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="py-2 px-4 border-b text-red-500">ID</th>
-              <th className="py-2 px-4 border-b text-red-500">Name</th>
-              <th className="py-2 px-4 border-b text-red-500">Gender</th>
+              <th className="py-2 px-4 border-b text-red-500">
+                Father&apos;s Name
+              </th>
+              <th className="py-2 px-4 border-b text-red-500">
+                Mother&apos;s Name
+              </th>
               <th className="py-2 px-4 border-b text-red-500">Occupation</th>
               <th className="py-2 px-4 border-b text-red-500">Address</th>
               <th className="py-2 px-4 border-b text-red-500">E-mail</th>
               <th className="py-2 px-4 border-b text-red-500">Phone</th>
+              <th className="py-2 px-4 border-b text-red-500">Religion</th>
             </tr>
           </thead>
           <tbody>
             {currentParents.map((parent) => (
-              <tr key={parent.id}>
+              <tr
+                key={parent.id}
+                className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-sm hover:scale-[1.001] cursor-pointer"
+              >
                 <td className="py-2 px-4 border-b text-gray-800">
                   {parent.id}
                 </td>
                 <td className="py-2 px-4 border-b text-gray-800">
-                  {parent.name}
+                  {parent.fatherName}
                 </td>
                 <td className="py-2 px-4 border-b text-gray-800">
-                  {parent.gender}
+                  {parent.motherName}
                 </td>
                 <td className="py-2 px-4 border-b text-gray-800">
-                  {parent.occupation}
+                  {parent.fatherOccupation}
                 </td>
                 <td className="py-2 px-4 border-b text-gray-800">
                   {parent.address}
@@ -109,6 +156,9 @@ const Parent = () => {
                 </td>
                 <td className="py-2 px-4 border-b text-gray-800">
                   {parent.phone}
+                </td>
+                <td className="py-2 px-4 border-b text-gray-800">
+                  {parent.religion}
                 </td>
               </tr>
             ))}
