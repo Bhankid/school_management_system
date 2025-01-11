@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
-import Search from "../components/Search";
+import React, { useState, useRef, useEffect } from "react";
+import Search from "./Search";
+import ProfileDropdown from "./ProfileDropdown";
 
 interface SearchResult {
   id: string;
@@ -14,6 +15,22 @@ interface SearchResult {
 function Header() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowProfileMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getDashboardData = (): SearchResult[] => [
     { id: "1", title: "Students", value: "50000", type: "student" },
@@ -54,16 +71,30 @@ function Header() {
 
           <div className="hidden md:block border-l-2 border-red-500 h-8 mx-4"></div>
 
-          <div className="flex items-center cursor-pointer">
-            <div className="relative w-8 h-8 md:w-10 md:h-10">
-              <Image
-                src="/profile-picture.png"
-                alt="User profile picture"
-                fill
-                className="rounded-full object-cover"
-              />
+          <div
+            className="flex items-center cursor-pointer relative"
+            ref={profileMenuRef}
+          >
+            <div
+              className="flex items-center"
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+            >
+              <div className="relative w-8 h-8 md:w-10 md:h-10">
+                <Image
+                  src="/profile-picture.png"
+                  alt="User profile picture"
+                  fill
+                  className="rounded-full object-cover"
+                />
+              </div>
+              <i
+                className={`fas fa-caret-down text-gray-500 ml-2 text-sm md:text-base transition-transform duration-200 ${
+                  showProfileMenu ? "rotate-180" : ""
+                }`}
+              ></i>
             </div>
-            <i className="fas fa-caret-down text-gray-500 ml-2 text-sm md:text-base"></i>
+
+            <ProfileDropdown isOpen={showProfileMenu} />
           </div>
         </div>
       </div>
