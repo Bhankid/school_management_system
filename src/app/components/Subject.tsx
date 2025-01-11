@@ -220,11 +220,11 @@ const Subject = () => {
           <div className="flex mt-4">
             <button
               type="submit"
-              className="bg-red-500 text-white p-2 rounded mr-2"
+              className="bg-red-500 hover:bg-red-700 text-white p-2 rounded mr-2"
             >
               Save
             </button>
-            <button type="reset" className="bg-blue-500 text-white p-2 rounded">
+            <button type="reset" className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded">
               Reset
             </button>
           </div>

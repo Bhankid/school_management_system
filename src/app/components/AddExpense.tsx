@@ -107,14 +107,14 @@ function AddExpense() {
             <div className="flex space-x-4 mt-4">
               <button
                 type="submit"
-                className="bg-red-500 text-white px-4 py-2 rounded"
+                className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
               >
                 Save
               </button>
               <button
                 type="button"
                 onClick={handleReset}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
               >
                 Reset
               </button>

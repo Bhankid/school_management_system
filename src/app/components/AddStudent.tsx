@@ -240,14 +240,14 @@ function AddStudent() {
             <button
               type="submit"
               disabled={pending}
-              className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+              className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded mr-2"
             >
               {pending ? "Saving..." : "Save"}
             </button>
             <button
               type="button"
               onClick={handleReset}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
             >
               Reset
             </button>

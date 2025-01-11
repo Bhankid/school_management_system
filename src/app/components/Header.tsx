@@ -40,34 +40,40 @@ function Header() {
   };
 
   return (
-    <div className="relative">
-      <div className="flex items-center justify-end p-4 bg-white shadow">
-        <Search onSearch={handleSearch} />
+    <div className="relative w-full">
+      <div className="flex flex-col md:flex-row items-center justify-between p-4 bg-white shadow">
+        <div className="w-full md:w-auto mb-4 md:mb-0">
+          <Search onSearch={handleSearch} />
+        </div>
 
-        <div className="flex items-center ml-4 space-x-4">
-          <i className="fas fa-envelope text-red-500 hover:text-red-600 cursor-pointer"></i>
-          <i className="fas fa-bell text-red-500 hover:text-red-600 cursor-pointer"></i>
-          <div className="border-l-2 border-red-500 h-8 mx-4"></div>
+        <div className="flex items-center justify-center w-full md:w-auto space-x-4">
+          <div className="flex items-center space-x-4">
+            <i className="fas fa-envelope text-red-500 hover:text-red-600 cursor-pointer text-lg md:text-xl"></i>
+            <i className="fas fa-bell text-red-500 hover:text-red-600 cursor-pointer text-lg md:text-xl"></i>
+          </div>
+
+          <div className="hidden md:block border-l-2 border-red-500 h-8 mx-4"></div>
 
           <div className="flex items-center cursor-pointer">
-            <Image
-              src="/profile-picture.png"
-              alt="User profile picture"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <i className="fas fa-caret-down text-gray-500 ml-2"></i>
+            <div className="relative w-8 h-8 md:w-10 md:h-10">
+              <Image
+                src="/profile-picture.png"
+                alt="User profile picture"
+                fill
+                className="rounded-full object-cover"
+              />
+            </div>
+            <i className="fas fa-caret-down text-gray-500 ml-2 text-sm md:text-base"></i>
           </div>
         </div>
       </div>
 
       {showResults && searchResults.length > 0 && (
-        <div className="absolute top-16 right-4 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50 text-gray-600">
+        <div className="absolute top-full left-0 right-0 md:left-auto md:right-4 md:w-80 mt-2 bg-white shadow-lg rounded-lg overflow-hidden z-50 mx-4 md:mx-0">
           {searchResults.map((item) => (
             <div
               key={item.id}
-              className="p-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between"
+              className="p-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between text-sm md:text-base"
             >
               <div className="flex items-center">
                 <span

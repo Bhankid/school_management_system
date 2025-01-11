@@ -95,37 +95,45 @@ const Dashboard: React.FC = () => {
 
   const renderDashboardContent = () => (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
         {/* Students Statistics Card */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex items-center">
-            <div className="bg-green-100 p-3 rounded-full w-10 h-10 flex items-center justify-center  relative">
-              <i className="fas fa-users text-green-500"></i>
-              <div className="absolute left-[50px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
+            <div className="bg-green-100 p-2 sm:p-3 rounded-full w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center relative">
+              <i className="fas fa-users text-green-500 text-sm sm:text-base"></i>
+              <div className="absolute left-[40px] sm:left-[50px] top-1/2 transform -translate-y-1/2 h-6 sm:h-8 w-0.5 bg-red-500"></div>
             </div>
-            <div className="ml-6">
-              <p className="text-gray-800 font-medium">Students</p>
-              <p className="text-2xl font-bold text-gray-900">50000</p>
+            <div className="ml-4 sm:ml-6">
+              <p className="text-gray-800 font-medium text-sm sm:text-base">
+                Students
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                50000
+              </p>
             </div>
           </div>
         </div>
 
         {/* Teachers Statistics Card */}
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
           <div className="flex items-center">
-            <div className="bg-blue-100 p-3 rounded-full w-10 h-10 flex items-center justify-center  relative">
-              <i className="fas fa-chalkboard-teacher text-blue-500"></i>
-              <div className="absolute left-[50px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
+            <div className="bg-blue-100 p-2 sm:p-3 rounded-full w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center relative">
+              <i className="fas fa-chalkboard-teacher text-blue-500 text-sm sm:text-base"></i>
+              <div className="absolute left-[40px] sm:left-[50px] top-1/2 transform -translate-y-1/2 h-6 sm:h-8 w-0.5 bg-red-500"></div>
             </div>
-            <div className="ml-6">
-              <p className="text-gray-800 font-medium">Teachers</p>
-              <p className="text-2xl font-bold text-gray-900">1500</p>
+            <div className="ml-4 sm:ml-6">
+              <p className="text-gray-800 font-medium text-sm sm:text-base">
+                Teachers
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                1500
+              </p>
             </div>
           </div>
         </div>
 
         {/* Parents Statistics Card */}
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
           <div className="flex items-center">
             <div className="bg-yellow-100 p-3 rounded-full w-10 h-10 flex items-center justify-center relative">
               <i className="fas fa-user-friends text-yellow-500"></i>
@@ -139,15 +147,19 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Earnings Statistics Card */}
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
           <div className="flex items-center">
-            <div className="bg-red-100 p-3 rounded-full w-10 h-10 flex items-center justify-center relative">
-              <i className="fas fa-dollar-sign text-red-500"></i>
-              <div className="absolute left-[50px] top-1/2 transform -translate-y-1/2 h-8 w-0.5 bg-red-500"></div>
+            <div className="bg-red-100 p-2 sm:p-3 rounded-full w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center relative">
+              <i className="fas fa-dollar-sign text-red-500 text-sm sm:text-base"></i>
+              <div className="absolute left-[40px] sm:left-[50px] top-1/2 transform -translate-y-1/2 h-6 sm:h-8 w-0.5 bg-red-500"></div>
             </div>
-            <div className="ml-6">
-              <p className="text-gray-800 font-medium">Earnings</p>
-              <p className="text-2xl font-bold text-gray-900">$200000</p>
+            <div className="ml-4 sm:ml-6">
+              <p className="text-gray-800 font-medium text-sm sm:text-base">
+                Earnings
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                $200000
+              </p>
             </div>
           </div>
         </div>
@@ -155,22 +167,34 @@ const Dashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Earnings Section */}
-        <div className="bg-white p-4 rounded-lg shadow col-span-2">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-gray-800">Earnings</h2>
-            <div className="text-gray-700">June 10, 2021</div>
-          </div>
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <p className="text-gray-700">Total Collections</p>
-              <p className="text-2xl font-bold text-gray-500">$90,000</p>
-            </div>
-            <div>
-              <p className="text-gray-700">Fees Collections</p>
-              <p className="text-2xl font-bold text-gray-500">$75,000</p>
+        <div className="bg-white p-4 rounded-lg shadow col-span-1 lg:col-span-2">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+            <h2 className="text-lg font-bold text-gray-800 mb-2 sm:mb-0">
+              Earnings
+            </h2>
+            <div className="text-sm sm:text-base text-gray-700">
+              Jan 11, 2025
             </div>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 mb-4">
+            <div>
+              <p className="text-gray-700 text-sm sm:text-base">
+                Total Collections
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-500">
+                $90,000
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-700 text-sm sm:text-base">
+                Fees Collections
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-500">
+                $75,000
+              </p>
+            </div>
+          </div>
+          <div className="h-[250px] sm:h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={earningsData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -207,25 +231,27 @@ const Dashboard: React.FC = () => {
 
         {/* Expenses Section */}
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-gray-800">Expenses</h2>
-            <div className="text-gray-600">June 2021</div>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+            <h2 className="text-lg font-bold text-gray-800 mb-2 sm:mb-0">
+              Expenses
+            </h2>
+            <div className="text-sm sm:text-base text-gray-600">Jan 2025</div>
           </div>
           <div className="flex justify-between items-center mb-4">
             <div>
-              <p className="text-gray-600">April 2021</p>
-              <p className="text-green-500">$125,000</p>
+              <p className="text-xs sm:text-sm text-gray-600">April 2021</p>
+              <p className="text-sm sm:text-base text-green-500">$125,000</p>
             </div>
             <div>
-              <p className="text-gray-600">May 2021</p>
-              <p className="text-blue-500">$100,000</p>
+              <p className="text-xs sm:text-sm text-gray-600">May 2021</p>
+              <p className="text-sm sm:text-base text-green-500">$100,000</p>
             </div>
             <div>
-              <p className="text-gray-600">June 2021</p>
-              <p className="text-red-500">$75,000</p>
+              <p className="text-xs sm:text-sm text-gray-600">June 2021</p>
+              <p className="text-sm sm:text-base text-green-500">$75,000</p>
             </div>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[250px] sm:h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={expensesData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -257,9 +283,9 @@ const Dashboard: React.FC = () => {
         {/* Students Distribution Section */}
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-gray-800">Students</h2>
+            <h2 className="text-lg font-bold text-gray-800 mb-4">Students</h2>
           </div>
-          <div style={{ width: "100%", height: 300 }}>
+          <div className="h-[250px] sm:h-[300px] w-full">
             <ResponsiveContainer>
               <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                 <Pie
@@ -288,20 +314,20 @@ const Dashboard: React.FC = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 space-y-2 sm:space-y-0">
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
-              <p className="text-gray-600">30,000 Boys</p>
+              <div className="w-3 sm:w-4 h-3 sm:h-4 bg-blue-500 rounded-full mr-2"></div>
+              <p className="text-sm sm:text-base text-gray-600">30,000 Boys</p>
             </div>
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-red-500 rounded-full mr-2"></div>
-              <p className="text-gray-600">20,000 Girls</p>
+              <div className="w-3 sm:w-4 h-3 sm:h-4 bg-red-500 rounded-full mr-2"></div>
+              <p className="text-sm sm:text-base text-gray-600">20,000 Girls</p>
             </div>
           </div>
         </div>
 
         {/* Event Calendar and Reminder Section */}
-        <div className="lg:col-span-2 flex gap-6">
+        <div className="lg:col-span-2 flex flex-col lg:flex-row gap-4 lg:gap-6">
           <EventCalendar />
           <Reminder />
         </div>
@@ -351,7 +377,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-blue-50">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-blue-50">
       <Sidebar setActiveTab={setActiveTab} activeTab={activeTab} />
       <div className="flex-1">
         <Header />

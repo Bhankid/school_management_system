@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -38,6 +39,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
   const handleTabClick = (tab: ActiveTab) => {
     setActiveTab(tab);
     localStorage.setItem("activeTab", tab);
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
   };
 
   const getActiveClass = (tab: ActiveTab) => {
@@ -47,66 +51,69 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
   };
 
   return (
-    <div
-      className={`${
-        isSidebarOpen ? "w-64" : "w-16"
-      } min-h-screen bg-blue-900 text-white sticky transition-all duration-300`}
-    >
-      <div className="bg-red-600 p-4 flex items-center justify-between">
-        {isSidebarOpen && (
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={40}
-            height={40}
-            className="w-10 h-10"
+    <>
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <div
+        className={`${
+          isSidebarOpen ? "w-64" : "w-16"
+        } min-h-screen bg-blue-900 text-white fixed lg:sticky top-0 left-0 z-40 lg:z-0 transition-all duration-300`}
+      >
+        <div className="bg-red-600 p-4 flex items-center justify-between">
+          {isSidebarOpen && (
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10"
+            />
+          )}
+          <i
+            className={`fas ${
+              isSidebarOpen ? "fa-times" : "fa-bars"
+            } cursor-pointer text-2xl font-bold ${!isSidebarOpen && "mx-auto"}`}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           />
-        )}
-        <i
-          className={`fas ${
-            isSidebarOpen ? "fa-times" : "fa-bars"
-          } cursor-pointer text-2xl font-bold ${!isSidebarOpen && "mx-auto"}`}
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        ></i>
-      </div>
+        </div>
 
-      <ul className="mt-4">
-        <li
-          onClick={() => handleTabClick("dashboard")}
-          className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
-            "dashboard"
-          )}`}
-        >
-          <i className="fas fa-tachometer-alt mr-3"></i>
-          {isSidebarOpen && <span>Dashboard</span>}
-        </li>
-
-        <div>
+        <ul className="mt-4 overflow-y-auto max-h-[calc(100vh-5rem)]">
           <li
-            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
-              isStudentsOpen ? "bg-blue-800" : "hover:bg-blue-800"
-            }`}
-            onClick={() => isSidebarOpen && setIsStudentsOpen(!isStudentsOpen)}
+            onClick={() => handleTabClick("dashboard")}
+            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
+              "dashboard"
+            )}`}
           >
-            <i className="fas fa-users mr-3"></i>
-            {isSidebarOpen && (
-              <>
-                <span>Students</span>
-                <i
-                  className={`fas fa-chevron-${
-                    isStudentsOpen ? "down" : "right"
-                  } ml-auto transition-transform duration-500`}
-                ></i>
-              </>
-            )}
+            <i className="fas fa-tachometer-alt mr-3"></i>
+            {isSidebarOpen && <span>Dashboard</span>}
           </li>
 
-          {isSidebarOpen && (
-            <div
-              className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                isStudentsOpen ? "max-h-48" : "max-h-0"
+          {/* Students Menu */}
+          <div>
+            <li
+              className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
+                isStudentsOpen ? "bg-blue-800" : "hover:bg-blue-800"
               }`}
+              onClick={() => setIsStudentsOpen(!isStudentsOpen)}
             >
+              <i className="fas fa-users mr-3"></i>
+              {isSidebarOpen && (
+                <>
+                  <span>Students</span>
+                  <i
+                    className={`fas fa-chevron-${
+                      isStudentsOpen ? "down" : "right"
+                    } ml-auto`}
+                  />
+                </>
+              )}
+            </li>
+            {isSidebarOpen && isStudentsOpen && (
               <ul className="bg-blue-800">
                 <li
                   onClick={() => handleTabClick("students")}
@@ -136,46 +143,41 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
                   <span>Students Promotion</span>
                 </li>
               </ul>
-            </div>
-          )}
-        </div>
-
-        <li
-          onClick={() => handleTabClick("parents")}
-          className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
-            "parents"
-          )}`}
-        >
-          <i className="fas fa-user-friends mr-3"></i>
-          {isSidebarOpen && <span>Parents</span>}
-        </li>
-
-        <div>
-          <li
-            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
-              isTeachersOpen ? "bg-blue-800" : "hover:bg-blue-800"
-            }`}
-            onClick={() => isSidebarOpen && setIsTeachersOpen(!isTeachersOpen)}
-          >
-            <i className="fas fa-chalkboard-teacher mr-3"></i>
-            {isSidebarOpen && (
-              <>
-                <span>Teachers</span>
-                <i
-                  className={`fas fa-chevron-${
-                    isTeachersOpen ? "down" : "right"
-                  } ml-auto transition-transform duration-500`}
-                ></i>
-              </>
             )}
+          </div>
+
+          {/* Parents Tab */}
+          <li
+            onClick={() => handleTabClick("parents")}
+            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
+              "parents"
+            )}`}
+          >
+            <i className="fas fa-user-friends mr-3"></i>
+            {isSidebarOpen && <span>Parents</span>}
           </li>
 
-          {isSidebarOpen && (
-            <div
-              className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                isTeachersOpen ? "max-h-32" : "max-h-0"
+          {/* Teachers Menu */}
+          <div>
+            <li
+              className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
+                isTeachersOpen ? "bg-blue-800" : "hover:bg-blue-800"
               }`}
+              onClick={() => setIsTeachersOpen(!isTeachersOpen)}
             >
+              <i className="fas fa-chalkboard-teacher mr-3"></i>
+              {isSidebarOpen && (
+                <>
+                  <span>Teachers</span>
+                  <i
+                    className={`fas fa-chevron-${
+                      isTeachersOpen ? "down" : "right"
+                    } ml-auto`}
+                  />
+                </>
+              )}
+            </li>
+            {isSidebarOpen && isTeachersOpen && (
               <ul className="bg-blue-800">
                 <li
                   onClick={() => handleTabClick("teachers")}
@@ -196,36 +198,30 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
                   <span>Add Teachers</span>
                 </li>
               </ul>
-            </div>
-          )}
-        </div>
-
-        <div>
-          <li
-            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
-              isAccountOpen ? "bg-blue-800" : "hover:bg-blue-800"
-            }`}
-            onClick={() => isSidebarOpen && setIsAccountOpen(!isAccountOpen)}
-          >
-            <i className="fas fa-user-circle mr-3"></i>
-            {isSidebarOpen && (
-              <>
-                <span>Account</span>
-                <i
-                  className={`fas fa-chevron-${
-                    isAccountOpen ? "down" : "right"
-                  } ml-auto transition-transform duration-500`}
-                ></i>
-              </>
             )}
-          </li>
+          </div>
 
-          {isSidebarOpen && (
-            <div
-              className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                isAccountOpen ? "max-h-48" : "max-h-0"
+          {/* Account Menu */}
+          <div>
+            <li
+              className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
+                isAccountOpen ? "bg-blue-800" : "hover:bg-blue-800"
               }`}
+              onClick={() => setIsAccountOpen(!isAccountOpen)}
             >
+              <i className="fas fa-user-circle mr-3"></i>
+              {isSidebarOpen && (
+                <>
+                  <span>Account</span>
+                  <i
+                    className={`fas fa-chevron-${
+                      isAccountOpen ? "down" : "right"
+                    } ml-auto`}
+                  />
+                </>
+              )}
+            </li>
+            {isSidebarOpen && isAccountOpen && (
               <ul className="bg-blue-800">
                 <li
                   onClick={() => handleTabClick("fees-group")}
@@ -264,31 +260,31 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
                   <span>Add Expenses</span>
                 </li>
               </ul>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        <li
-          onClick={() => handleTabClick("subjects")}
-          className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
-            "subjects"
-          )}`}
-        >
-          <i className="fas fa-book mr-3"></i>
-          {isSidebarOpen && <span>Subject</span>}
-        </li>
-
-        <li
-          onClick={() => handleTabClick("settings")}
-          className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
-            "settings"
-          )}`}
-        >
-          <i className="fas fa-cog mr-3"></i>
-          {isSidebarOpen && <span>Settings</span>}
-        </li>
-      </ul>
-    </div>
+          {/* Other Tabs */}
+          <li
+            onClick={() => handleTabClick("subjects")}
+            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
+              "subjects"
+            )}`}
+          >
+            <i className="fas fa-book mr-3"></i>
+            {isSidebarOpen && <span>Subject</span>}
+          </li>
+          <li
+            onClick={() => handleTabClick("settings")}
+            className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
+              "settings"
+            )}`}
+          >
+            <i className="fas fa-cog mr-3"></i>
+            {isSidebarOpen && <span>Settings</span>}
+          </li>
+        </ul>
+      </div>
+    </>
   );
 };
 
