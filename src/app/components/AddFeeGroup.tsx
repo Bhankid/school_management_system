@@ -23,7 +23,9 @@ const AddFeeGroup = () => {
     <form className="space-y-6">
       <div className="grid grid-cols-1 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Name *</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Name *
+          </label>
           <input
             type="text"
             required
@@ -32,7 +34,9 @@ const AddFeeGroup = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Description
+          </label>
           <textarea
             className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 focus:ring-red-500 focus:border-red-500"
             rows={3}
@@ -41,7 +45,9 @@ const AddFeeGroup = () => {
 
         <div>
           <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium text-gray-700">Fees *</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Fees *
+            </label>
             <button
               type="button"
               onClick={addFeeField}
@@ -50,7 +56,7 @@ const AddFeeGroup = () => {
               <i className="fas fa-plus"></i> Add Fee
             </button>
           </div>
-          
+
           {fees.map((fee, index) => (
             <div key={index} className="flex space-x-4 mb-2">
               <input
@@ -64,7 +70,9 @@ const AddFeeGroup = () => {
                 type="text"
                 placeholder="Amount"
                 value={fee.amount}
-                onChange={(e) => handleFeeChange(index, "amount", e.target.value)}
+                onChange={(e) =>
+                  handleFeeChange(index, "amount", e.target.value)
+                }
                 className="flex-1 p-2 border border-gray-300 rounded text-gray-900 focus:ring-red-500 focus:border-red-500"
               />
               {fees.length > 1 && (
@@ -90,9 +98,9 @@ const AddFeeGroup = () => {
         </button>
         <button
           type="button"
-          className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded"
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
         >
-          Cancel
+          Reset
         </button>
       </div>
     </form>
