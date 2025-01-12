@@ -141,7 +141,7 @@ const Account = () => {
               <i className="fas fa-list"></i>
               <span>Fees Group List</span>
               {activeTab === "list" && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-red-500"></div>
+                <div className="absolute bottom-0 left-0 w-20 h-0.5 bg-red-500"></div>
               )}
             </button>
             <button
@@ -153,7 +153,7 @@ const Account = () => {
               <i className="fas fa-plus"></i>
               <span>Add Fees Group</span>
               {activeTab === "add" && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-red-500"></div>
+                <div className="absolute bottom-0 left-0 w-20 h-0.5 bg-red-500"></div>
               )}
             </button>
           </div>
