@@ -1,64 +1,80 @@
 import Image from "next/image";
 
-function StudentProfileCard() {
+interface StudentType {
+  id: number;
+  name: string;
+  gender: string;
+  class: string;
+  dateOfBirth: string;
+  Parent?: {
+    fatherName: string;
+    motherName: string;
+    phone: string;
+    address: string;
+  };
+}
+
+interface StudentProfileCardProps {
+  student: StudentType;
+}
+
+function StudentProfileCard({ student }: StudentProfileCardProps) {
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 max-w-md w-full">
-      <div className="flex items-center mb-6">
-        <Image
-          src="/logo.png"
-          alt="School Logo"
-          width={48}
-          height={48}
-          className="mr-4"
-        />
-        <Image
-          src="/student_profile.png"
-          alt="Profile of Daniel Grant"
-          width={96}
-          height={96}
-          className="rounded-full object-cover"
-        />
+    <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
+      <div className="mb-6">
+        <Image src="/logo.png" alt="School Logo" width={48} height={48} />
       </div>
-      <h2 className="text-xl font-bold text-blue-600 mb-2">Daniel Grant</h2>
-      <p className="text-gray-600 mb-4">
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-      </p>
-      <div className="text-gray-800">
-        <p className="mb-2">
-          <span className="font-medium">ID Number:</span> 22
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Name:</span> Daniel Grant
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Gender:</span> Male
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Father Name:</span> Steve Grant
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Mother Name:</span> Naomi Grant
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Date Of Birth:</span> 07.08.2016
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Religion:</span> Islam
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Father Occupation:</span> Graphic
-          Designer
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">E-mail:</span> arabgrant@gmail.com
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Admission Date:</span> 07.08.2019
-        </p>
-        <p className="mb-2">
-          <span className="font-medium">Class:</span> 2
-        </p>
+
+      <div className="flex gap-8">
+        <div className="ml-4">
+          <Image
+            src="/student_profile.png"
+            alt={`Profile of ${student.name}`}
+            width={150}
+            height={150}
+            className="rounded-full object-cover"
+          />
+        </div>
+
+        <div className="flex-1">
+          <h2 className="text-xl font-bold text-blue-600 mb-4">
+            {student.name}
+          </h2>
+          <div className="text-gray-800 grid grid-cols-2 gap-4">
+            <p className="mb-2">
+              <span className="font-medium">ID Number:</span> {student.id}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Name:</span> {student.name}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Gender:</span> {student.gender}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Father Name:</span>{" "}
+              {student.Parent?.fatherName}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Mother Name:</span>{" "}
+              {student.Parent?.motherName}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Date Of Birth:</span>{" "}
+              {new Date(student.dateOfBirth).toLocaleDateString()}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Class:</span> {student.class}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Phone:</span>{" "}
+              {student.Parent?.phone}
+            </p>
+            <p className="mb-2 col-span-2">
+              <span className="font-medium">Address:</span>{" "}
+              {student.Parent?.address}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

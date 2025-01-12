@@ -1,6 +1,8 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { getAllParents } from "../actions/parentActions";
+import ParentDetails from "./ParentDetails";
 
 interface ParentType {
   id: number;
@@ -21,6 +23,8 @@ const Parent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [filteredResults, setFilteredResults] = useState<ParentType[]>([]);
+  const [selectedParent, setSelectedParent] = useState<ParentType | null>(null);
+  const [isProfileVisible, setIsProfileVisible] = useState(false);
 
   useEffect(() => {
     const loadParents = async () => {
@@ -34,6 +38,16 @@ const Parent = () => {
     };
     loadParents();
   }, []);
+
+  const handleParentClick = (parent: ParentType) => {
+    setSelectedParent(parent);
+    setIsProfileVisible(true);
+  };
+
+  const handleCloseProfile = () => {
+    setIsProfileVisible(false);
+    setTimeout(() => setSelectedParent(null), 300);
+  };
 
   const handleSearch = () => {
     const filtered = parents.filter((parent) => {
@@ -134,7 +148,8 @@ const Parent = () => {
             {currentParents.map((parent) => (
               <tr
                 key={parent.id}
-                className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-sm hover:scale-[1.001] cursor-pointer"
+                onClick={() => handleParentClick(parent)}
+                className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow cursor-pointer"
               >
                 <td className="py-2 px-4 border-b text-gray-800">
                   {parent.id}
@@ -201,6 +216,26 @@ const Parent = () => {
           Next
         </button>
       </div>
+
+      {selectedParent && (
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${
+            isProfileVisible ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={handleCloseProfile}
+        >
+          <div
+            className={`transform transition-all duration-300 ${
+              isProfileVisible
+                ? "scale-100 translate-y-0"
+                : "scale-95 translate-y-4"
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ParentDetails parent={selectedParent} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,68 +1,73 @@
 import Image from "next/image";
 
-const TeacherProfile = () => {
+interface TeacherType {
+  id: number;
+  name: string;
+  gender: string;
+  class: string;
+  subject: string;
+  address: string;
+  dateOfBirth: string;
+  phone: string;
+}
+
+interface TeacherProfileProps {
+  teacher: TeacherType;
+}
+
+function TeacherProfile({ teacher }: TeacherProfileProps) {
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
-      <div className="flex items-center">
-        <Image
-          src="/student_profile.png"
-          alt="Profile picture of a young man wearing a cap and a sleeveless shirt"
-          width={128}
-          height={128}
-          className="rounded-full mr-8"
-        />
-        <div>
-          <h1 className="text-2xl font-bold text-blue-700">Daniel Grant</h1>
-          <p className="text-gray-600 mt-2">
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-          </p>
-        </div>
+    <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
+      <div className="mb-6">
+        <Image src="/logo.png" alt="School Logo" width={48} height={48} />
       </div>
-      <div className="mt-8">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-gray-700">
-            <p>
-              <span className="font-bold">ID Number:</span> 22
+
+      <div className="flex gap-8">
+        <div className="ml-4">
+          <Image
+            src="/student_profile.png"
+            alt={`Profile of ${teacher.name}`}
+            width={150}
+            height={150}
+            className="rounded-full object-cover"
+          />
+        </div>
+
+        <div className="flex-1">
+          <h2 className="text-xl font-bold text-blue-600 mb-4">
+            {teacher.name}
+          </h2>
+          <div className="text-gray-800 grid grid-cols-2 gap-4">
+            <p className="mb-2">
+              <span className="font-medium">ID Number:</span> {teacher.id}
             </p>
-            <p>
-              <span className="font-bold">Name:</span> Daniel Grant
+            <p className="mb-2">
+              <span className="font-medium">Name:</span> {teacher.name}
             </p>
-            <p>
-              <span className="font-bold">Gender:</span> Male
+            <p className="mb-2">
+              <span className="font-medium">Gender:</span> {teacher.gender}
             </p>
-            <p>
-              <span className="font-bold">Father Name:</span> Steve Grant
+            <p className="mb-2">
+              <span className="font-medium">Subject:</span> {teacher.subject}
             </p>
-            <p>
-              <span className="font-bold">Mother Name:</span> Naomi Grant
+            <p className="mb-2">
+              <span className="font-medium">Class:</span> {teacher.class}
             </p>
-          </div>
-          <div className="text-gray-700">
-            <p>
-              <span className="font-bold">Date Of Birth:</span> 07.08.2016
+            <p className="mb-2">
+              <span className="font-medium">Date Of Birth:</span>{" "}
+              {teacher.dateOfBirth}
             </p>
-            <p>
-              <span className="font-bold">Religion:</span> Islam
+            <p className="mb-2">
+              <span className="font-medium">Phone:</span> {teacher.phone}
             </p>
-            <p>
-              <span className="font-bold">Father Occupation:</span> Graphic
-              Designer
-            </p>
-            <p>
-              <span className="font-bold">E-mail:</span> arabagrant@gmail.com
-            </p>
-            <p>
-              <span className="font-bold">Admission Date:</span> 07.08.2019
-            </p>
-            <p>
-              <span className="font-bold">Class:</span> 2
+            <p className="mb-2 col-span-2">
+              <span className="font-medium">Address:</span> {teacher.address}
             </p>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default TeacherProfile;

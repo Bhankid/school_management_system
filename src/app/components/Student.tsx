@@ -1,6 +1,8 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { getAllStudents } from "../actions/studentActions";
+import StudentProfileCard from "./StudentProfileCard";
 
 interface StudentType {
   id: number;
@@ -24,6 +26,10 @@ const StudentsData = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [filteredResults, setFilteredResults] = useState<StudentType[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<StudentType | null>(
+    null
+  );
+  const [isProfileVisible, setIsProfileVisible] = useState(false);
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -52,6 +58,16 @@ const StudentsData = () => {
     setCurrentPage(1);
   };
 
+  const handleStudentClick = (student: StudentType) => {
+    setSelectedStudent(student);
+    setIsProfileVisible(true);
+  };
+
+  const handleCloseProfile = () => {
+    setIsProfileVisible(false);
+    setTimeout(() => setSelectedStudent(null), 300);
+  };
+
   const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -74,13 +90,14 @@ const StudentsData = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 relative">
       <div className="bg-white p-4 rounded shadow-md">
         <div className="flex items-center mb-4">
           <h1 className="text-xl font-bold text-gray-700">Students</h1>
           <span className="mx-2 text-gray-500">/</span>
           <h2 className="text-red-500">All Students</h2>
         </div>
+
         <div className="bg-white p-6 rounded shadow-sm">
           <h2 className="text-2xl font-bold mb-4 text-gray-500">
             All Students Data
@@ -114,55 +131,58 @@ const StudentsData = () => {
             </button>
           </div>
 
-          <table className="min-w-full bg-white">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border-b text-red-500">ID</th>
-                <th className="py-2 px-4 border-b text-red-500">Name</th>
-                <th className="py-2 px-4 border-b text-red-500">Gender</th>
-                <th className="py-2 px-4 border-b text-red-500">Class</th>
-                <th className="py-2 px-4 border-b text-red-500">Parents</th>
-                <th className="py-2 px-4 border-b text-red-500">Address</th>
-                <th className="py-2 px-4 border-b text-red-500">
-                  Date of Birth
-                </th>
-                <th className="py-2 px-4 border-b text-red-500">Phone</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentStudents.map((student) => (
-                <tr
-                  key={student.id}
-                  className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-sm hover:scale-[1.01] cursor-pointer"
-                >
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    {student.id}
-                  </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    {student.name}
-                  </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    {student.gender}
-                  </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    {student.class}
-                  </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    {`${student.Parent?.fatherName}, ${student.Parent?.motherName}`}
-                  </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    {student.Parent?.address}
-                  </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    {new Date(student.dateOfBirth).toLocaleDateString()}
-                  </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
-                    {student.Parent?.phone}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border-b text-red-500">ID</th>
+                  <th className="py-2 px-4 border-b text-red-500">Name</th>
+                  <th className="py-2 px-4 border-b text-red-500">Gender</th>
+                  <th className="py-2 px-4 border-b text-red-500">Class</th>
+                  <th className="py-2 px-4 border-b text-red-500">Parents</th>
+                  <th className="py-2 px-4 border-b text-red-500">Address</th>
+                  <th className="py-2 px-4 border-b text-red-500">
+                    Date of Birth
+                  </th>
+                  <th className="py-2 px-4 border-b text-red-500">Phone</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentStudents.map((student) => (
+                  <tr
+                    key={student.id}
+                    onClick={() => handleStudentClick(student)}
+                    className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow cursor-pointer"
+                  >
+                    <td className="py-2 px-4 border-b text-gray-800">
+                      {student.id}
+                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">
+                      {student.name}
+                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">
+                      {student.gender}
+                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">
+                      {student.class}
+                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">
+                      {`${student.Parent?.fatherName}, ${student.Parent?.motherName}`}
+                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">
+                      {student.Parent?.address}
+                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">
+                      {new Date(student.dateOfBirth).toLocaleDateString()}
+                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">
+                      {student.Parent?.phone}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           <div className="flex justify-between items-center mt-4">
             <button
@@ -205,6 +225,26 @@ const StudentsData = () => {
           </div>
         </div>
       </div>
+
+      {selectedStudent && (
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${
+            isProfileVisible ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={handleCloseProfile}
+        >
+          <div
+            className={`transform transition-all duration-300 ${
+              isProfileVisible
+                ? "scale-100 translate-y-0"
+                : "scale-95 translate-y-4"
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <StudentProfileCard student={selectedStudent} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

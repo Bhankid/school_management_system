@@ -12,6 +12,7 @@ import StudentPromotion from "../components/StudentPromotion";
 import Subject from "../components/Subject";
 import Teacher from "../components/Teacher";
 import Fees from "../components/Fees";
+import AddFees from "../components/AddFees";
 import Expense from "../components/Expense";
 import AddExpense from "../components/AddExpense";
 import AddTeacher from "../components/AddTeacher";
@@ -45,9 +46,11 @@ type ActiveTab =
   | "settings"
   | "fees-group"
   | "student-fees"
+  | "add-fees"
   | "expenses"
   | "add-expenses"
   | "add-teacher";
+
 
 const earningsData = [
   { day: "Mon", totalCollections: 85000, feesCollections: 70000 },
@@ -361,6 +364,8 @@ const Dashboard: React.FC = () => {
         return <Account />;
       case "student-fees":
         return <Fees />;
+      case "add-fees":
+        return <AddFees />;
       case "expenses":
         return <Expense />;
       case "add-expenses":

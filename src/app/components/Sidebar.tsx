@@ -13,6 +13,7 @@ export type ActiveTab =
   | "teachers"
   | "fees-group"
   | "student-fees"
+  | "add-fees"
   | "expenses"
   | "add-expenses"
   | "add-teacher"
@@ -82,7 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
           />
         </div>
 
-        <ul className="mt-4 overflow-y-auto max-h-[calc(100vh-5rem)]">
+        <ul className="mt-4">
           <li
             onClick={() => handleTabClick("dashboard")}
             className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(
@@ -240,6 +241,15 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
                 >
                   <i className="fas fa-dollar-sign mr-3"></i>
                   <span>Student Fees</span>
+                </li>
+                <li
+                  onClick={() => handleTabClick("add-fees")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "add-fees"
+                  )}`}
+                >
+                  <i className="fas fa-plus-circle mr-3"></i>
+                  <span>Add Fees</span>
                 </li>
                 <li
                   onClick={() => handleTabClick("expenses")}

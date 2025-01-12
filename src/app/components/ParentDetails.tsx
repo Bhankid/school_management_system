@@ -1,58 +1,70 @@
 import Image from "next/image";
 
-function ParentDetails() {
+interface ParentType {
+  id: number;
+  fatherName: string;
+  motherName: string;
+  email: string;
+  phone: string;
+  fatherOccupation: string;
+  address: string;
+  religion: string;
+}
+
+interface ParentDetailsProps {
+  parent: ParentType;
+}
+
+function ParentDetails({ parent }: ParentDetailsProps) {
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
-      <div className="flex flex-col md:flex-row items-center">
-        <div className="flex-shrink-0">
+    <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
+      <div className="mb-6">
+        <Image src="/logo.png" alt="School Logo" width={48} height={48} />
+      </div>
+
+      <div className="flex gap-8">
+        <div className="ml-4">
           <Image
-            className="rounded-full object-cover"
             src="/student_profile.png"
-            alt="Profile picture of a man wearing a cap and sleeveless shirt"
-            width={160}
-            height={160}
-            priority
+            alt={`Profile of ${parent.fatherName}`}
+            width={150}
+            height={150}
+            className="rounded-full object-cover"
           />
         </div>
-        <div className="mt-6 md:mt-0 md:ml-6 text-center md:text-left">
-          <h2 className="text-2xl font-bold text-blue-700">Daniel Grant</h2>
-          <p className="mt-2 text-gray-600">
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-          </p>
-          <div className="mt-4">
-            <div className="flex items-center">
-              <span className="font-bold text-gray-700 w-32">ID Number:</span>
-              <span className="text-gray-700">22</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="font-bold text-gray-700 w-32">Name:</span>
-              <span className="text-gray-700">Daniel Grant</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="font-bold text-gray-700 w-32">Gender:</span>
-              <span className="text-gray-700">Male</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="font-bold text-gray-700 w-32">Phone:</span>
-              <span className="text-gray-700">+123 9988568</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="font-bold text-gray-700 w-32">Religion:</span>
-              <span className="text-gray-700">Islam</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="font-bold text-gray-700 w-32">Occupation:</span>
-              <span className="text-gray-700">Banker</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="font-bold text-gray-700 w-32">E-mail:</span>
-              <span className="text-gray-700">arabagrant@gmail.com</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="font-bold text-gray-700 w-32">Address:</span>
-              <span className="text-gray-700">59 Australia, Sydney</span>
-            </div>
+
+        <div className="flex-1">
+          <h2 className="text-xl font-bold text-blue-600 mb-4">
+            {parent.fatherName}
+          </h2>
+          <div className="text-gray-800 grid grid-cols-2 gap-4">
+            <p className="mb-2">
+              <span className="font-medium">ID Number:</span> {parent.id}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Father&apos;s Name:</span>{" "}
+              {parent.fatherName}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Mother&apos;s Name:</span>{" "}
+              {parent.motherName}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Occupation:</span>{" "}
+              {parent.fatherOccupation}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Religion:</span> {parent.religion}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Phone:</span> {parent.phone}
+            </p>
+            <p className="mb-2">
+              <span className="font-medium">Email:</span> {parent.email}
+            </p>
+            <p className="mb-2 col-span-2">
+              <span className="font-medium">Address:</span> {parent.address}
+            </p>
           </div>
         </div>
       </div>

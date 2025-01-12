@@ -1,5 +1,7 @@
 "use client";
+
 import { useState } from "react";
+import TeacherProfile from "./TeacherProfile";
 
 interface TeacherType {
   id: number;
@@ -18,8 +20,11 @@ const Teacher = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
+  const [selectedTeacher, setSelectedTeacher] = useState<TeacherType | null>(
+    null
+  );
+  const [isProfileVisible, setIsProfileVisible] = useState(false);
 
-  // Sample teacher data
   const allTeachers = Array.from({ length: 50 }, (_, index) => ({
     id: index + 1,
     name: "Daniel Grant",
@@ -33,6 +38,16 @@ const Teacher = () => {
 
   const [filteredTeachers, setFilteredTeachers] =
     useState<TeacherType[]>(allTeachers);
+
+  const handleTeacherClick = (teacher: TeacherType) => {
+    setSelectedTeacher(teacher);
+    setIsProfileVisible(true);
+  };
+
+  const handleCloseProfile = () => {
+    setIsProfileVisible(false);
+    setTimeout(() => setSelectedTeacher(null), 300);
+  };
 
   const handleSearch = () => {
     const filtered = allTeachers.filter((teacher) => {
@@ -133,7 +148,8 @@ const Teacher = () => {
               {currentTeachers.map((teacher) => (
                 <tr
                   key={teacher.id}
-                  className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-sm"
+                  onClick={() => handleTeacherClick(teacher)}
+                  className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow cursor-pointer"
                 >
                   <td className="py-2 px-4 border-b text-gray-800">
                     {teacher.id}
@@ -205,6 +221,26 @@ const Teacher = () => {
           </button>
         </div>
       </div>
+
+      {selectedTeacher && (
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${
+            isProfileVisible ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={handleCloseProfile}
+        >
+          <div
+            className={`transform transition-all duration-300 ${
+              isProfileVisible
+                ? "scale-100 translate-y-0"
+                : "scale-95 translate-y-4"
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <TeacherProfile teacher={selectedTeacher} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
