@@ -4,6 +4,8 @@ import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import Search from "./Search";
 import ProfileDropdown from "./ProfileDropdown";
+import NotificationDropdown from "./NotificationDropdown";
+import MessageDropdown from "./MessageDropdown";
 
 interface SearchResult {
   id: string;
@@ -16,7 +18,11 @@ function Header() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showMessages, setShowMessages] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
+  const messageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -25,6 +31,18 @@ function Header() {
         !profileMenuRef.current.contains(event.target as Node)
       ) {
         setShowProfileMenu(false);
+      }
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setShowNotifications(false);
+      }
+      if (
+        messageRef.current &&
+        !messageRef.current.contains(event.target as Node)
+      ) {
+        setShowMessages(false);
       }
     };
 
@@ -65,8 +83,20 @@ function Header() {
 
         <div className="flex items-center justify-center w-full md:w-auto space-x-4">
           <div className="flex items-center space-x-4">
-            <i className="fas fa-envelope text-red-500 hover:text-red-600 cursor-pointer text-lg md:text-xl"></i>
-            <i className="fas fa-bell text-red-500 hover:text-red-600 cursor-pointer text-lg md:text-xl"></i>
+            <div className="relative" ref={messageRef}>
+              <i
+                className="fas fa-envelope text-red-500 hover:text-red-600 cursor-pointer text-lg md:text-xl"
+                onClick={() => setShowMessages(!showMessages)}
+              ></i>
+              <MessageDropdown isOpen={showMessages} />
+            </div>
+            <div className="relative" ref={notificationRef}>
+              <i
+                className="fas fa-bell text-red-500 hover:text-red-600 cursor-pointer text-lg md:text-xl"
+                onClick={() => setShowNotifications(!showNotifications)}
+              ></i>
+              <NotificationDropdown isOpen={showNotifications} />
+            </div>
           </div>
 
           <div className="hidden md:block border-l-2 border-red-500 h-8 mx-4"></div>

@@ -221,9 +221,9 @@ const Dashboard: React.FC = () => {
                   type="monotone"
                   dataKey="feesCollections"
                   name="Fees Collections"
-                  stroke="#A31618FF"
+                  stroke="#C71013FF"
                   strokeWidth={2}
-                  dot={{ fill: "#B60B0BFF" }}
+                  dot={{ fill: "#C60A0AFF" }}
                 />
               </LineChart>
             </ResponsiveContainer>
