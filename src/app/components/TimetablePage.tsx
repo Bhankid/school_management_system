@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import TimetableGrid from "./TimetableGrid";
 import ExportOptions from "./ExportOptions";
-import { generateTimetable, TimeSlot } from "@/lib/generateTimetable"; 
+import { generateTimetable, TimeSlot } from "@/lib/generateTimetable";
 
 const TimetablePage = () => {
   const [timetable, setTimetable] = useState<{
@@ -14,11 +14,37 @@ const TimetablePage = () => {
   useEffect(() => {
     try {
       const rawInput = localStorage.getItem("timetableInput");
-      if (!rawInput) throw new Error("No timetable input found.");
+
+      // Validate and parse input
+      if (!rawInput) {
+        throw new Error("No timetable input found. Please generate a timetable first.");
+      }
+
       const input = JSON.parse(rawInput);
-      setTimetable(generateTimetable(input));
-    } catch {
-      setError("Failed to generate timetable.");
+
+      if (
+        !input.classes ||
+        !input.subjects ||
+        !input.timeDurations ||
+        typeof input.classes !== "object" ||
+        typeof input.subjects !== "object" ||
+        typeof input.timeDurations !== "object"
+      ) {
+        throw new Error("Invalid timetable input structure.");
+      }
+
+      // Generate the timetable
+      const generated = generateTimetable(input);
+
+      if (!generated || Object.keys(generated).length === 0) {
+        throw new Error("Timetable generation failed.");
+      }
+
+      setTimetable(generated);
+      setError(null);
+    } catch (err) {
+      console.error("Error loading timetable:", err);
+      setError("An error occurred while loading the timetable.");
     }
   }, []);
 

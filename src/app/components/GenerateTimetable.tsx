@@ -16,25 +16,31 @@ const GenerateTimetable = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  // Add a new class to the list
   const addClass = () => {
     if (newClass.trim() && !classes.includes(newClass.trim())) {
-      setClasses([...classes, newClass.trim()]);
+      setClasses((prevClasses) => [...prevClasses, newClass.trim()]);
       setNewClass("");
+    } else if (classes.includes(newClass.trim())) {
+      setError(`Class "${newClass.trim()}" already exists.`);
     }
   };
 
+  // Add a new subject entry
   const addSubject = () => {
-    setSubjectInputs([
-      ...subjectInputs,
+    setSubjectInputs((prevSubjects) => [
+      ...prevSubjects,
       { subject: "", teacher: "", occurrences: 1 },
     ]);
   };
 
+  // Validate and generate timetable
   const handleGenerate = () => {
     setError(null);
 
+    // Validate input
     if (!classes.length || !subjectInputs.length) {
-      setError("Please add at least one class and subject.");
+      setError("Please add at least one class and one subject.");
       return;
     }
 
@@ -43,6 +49,7 @@ const GenerateTimetable = () => {
       return;
     }
 
+    // Prepare input for timetable generation
     const input = {
       classes,
       subjects: subjectInputs,
@@ -59,8 +66,9 @@ const GenerateTimetable = () => {
       },
     };
 
+    // Store input in localStorage
     localStorage.setItem("timetableInput", JSON.stringify(input));
-    router.push("/timetable");
+    router.push("/timetable"); // Navigate to the timetable page
   };
 
   return (
@@ -90,7 +98,9 @@ const GenerateTimetable = () => {
             <h2 className="font-bold text-gray-800">Added Classes:</h2>
             <ul className="list-disc pl-6">
               {classes.map((c, idx) => (
-                <li key={idx}>{c}</li>
+                <li key={idx} className="text-gray-700">
+                  {c}
+                </li>
               ))}
             </ul>
           </div>
@@ -99,7 +109,7 @@ const GenerateTimetable = () => {
         {/* Subject Input */}
         <button
           onClick={addSubject}
-          className="bg-blue-800 text-white px-4 py-2 rounded"
+          className="bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded"
         >
           Add Subject
         </button>
@@ -143,12 +153,15 @@ const GenerateTimetable = () => {
           </div>
         ))}
 
+        {/* Error Message */}
         {error && (
           <div className="bg-red-200 text-red-700 p-2 rounded">{error}</div>
         )}
+
+        {/* Generate Button */}
         <button
           onClick={handleGenerate}
-          className="bg-red-500 hover:bg-red-600 text-white p-2 rounded"
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
         >
           Generate Timetable
         </button>
