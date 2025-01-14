@@ -17,7 +17,9 @@ export type ActiveTab =
   | "expenses"
   | "add-expenses"
   | "add-teacher"
-  | "settings";
+  | "settings"
+  | "generate-timetable"
+  | "timetable";
 
 interface SidebarProps {
   setActiveTab: (tab: ActiveTab) => void;
@@ -28,6 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
   const [isStudentsOpen, setIsStudentsOpen] = useState(false);
   const [isTeachersOpen, setIsTeachersOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+    const [isSchedulingOpen, setIsSchedulingOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
@@ -281,8 +284,53 @@ const Sidebar: React.FC<SidebarProps> = ({ setActiveTab, activeTab }) => {
             )}`}
           >
             <i className="fas fa-book mr-3"></i>
-            {isSidebarOpen && <span>Subject</span>}
+            {isSidebarOpen && <span>Subjects</span>}
           </li>
+
+            {/* Scheduling tab */}
+<div>
+            <li
+              className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${
+                isSchedulingOpen ? "bg-blue-800" : "hover:bg-blue-800"
+              }`}
+              onClick={() => setIsSchedulingOpen(!isSchedulingOpen)}
+            >
+              <i className="fas fa-calendar-alt mr-3"></i>
+              {isSidebarOpen && (
+                <>
+                  <span>Scheduling</span>
+                  <i
+                    className={`fas fa-chevron-${
+                      isSchedulingOpen ? "down" : "right"
+                    } ml-auto`}
+                  />
+                </>
+              )}
+            </li>
+            {isSidebarOpen && isSchedulingOpen && (
+              <ul className="bg-blue-800">
+                <li
+                  onClick={() => handleTabClick("generate-timetable")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "generate-timetable"
+                  )}`}
+                >
+                  <i className="fas fa-cogs mr-3"></i>
+                  <span>Generate Timetable</span>
+                </li>
+                <li
+                  onClick={() => handleTabClick("timetable")}
+                  className={`flex items-center p-3 pl-12 cursor-pointer transition-colors duration-300 ${getActiveClass(
+                    "timetable"
+                  )}`}
+                >
+                  <i className="fas fa-table mr-3"></i>
+                  <span>Timetable</span>
+                </li>
+              </ul>
+            )}
+          </div>
+
           <li
             onClick={() => handleTabClick("settings")}
             className={`flex items-center p-4 cursor-pointer transition-colors duration-300 ${getActiveClass(

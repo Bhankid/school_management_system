@@ -19,6 +19,8 @@ import AddTeacher from "../components/AddTeacher";
 import AccountSettings from "../components/AccountSettings";
 import Account from "../components/Account";
 import Parent from "../components/Parent";
+import TimetablePage from "../components/TimetablePage";
+import GenerateTimetable from "../components/GenerateTimetable";
 import {
   LineChart,
   BarChart,
@@ -49,7 +51,9 @@ type ActiveTab =
   | "add-fees"
   | "expenses"
   | "add-expenses"
-  | "add-teacher";
+  | "add-teacher"
+  | "timetable"
+  | "generate-timetable";
 
 
 const earningsData = [
@@ -358,6 +362,10 @@ const Dashboard: React.FC = () => {
         return <Parent />;
       case "subjects":
         return <Subject />;
+      case "timetable":
+        return <TimetablePage />;
+      case "generate-timetable":
+        return <GenerateTimetable />;
       case "teachers":
         return <Teacher />;
       case "fees-group":
