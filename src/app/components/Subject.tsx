@@ -1,7 +1,8 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import { createSubject, getAllSubjects } from "../actions/subjectActions";
-import { toast } from "react-hot-toast";
+import Swal from 'sweetalert2';
 
 interface SubjectType {
   id?: number;
@@ -30,7 +31,12 @@ const Subject = () => {
       setSubjects(subjects);
       setFilteredResults(subjects);
     } catch {
-      toast.error("Failed to fetch subjects");
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to fetch subjects',
+        showConfirmButton: false,
+        timer: 1500
+      });
     }
   };
 
@@ -56,11 +62,21 @@ const Subject = () => {
 
     try {
       await createSubject(formData);
-      toast.success("Subject added successfully");
+      Swal.fire({
+        icon: 'success',
+        title: 'Subject added successfully',
+        showConfirmButton: false,
+        timer: 1500
+      });
       await fetchSubjects();
       formRef.current?.reset();
     } catch {
-      toast.error("Failed to add subject");
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to add subject',
+        showConfirmButton: false,
+        timer: 1500
+      });
     }
   };
 

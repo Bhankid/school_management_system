@@ -26,7 +26,7 @@ function EventCalendar() {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-800">Event Calendar</h2>
         <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <i className="fas fa-ellipsis-h text-gray-700"></i>
+          <i className="fas fa-ellipsis-h text-gray-700 w-4 h-4"></i>
         </button>
       </div>
       <Calendar

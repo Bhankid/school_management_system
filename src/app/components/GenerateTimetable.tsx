@@ -68,7 +68,7 @@ const GenerateTimetable = () => {
 
     // Store input in localStorage
     localStorage.setItem("timetableInput", JSON.stringify(input));
-    router.push("/timetable"); // Navigate to the timetable page
+    router.push("/TimetablePage"); // Navigate to the timetable page
   };
 
   return (
