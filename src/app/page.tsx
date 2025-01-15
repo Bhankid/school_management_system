@@ -1,12 +1,14 @@
-"use client"
+"use client";
 
 import Image from "next/image";
+import Link from "next/link"; // Import the Link component
 
 function Login() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-6xl">
         <div className="flex w-full max-w-4xl bg-white shadow-lg mx-auto overflow-hidden">
+          {/* Left Section (Gradient Background with Image) */}
           <div
             className="w-[50%] relative bg-gradient-to-br from-red-600 to-red-500"
             style={{
@@ -33,6 +35,8 @@ function Login() {
               <h1 className="text-4xl font-bold">WELCOME</h1>
             </div>
           </div>
+
+          {/* Right Section (Login Form) */}
           <div
             className="w-[55%] bg-blue-900 flex items-center justify-center p-8"
             style={{
@@ -50,12 +54,24 @@ function Login() {
                 placeholder="Enter your password"
                 className="w-full p-3 mb-4 border border-gray-300 rounded"
               />
-              <a href="#" className="text-blue-500 text-sm mb-4 block">
+              <Link
+                href="/forgot-password" // Replace with your forgot password route
+                className="text-blue-500 text-sm mb-4 block hover:underline"
+              >
                 Forgot your password?
-              </a>
-              <button className="w-full bg-red-600 text-white p-3 rounded">
+              </Link>
+              <button className="w-full bg-red-600 text-white p-3 rounded hover:bg-red-700 transition-colors">
                 SIGN IN
               </button>
+              <p className="text-sm text-gray-600 mt-4">
+                Don&apos;t have an account?{" "}
+                <Link
+                  href="/signup"
+                  className="text-blue-500 hover:underline"
+                >
+                  Sign up
+                </Link>
+              </p>
             </div>
           </div>
         </div>
