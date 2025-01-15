@@ -39,12 +39,16 @@ function AddTeacher() {
 
   return (
     <div className="p-6">
-      <div className="text-sm text-gray-500 mb-4">
-        <span className="font-bold text-black">Teachers</span>
-        <span className="mx-2">/</span>
-        <span className="text-red-500">Add Teacher</span>
-      </div>
-      <div className="bg-white p-8 rounded-lg shadow-md">
+      <div className="text-lg font-bold mb-4 text-gray-800">Teachers</div>
+       <div className="bg-white p-8 rounded-lg shadow-md">
+  <nav className="text-sm text-gray-600 mb-4">
+    <a href="#" className="text-black">
+      Home
+    </a>
+    <i className="fas fa-chevron-right mx-2"></i>
+    <span className="text-red-500">Teacher Add Form</span>
+  </nav>
+     
         <h1 className="text-2xl font-bold mb-6 text-gray-500">
           Add New Teacher
         </h1>

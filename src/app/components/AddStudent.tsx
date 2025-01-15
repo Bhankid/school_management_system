@@ -30,8 +30,8 @@ function AddStudent() {
   return (
     <form ref={formRef} action={addStudent}>
       <div className="p-8">
-        <div className="bg-white p-6 rounded-lg shadow-lg">   
         <div className="text-lg font-bold mb-4 text-gray-800">Students</div>
+        <div className="bg-white p-6 rounded-lg shadow-lg">   
       <nav className="text-sm text-gray-600 mb-4">
         <a href="#" className="text-black">
           Home
