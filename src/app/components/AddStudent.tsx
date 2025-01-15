@@ -30,14 +30,16 @@ function AddStudent() {
   return (
     <form ref={formRef} action={addStudent}>
       <div className="p-8">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <div className="mb-4">
-            <h1 className="text-xl font-bold text-gray-700 pb-4">Students</h1>
-            <p className="text-sm text-gray-500">
-              Home &gt; <span className="text-red-500">Student Admit Form</span>
-            </p>
-          </div>
-
+        <div className="bg-white p-6 rounded-lg shadow-lg">   
+        <div className="text-lg font-bold mb-4 text-gray-800">Students</div>
+      <nav className="text-sm text-gray-600 mb-4">
+        <a href="#" className="text-black">
+          Home
+        </a>
+        <i className="fas fa-chevron-right mx-2"></i>
+        <span className="text-red-500">Student Admit Form</span>
+          </nav>
+          
           <div className="border-t border-gray-200 pt-4">
             <h2 className="text-lg font-semibold mb-4 text-gray-500">
               Add New Students
@@ -50,6 +52,7 @@ function AddStudent() {
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -58,6 +61,7 @@ function AddStudent() {
                   name="gender"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 >
                   <option value="">Please Select Gender</option>
                   <option value="male">Male</option>
@@ -70,6 +74,7 @@ function AddStudent() {
                   name="class"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 >
                   <option value="">Please Select Class</option>
                   <option value="1">Class 1</option>
@@ -87,6 +92,7 @@ function AddStudent() {
                   type="date"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -96,6 +102,7 @@ function AddStudent() {
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -104,6 +111,7 @@ function AddStudent() {
                   name="religion"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 >
                   <option value="">Please Select Religion</option>
                   <option value="christianity">Christianity</option>
@@ -119,13 +127,14 @@ function AddStudent() {
                   type="date"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
             </div>
           </div>
 
           <div className="border-t border-gray-200 pt-4 mt-4">
-            <h2 className="text-lg font-semibold mb-4">Add New Parent</h2>
+            <h2 className="text-lg font-semibold mb-4 text-gray-500">Add New Parent</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-gray-700">
@@ -136,6 +145,7 @@ function AddStudent() {
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -147,6 +157,7 @@ function AddStudent() {
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -156,6 +167,7 @@ function AddStudent() {
                   type="email"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -165,6 +177,7 @@ function AddStudent() {
                   type="tel"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -176,6 +189,7 @@ function AddStudent() {
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -185,6 +199,7 @@ function AddStudent() {
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 />
               </div>
               <div>
@@ -193,6 +208,7 @@ function AddStudent() {
                   name="parentReligion"
                   className="w-full p-2 border border-gray-300 rounded"
                   required
+                  style={{ color: '#080808FF' }}
                 >
                   <option value="">Please Select Religion</option>
                   <option value="christianity">Christianity</option>
@@ -217,7 +233,7 @@ function AddStudent() {
                     priority
                   />
                 ) : (
-                  <span className="text-gray-500">150px x 150px</span>
+                  <span className="text-gray-400">150px x 150px</span>
                 )}
               </div>
               <div className="ml-4">
