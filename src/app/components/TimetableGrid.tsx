@@ -18,6 +18,7 @@ const TimetableGrid: React.FC<TimetableGridProps> = ({ timetable }) => {
   return (
     <div className="p-4">
       <div className="text-lg font-bold mb-4 text-gray-800">Schedule</div>
+       <div className="overflow-x-auto bg-white p-4 rounded-lg shadow-md">
       <nav className="text-sm text-gray-600 mb-6">
         <a href="#" className="text-black">
           Home
@@ -25,7 +26,7 @@ const TimetableGrid: React.FC<TimetableGridProps> = ({ timetable }) => {
         <i className="fas fa-chevron-right mx-2"></i>
         <span className="text-red-500">Generate Timetable</span>
       </nav>
-      <div className="overflow-x-auto bg-white p-4 rounded-lg shadow-md">
+     
         <table className="w-full border-collapse border border-gray-300 shadow-md">
           <thead>
             <tr className="bg-blue-800 text-white">
