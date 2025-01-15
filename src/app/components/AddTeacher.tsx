@@ -60,6 +60,7 @@ function AddTeacher() {
               name="firstName"
               required
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             />
           </div>
           <div>
@@ -69,6 +70,7 @@ function AddTeacher() {
               name="lastName"
               required
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             />
           </div>
           <div>
@@ -76,6 +78,7 @@ function AddTeacher() {
             <select
               name="gender"
               required
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             >
               <option value="">Please Select Gender</option>
@@ -89,6 +92,7 @@ function AddTeacher() {
               type="date"
               name="dateOfBirth"
               required
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             />
           </div>
@@ -98,6 +102,7 @@ function AddTeacher() {
               type="text"
               name="bloodGroup"
               required
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             />
           </div>
@@ -106,6 +111,7 @@ function AddTeacher() {
             <select
               name="religion"
               required
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             >
               <option value="">Please Select Religion</option>
@@ -120,6 +126,7 @@ function AddTeacher() {
             <input
               type="email"
               name="email"
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             />
           </div>
@@ -128,6 +135,7 @@ function AddTeacher() {
             <input
               type="text"
               name="phone"
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             />
           </div>
@@ -136,6 +144,7 @@ function AddTeacher() {
             <select
               name="class"
               required
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             >
               <option value="">Please Select Class</option>
@@ -153,6 +162,7 @@ function AddTeacher() {
               type="text"
               name="address"
               required
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             />
           </div>
@@ -162,6 +172,7 @@ function AddTeacher() {
               type="date"
               name="admissionDate"
               required
+              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
             />
           </div>
@@ -177,7 +188,7 @@ function AddTeacher() {
                   priority
                 />
               ) : (
-                <span className="text-gray-500">150px x 150px</span>
+                <span className="text-gray-400">150px x 150px</span>
               )}
             </div>
             <label className="block text-gray-700 mb-2">
