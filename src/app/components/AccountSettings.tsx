@@ -11,11 +11,13 @@ function AccountSettings() {
     city: "Accra",
     address: "Greater-Accra",
     username: "Prince Afful Quansah",
-    password: "*********",
+    password: "password123", // Actual password
     language: "English",
   });
 
   const [profileImage, setProfileImage] = useState("/profile-picture.png");
+  const [isUsernameEditable, setIsUsernameEditable] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -37,9 +39,18 @@ function AccountSettings() {
     });
   };
 
+  const toggleUsernameEditable = () => {
+    setIsUsernameEditable(!isUsernameEditable);
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        {/* Header */}
         <div className="bg-gray-100 p-4">
           <h1 className="text-xl font-bold text-black pb-4">Settings</h1>
           <nav className="text-sm text-gray-600">
@@ -51,6 +62,7 @@ function AccountSettings() {
           </nav>
         </div>
 
+        {/* Profile Image Section */}
         <div className="relative">
           <Image
             src="/settings_bg.png"
@@ -82,11 +94,13 @@ function AccountSettings() {
           </div>
         </div>
 
+        {/* Form Section */}
         <div className="p-6 pt-16">
           <h2 className="text-xl font-semibold text-black">
             Prince Afful Quansah - Admin
           </h2>
           <form className="mt-6 space-y-4 text-gray-800">
+            {/* School Name */}
             <div>
               <label className="block text-sm font-medium">School Name *</label>
               <input
@@ -98,6 +112,7 @@ function AccountSettings() {
               />
             </div>
 
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium">Email *</label>
               <input
@@ -109,6 +124,7 @@ function AccountSettings() {
               />
             </div>
 
+            {/* Mobile */}
             <div>
               <label className="block text-sm font-medium">Mobile No</label>
               <input
@@ -120,6 +136,7 @@ function AccountSettings() {
               />
             </div>
 
+            {/* City */}
             <div>
               <label className="block text-sm font-medium">City</label>
               <input
@@ -131,6 +148,7 @@ function AccountSettings() {
               />
             </div>
 
+            {/* Address */}
             <div>
               <label className="block text-sm font-medium">Address</label>
               <input
@@ -142,30 +160,42 @@ function AccountSettings() {
               />
             </div>
 
+            {/* Username */}
             <div className="relative">
               <label className="block text-sm font-medium">Username</label>
               <input
                 type="text"
                 name="username"
-                value={formData.username}
+                value={isUsernameEditable ? formData.username : "*****"}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                readOnly={!isUsernameEditable}
               />
-              <i className="fas fa-pen absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"></i>
+              <i
+                className="fas fa-pen absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                onClick={toggleUsernameEditable}
+              ></i>
             </div>
 
+            {/* Password */}
             <div className="relative">
               <label className="block text-sm font-medium">Password</label>
               <input
-                type="password"
+                type={isPasswordVisible ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
-              <i className="fas fa-pen absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"></i>
+              <i
+                className={`fas ${
+                  isPasswordVisible ? "fa-eye-slash" : "fa-eye"
+                } absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer`}
+                onClick={togglePasswordVisibility}
+              ></i>
             </div>
 
+            {/* Language */}
             <div>
               <label className="block text-sm font-medium">Language</label>
               <select
@@ -180,6 +210,7 @@ function AccountSettings() {
               </select>
             </div>
 
+            {/* Submit Button */}
             <div>
               <button
                 type="submit"
