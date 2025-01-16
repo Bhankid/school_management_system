@@ -188,11 +188,11 @@ function AccountSettings() {
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
               <i
-                className={`fas ${
-                  isPasswordVisible ? "fa-eye-slash" : "fa-eye"
-                } absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer`}
-                onClick={togglePasswordVisibility}
-              ></i>
+      className={`fas ${
+        isPasswordVisible ? "fa-eye-slash" : "fa-eye"
+      } absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer`}
+      onClick={togglePasswordVisibility}
+    ></i>
             </div>
 
             {/* Language */}

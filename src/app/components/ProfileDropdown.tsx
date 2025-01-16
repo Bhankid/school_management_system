@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FC } from "react";
 
 interface ProfileDropdownProps {
@@ -27,7 +28,7 @@ const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen }) => {
           <div className="relative w-10 h-10 md:w-12 md:h-12">
             <Image
               src="/profile-picture.png"
-              alt="User profile picture"
+              alt="User  profile picture"
               fill
               className="rounded-full object-cover"
             />
@@ -40,39 +41,27 @@ const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen }) => {
       </div>
 
       <div className="py-2">
-        <a
-          href="#"
-          className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
-        >
+        <Link href="/profile" className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
           <i className="fas fa-user-circle w-5 text-gray-400"></i>
           <span className="ml-3">My Profile</span>
-        </a>
-        <a
-          href="#"
-          className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
-        >
+        </Link>
+        <Link href="/account-settings" className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
           <i className="fas fa-cog w-5 text-gray-400"></i>
           <span className="ml-3">Account Settings</span>
-        </a>
-        <a
-          href="#"
-          className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
-        >
+        </Link>
+        <Link href="/privacy-settings" className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
           <i className="fas fa-user-shield w-5 text-gray-400"></i>
           <span className="ml-3">Privacy Settings</span>
-        </a>
+        </Link>
       </div>
 
       <div className="border-t border-gray-100"></div>
 
       <div className="py-2">
-        <a
-          href="#"
-          className="flex items-center px-4 py-3 md:py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
-        >
+        <Link href="/signout" className="flex items-center px-4 py-3 md:py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150">
           <i className="fas fa-sign-out-alt w-5"></i>
           <span className="ml-3">Sign Out</span>
-        </a>
+        </Link>
       </div>
     </div>
   );
