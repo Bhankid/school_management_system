@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddFeeGroup from "../components/AddFeeGroup";
+import { getAllFeeGroups } from "../actions/feeGroupActions";
 
 interface Fee {
   type: string;
@@ -21,63 +22,22 @@ const Account = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState<"list" | "add">("list");
+  const [feeGroups, setFeeGroups] = useState<FeeGroup[]>([]);
 
-  const allFeeGroups: FeeGroup[] = [
-    {
-      id: 1,
-      name: "Creche Fees",
-      fees: [
-        { type: "Feeding Fee", amount: "GHS200.00" },
-        { type: "Maintenance", amount: "GHS100.00" },
-        { type: "Tuition", amount: "GHS250.00" },
-      ],
-      description: "To be paid every semester",
-    },
-    {
-      id: 2,
-      name: "Nurse Fee Group",
-      fees: [
-        { type: "Feeding Fee", amount: "GHS150.00" },
-        { type: "Maintenance", amount: "GHS100.00" },
-        { type: "Tuition", amount: "GHS450.00" },
-      ],
-      description: "To be paid every semester",
-    },
-    {
-      id: 3,
-      name: "Kindergarten Fee Group",
-      fees: [
-        { type: "Feeding Fee", amount: "GHS180.00" },
-        { type: "Maintenance", amount: "GHS120.00" },
-        { type: "Tuition", amount: "GHS500.00" },
-      ],
-      description: "To be paid every semester",
-    },
-    {
-      id: 4,
-      name: "Class 1 Fee Group",
-      fees: [
-        { type: "Feeding Fee", amount: "GHS100.00" },
-        { type: "PTA", amount: "GHS50.00" },
-        { type: "Computer Fees", amount: "GHS150.00" },
-        { type: "Tuition", amount: "GHS500.00" },
-      ],
-      description: "To be paid every semester",
-    },
-    {
-      id: 5,
-      name: "Class 2 Fee Group",
-      fees: [
-        { type: "Feeding Fee", amount: "GHS100.00" },
-        { type: "PTA", amount: "GHS50.00" },
-        { type: "Computer Fees", amount: "GHS150.00" },
-        { type: "Tuition", amount: "GHS500.00" },
-      ],
-      description: "To be paid every semester",
-    },
-  ];
+  useEffect(() => {
+    const fetchFeeGroups = async () => {
+      const fetchedFeeGroups = await getAllFeeGroups();
+      setFeeGroups(fetchedFeeGroups);
+    };
+    fetchFeeGroups();
+  }, []);
 
-  const filteredFeeGroups = allFeeGroups.filter((group) => {
+  const addNewFeeGroup = (newFeeGroup: FeeGroup) => {
+    setFeeGroups((prev) => [newFeeGroup, ...prev]);
+    setActiveTab("list");
+  };
+
+  const filteredFeeGroups = feeGroups.filter((group) => {
     const searchLower = searchTerm.toLowerCase();
     const hasMatchingFees = group.fees.some(
       (fee) =>
@@ -181,20 +141,20 @@ const Account = () => {
               </thead>
               <tbody>
                 {currentFeeGroups.length > 0 ? (
-                  currentFeeGroups.map((group) => (
+                  currentFeeGroups.map((group, index) => (
                     <tr
                       key={group.id}
                       className="hover:bg-gray-50 transition-colors duration-200"
                     >
                       <td className="border p-2 text-center text-gray-800">
-                        {group.id}
+                        {startIndex + index + 1}
                       </td>
                       <td className="border p-2 text-gray-800">{group.name}</td>
                       <td className="border p-2 text-gray-800">
-                        {group.fees.map((fee, index) => (
-                          <div key={index}>
+                        {group.fees.map((fee, i) => (
+                          <div key={i}>
                             {fee.type} - {fee.amount}
-                            {index < group.fees.length - 1 && <br />}
+                            {i < group.fees.length - 1 && <br />}
                           </div>
                         ))}
                       </td>
@@ -256,7 +216,7 @@ const Account = () => {
             </div>
           </>
         ) : (
-          <AddFeeGroup />
+          <AddFeeGroup onAdd={addNewFeeGroup} />
         )}
       </div>
     </div>
