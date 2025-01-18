@@ -377,7 +377,11 @@ const Dashboard: React.FC = () => {
       case "expenses":
         return <Expense />;
       case "add-expenses":
-        return <AddExpense />;
+        return <AddExpense
+  onAdd={(expense) => {
+    console.log("New Expense Added:", expense);
+  }}
+/>
       case "add-teacher":
         return <AddTeacher />;
       case "settings":

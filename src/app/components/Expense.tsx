@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { getAllExpenses } from "../actions/expenseActions";
 
 interface ExpenseType {
   id: number;
@@ -9,7 +11,7 @@ interface ExpenseType {
   status: string;
   email: string;
   phone: string;
-  dueDate: string;
+  dueDate: string | null;
 }
 
 const ITEMS_PER_PAGE = 15;
@@ -19,21 +21,22 @@ const Expense = () => {
   const [searchName, setSearchName] = useState("");
   const [searchExpenseType, setSearchExpenseType] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
+  const [allExpenses, setAllExpenses] = useState<ExpenseType[]>([]);
+  const [filteredExpenses, setFilteredExpenses] = useState<ExpenseType[]>([]);
 
-  // Sample expense data
-  const allExpenses = Array.from({ length: 45 }, (_, index) => ({
-    id: index + 1,
-    name: "Daniel Grant",
-    expenseType: "Salary",
-    amount: "$2,000.00",
-    status: index % 3 === 0 ? "unpaid" : index % 3 === 1 ? "Paid" : "Due",
-    email: "arabgrant@gmail.com",
-    phone: "+2339988568",
-    dueDate: "02/02/2019",
-  }));
+  useEffect(() => {
+    const loadExpenses = async () => {
+      const expenses = await getAllExpenses();
+      const formattedExpenses = expenses.map(expense => ({
+        ...expense,
+        dueDate: expense.dueDate ? new Date(expense.dueDate).toISOString().split('T')[0] : null
+      }));
+      setAllExpenses(formattedExpenses);
+      setFilteredExpenses(formattedExpenses);
+    };
 
-  const [filteredExpenses, setFilteredExpenses] =
-    useState<ExpenseType[]>(allExpenses);
+    loadExpenses();
+  }, []);
 
   const handleSearch = () => {
     const filtered = allExpenses.filter((expense) => {
@@ -43,13 +46,10 @@ const Expense = () => {
 
       const matchesExpenseType =
         searchExpenseType === "" ||
-        expense.expenseType
-          .toLowerCase()
-          .includes(searchExpenseType.toLowerCase());
+        expense.expenseType.toLowerCase().includes(searchExpenseType.toLowerCase());
 
       const matchesStatus =
-        searchStatus === "" ||
-        expense.status.toLowerCase() === searchStatus.toLowerCase();
+        searchStatus === "" || expense.status.toLowerCase() === searchStatus.toLowerCase();
 
       return matchesName && matchesExpenseType && matchesStatus;
     });

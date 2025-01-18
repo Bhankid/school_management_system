@@ -4,6 +4,8 @@ import "../models/Parent";
 import "../models/StudentPromotion";
 import "../models/Teacher";
 import "../models/Subject";
+import "../models/StudentFee";
+import "../models/Expense";
 
 const initDatabase = async () => {
   try {
