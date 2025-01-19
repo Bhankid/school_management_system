@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
 
-interface ExpenseAttributes {
+export interface ExpenseAttributes {
   id: number;
   name: string;
   expenseType: string;

@@ -1,6 +1,6 @@
 "use server";
 
-import Expense from "@/models/Expense";
+import Expense, { ExpenseAttributes } from "@/models/Expense";
 import { revalidatePath } from "next/cache";
 
 export async function addExpense(formData: FormData) {
@@ -25,7 +25,7 @@ export async function addExpense(formData: FormData) {
 
     revalidatePath("/expenses");
 
-    // Serialize the returned data
+    // Serialize the returned data to a plain object
     return {
       id: expense.id,
       name: expense.name,
@@ -42,13 +42,14 @@ export async function addExpense(formData: FormData) {
   }
 }
 
-export async function getAllExpenses(): Promise<Expense[]> {
+export async function getAllExpenses(): Promise<ExpenseAttributes[]> {
   try {
     const expenses = await Expense.findAll({
       order: [["createdAt", "DESC"]],
     });
 
-    return expenses;
+    // Convert Sequelize instances to plain objects
+    return expenses.map(expense => expense.get({ plain: true }));
   } catch (error) {
     console.error("Failed to fetch expenses:", error);
     throw new Error("Failed to fetch expenses.");

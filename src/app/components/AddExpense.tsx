@@ -1,171 +1,153 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import Swal from "sweetalert2";
 import { addExpense } from "../actions/expenseActions";
 
-const AddExpense = ({ onAdd }: { onAdd: (expense: { id: number; name: string; expenseType: string; amount: string; status: string; email: string; phone: string; dueDate: string }) => void }) => {
-  const [name, setName] = useState("");
-  const [expenseType, setExpenseType] = useState("");
-  const [amount, setAmount] = useState("");
-  const [status, setStatus] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [dueDate, setDueDate] = useState("");
+interface Expense {
+  name: string;
+  expenseType: string;
+  status: string;
+  amount: number;
+  phone?: string;
+  email?: string;
+  dueDate?: string;
+}
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+function AddExpense({ onAdd }: { onAdd: (expense: Expense) => void }) {
+  const formRef = useRef<HTMLFormElement>(null);
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("expenseType", expenseType);
-    formData.append("amount", amount);
-    formData.append("status", status);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("dueDate", dueDate);
+  const handleReset = () => {
+    if (formRef.current) {
+      formRef.current.reset();
+    }
+  };
+
+  const inputClasses =
+    "mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500";
+  const selectClasses =
+    "mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500";
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(formRef.current!);
 
     try {
-      const newExpense = await addExpense(formData);
-      onAdd({
-        id: newExpense.id,
-        name,
-        expenseType,
-        amount,
-        status,
-        email,
-        phone,
-        dueDate,
-      });
-      setName("");
-      setExpenseType("");
-      setAmount("");
-      setStatus("");
-      setEmail("");
-      setPhone("");
-      setDueDate("");
+      const newExpense = await addExpense(formData); // Call the addExpense function
+      onAdd({ ...newExpense, amount: Number(newExpense.amount), dueDate: newExpense.dueDate || undefined }); // Notify parent about the new expense
+      handleReset(); // Reset the form after successful submission
 
+      // Show SweetAlert2 success modal
       Swal.fire({
+        title: "Success!",
+        text: "Expense added successfully.",
         icon: "success",
-        title: "Success",
-        text: "Expense added successfully!",
-        confirmButtonColor: "#d33",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#4CAF50",
       });
     } catch (error) {
-      console.error("Failed to add expense:", error);
+      console.error("Error adding expense:", error);
+
+      // Show SweetAlert2 error modal
       Swal.fire({
+        title: "Error!",
+        text: "Failed to add expense. Please try again.",
         icon: "error",
-        title: "Error",
-        text: "Failed to add expense.",
-        confirmButtonColor: "#d33",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#F44336",
       });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Name *</label>
-          <input type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-          />
+    <div className="p-4 md:p-8">
+      <div className="bg-white p-4 md:p-8 rounded shadow-md">
+        <div className="mb-4">
+          <h1 className="text-xl font-bold text-gray-400 pb-4">Account</h1>
+          <div className="text-sm text-gray-500">
+            Home <span className="text-red-500">{`>`} Add Expense</span>
+          </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Expense Type *</label>
-          <select
-            value={expenseType}
-            onChange={(e) => setExpenseType(e.target.value)}
-            required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-          >
-            <option value="">Please Select Class</option>
-            <option value="salary">Salary</option>
-            <option value="maintenance">Maintenance</option>
-            <option value="purchase">Purchase</option>
-            <option value="utilities">Utilities</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Status *</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-          >
-            <option value="">Please Select</option>
-            <option value="paid">Paid</option>
-            <option value="pending">Pending</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Amount *</label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Phone</label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">E-Mail Address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Due Date</label>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            className="block w-full p-2 border border-gray-300 rounded"
-          />
+        <div className="bg-white p-4 md:p-8 rounded shadow-sm">
+          <h2 className="text-lg font-bold mb-4 text-gray-800">
+            Add New Expense
+          </h2>
+          <form ref={formRef} className="space-y-4" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Name *
+                </label>
+                <input type="text" name="name" required className={inputClasses} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Expense Type *
+                </label>
+                <select name="expenseType" required className={selectClasses}>
+                  <option value="">Select Expense Type</option>
+                  <option value="salary">Salary</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="purchase">Purchase</option>
+                  <option value="utilities">Utilities</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Status *
+                </label>
+                <select name="status" required className={selectClasses}>
+                  <option value="">Select Status</option>
+                  <option value="paid">Paid</option>
+                  <option value="pending">Pending</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Amount *
+                </label>
+                <input type="number" name="amount" required className={inputClasses} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Phone
+                </label>
+                <input type="tel" name="phone" className={inputClasses} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  E-Mail Address
+                </label>
+                <input type="email" name="email" className={inputClasses} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Due Date
+                </label>
+                <input type="date" name="dueDate" className={inputClasses} />
+              </div>
+            </div>
+            <div className="flex space-x-4 mt-4">
+              <button
+                type="submit"
+                className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                Reset
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-      <div className="flex space-x-4 mt-4">
-        <button
-          type="submit"
-          className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
-        >
-          Save
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setName("");
-            setExpenseType("");
-            setAmount("");
-            setStatus("");
-            setEmail("");
-            setPhone("");
-            setDueDate("");
-          }}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Reset
-        </button>
-      </div>
-    </form>
+    </div>
   );
-};
+}
 
 export default AddExpense;

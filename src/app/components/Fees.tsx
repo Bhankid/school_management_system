@@ -1,41 +1,46 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { getAllFees } from "../actions/feeActions";
 
 interface FeeType {
   id: number;
   name: string;
   gender: string;
   class: string;
-  amount: string;
+  amount: number;
   status: string;
   email: string;
   phone: string;
+  dueDate: string;
 }
 
 const ITEMS_PER_PAGE = 13;
 
 const Fees = () => {
+  const [fees, setFees] = useState<FeeType[]>([]);
+  const [filteredFees, setFilteredFees] = useState<FeeType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
 
-  // Sample fees data
-  const allFees = Array.from({ length: 50 }, (_, index) => ({
-    id: index + 1,
-    name: "Daniel Grant",
-    gender: "Male",
-    class: "2",
-    amount: "$2,000.00",
-    status: index % 2 === 0 ? "unpaid" : "Paid",
-    email: "arabogrant@gmail.com",
-    phone: "+23359988568",
-  }));
-
-  const [filteredFees, setFilteredFees] = useState<FeeType[]>(allFees);
+  // Fetch data from the server when the component mounts
+  useEffect(() => {
+    async function fetchFees() {
+      try {
+        const data = await getAllFees();
+        setFees(data); // Set the fetched data directly
+        setFilteredFees(data); // Initialize filteredFees with fetched data
+      } catch (error) {
+        console.error("Failed to fetch fees:", error);
+      }
+    }
+    fetchFees();
+  }, []);
 
   const handleSearch = () => {
-    const filtered = allFees.filter((fee) => {
+    const filtered = fees.filter((fee) => {
       const matchesName =
         searchName === "" ||
         fee.name.toLowerCase().includes(searchName.toLowerCase());
@@ -136,55 +141,37 @@ const Fees = () => {
                   <th className="py-2 px-4 border-b text-red-500">Class</th>
                   <th className="py-2 px-4 border-b text-red-500">Amount</th>
                   <th className="py-2 px-4 border-b text-red-500">Status</th>
-                  <th className="py-2 px-4 border-b text-red-500">
-                    Parent Email
-                  </th>
-                  <th className="py-2 px-4 border-b text-red-500">
-                    Parent Phone
-                  </th>
+                  <th className="py-2 px-4 border-b text-red-500">Parent Email</th>
+                  <th className="py-2 px-4 border-b text-red-500">Parent Phone</th>
                 </tr>
               </thead>
               <tbody>
-                {currentFees.map((fee) => (
-                  <tr
-                    key={fee.id}
-                    className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-md cursor-pointer"
-                  >
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.id}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.name}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.gender}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.class}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.amount}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      <span
-                        className={`px-2 py-1 rounded text-white ${
-                          fee.status.toLowerCase() === "unpaid"
-                            ? "bg-red-500"
-                            : "bg-blue-600"
-                        }`}
-                      >
-                        {fee.status}
-                      </span>
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.email}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.phone}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+  {currentFees.map((fee) => (
+    <tr
+      key={fee.id} // Ensure fee.id is unique
+      className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-md cursor-pointer"
+    >
+      <td className="py-2 px-4 border-b text-gray-800">{fee.id}</td>
+      <td className="py-2 px-4 border-b text-gray-800">{fee.name}</td>
+      <td className="py-2 px-4 border-b text-gray-800">{fee.gender}</td>
+      <td className="py-2 px-4 border-b text-gray-800">{fee.class}</td>
+      <td className="py-2 px-4 border-b text-gray-800">{fee.amount}</td>
+      <td className="py-2 px-4 border-b text-gray-800">
+        <span
+          className={`px-2 py-1 rounded text-white ${
+            fee.status.toLowerCase() === "unpaid"
+              ? "bg-red-500"
+              : "bg-blue-600"
+          }`}
+        >
+          {fee.status}
+        </span>
+      </td>
+      <td className="py-2 px-4 border-b text-gray-800">{fee.email}</td>
+      <td className="py-2 px-4 border-b text-gray-800">{fee.phone}</td>
+    </tr>
+  ))}
+</tbody>
             </table>
           </div>
 
@@ -201,21 +188,19 @@ const Fees = () => {
               Previous
             </button>
             <div className="flex space-x-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`px-3 py-1 rounded ${
-                      currentPage === page
-                        ? "bg-red-500 text-white"
-                        : "bg-white border hover:bg-gray-50"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                )
-              )}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page} // Add unique key for pagination buttons
+                  onClick={() => handlePageChange(page)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === page
+                      ? "bg-red-500 text-white"
+                      : "bg-white border hover:bg-gray-50"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
             </div>
             <button
               className={`text-gray-500 ${

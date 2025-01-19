@@ -1,60 +1,57 @@
-import StudentFee from "@/models/StudentFee";
+"use server";
+
 import { revalidatePath } from "next/cache";
+import StudentFee from "@/models/StudentFee";
 
+// Add Fee Function
 export async function addFee(formData: FormData) {
-  const name = formData.get("name") as string;
-  const gender = formData.get("gender") as string;
-  const classField = formData.get("class") as string;
-  const amount = parseFloat(formData.get("amount") as string);
-  const status = formData.get("status") as string;
-  const email = formData.get("email") as string | null;
-  const phone = formData.get("phone") as string | null;
-  const dueDate = formData.get("dueDate") as string | null;
-
   try {
-    const newFee = await StudentFee.create({
-      name,
-      gender,
-      class: classField,
-      amount: amount.toString(),
-      status,
-      email: email || undefined,
-      phone: phone || undefined,
-      dueDate: dueDate ? new Date(dueDate) : undefined,
-    });
+    const dueDateValue = formData.get("dueDate") as string;
 
+    const feeData = {
+      name: formData.get("name") as string,
+      gender: formData.get("gender") as string,
+      class: formData.get("class") as string,
+      amount: parseFloat(formData.get("amount") as string),
+      status: formData.get("status") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      dueDate: dueDateValue && !isNaN(Date.parse(dueDateValue))
+        ? new Date(dueDateValue) // Parse valid date
+        : undefined, // Set to undefined if invalid or not provided
+    };
+
+    // Save the data in the database
+    await StudentFee.create(feeData);
+
+    // Revalidate relevant paths if necessary
     revalidatePath("/fees");
 
-    return {
-      id: newFee.id,
-      name: newFee.name,
-      gender: newFee.gender,
-      class: newFee.class,
-      amount: newFee.amount,
-      status: newFee.status,
-      email: newFee.email || "",
-      phone: newFee.phone || "",
-      dueDate: newFee.dueDate ? newFee.dueDate.toISOString().split("T")[0] : null,
-    };
+    return { success: true, message: "Fee added successfully." };
   } catch (error) {
-    console.error("Failed to add fee:", error);
-    throw new Error("Failed to add fee");
+    console.error("Error in addFee:", error);
+    throw new Error("Failed to add fee.");
   }
 }
 
+// Get All Fees Function
 export async function getAllFees() {
   try {
-    const fees = await StudentFee.findAll({ order: [["id", "DESC"]] });
+    const fees = await StudentFee.findAll({
+      order: [["id", "DESC"]],
+    });
+
+    // Convert Sequelize instances to plain objects
     return fees.map((fee) => ({
       id: fee.id,
-      name: fee.name,
-      gender: fee.gender,
-      class: fee.class,
-      amount: fee.amount,
-      status: fee.status,
-      email: fee.email || "",
-      phone: fee.phone || "",
-      dueDate: fee.dueDate ? fee.dueDate.toISOString().split("T")[0] : "",
+      name: fee.name || "N/A",
+      gender: fee.gender || "N/A",
+      class: fee.class || "N/A",
+      amount: fee.amount || 0,
+      status: fee.status || "N/A",
+      email: fee.email || "N/A",
+      phone: fee.phone || "N/A",
+      dueDate: fee.dueDate ? fee.dueDate.toISOString().split("T")[0] : "N/A",
     }));
   } catch (error) {
     console.error("Failed to fetch fees:", error);

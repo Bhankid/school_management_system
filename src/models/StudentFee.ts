@@ -6,7 +6,7 @@ interface StudentFeeAttributes {
   name: string;
   gender: string;
   class: string;
-  amount: string;
+  amount: number;
   status: string;
   email?: string;
   phone?: string;
@@ -23,13 +23,19 @@ class StudentFee
   public name!: string;
   public gender!: string;
   public class!: string;
-  public amount!: string;
+  public amount!: number;
   public status!: string;
   public email?: string;
   public phone?: string;
   public dueDate?: Date;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  // Getter for formatted due date
+  public get formattedDueDate(): string | null {
+    const dueDate = this.getDataValue('dueDate'); // Use getDataValue to access the attribute
+    return dueDate ? dueDate.toISOString().split("T")[0] : null;
+  }
 }
 
 StudentFee.init(
@@ -52,7 +58,7 @@ StudentFee.init(
       allowNull: false,
     },
     amount: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
     status: {
