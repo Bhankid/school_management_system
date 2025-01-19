@@ -1,7 +1,9 @@
 "use client";
+
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { addTeacher } from "../actions/teacherActions";
+import Swal from 'sweetalert2';
 
 function AddTeacher() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -18,10 +20,25 @@ function AddTeacher() {
     }
   };
 
-  const handleReset = () => {
-    if (formRef.current) {
+  const handleReset = async () => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "This will clear all form data",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, reset it!'
+    });
+
+    if (result.isConfirmed && formRef.current) {
       formRef.current.reset();
       setImagePreview(null);
+      Swal.fire(
+        'Reset!',
+        'Form has been cleared',
+        'success'
+      );
     }
   };
 
@@ -31,32 +48,37 @@ function AddTeacher() {
 
     try {
       await addTeacher(formData);
-      handleReset();
+      await Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Teacher added successfully',
+        confirmButtonColor: '#10B981'
+      });
+      formRef.current?.reset();
+      setImagePreview(null);
     } catch (error) {
-      console.error("Error adding teacher:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: error instanceof Error ? error.message : 'Failed to add teacher',
+        confirmButtonColor: '#EF4444'
+      });
     }
   };
 
   return (
     <div className="p-6">
       <div className="text-lg font-bold mb-4 text-gray-800">Teachers</div>
-       <div className="bg-white p-8 rounded-lg shadow-md">
-  <nav className="text-sm text-gray-600 mb-4">
-    <a href="#" className="text-black">
-      Home
-    </a>
-    <i className="fas fa-chevron-right mx-2"></i>
-    <span className="text-red-500">Teacher Add Form</span>
-  </nav>
-     
-        <h1 className="text-2xl font-bold mb-6 text-gray-500">
-          Add New Teacher
-        </h1>
-        <form
-          ref={formRef}
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+      <div className="bg-white p-8 rounded-lg shadow-md">
+        <nav className="text-sm text-gray-600 mb-4">
+          <a href="#" className="text-black">Home</a>
+          <i className="fas fa-chevron-right mx-2"></i>
+          <span className="text-red-500">Teacher Add Form</span>
+        </nav>
+
+        <h1 className="text-2xl font-bold mb-6 text-gray-500">Add New Teacher</h1>
+        
+        <form ref={formRef} onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div>
             <label className="block text-gray-700">First Name *</label>
             <input
@@ -82,8 +104,8 @@ function AddTeacher() {
             <select
               name="gender"
               required
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             >
               <option value="">Please Select Gender</option>
               <option value="male">Male</option>
@@ -96,18 +118,18 @@ function AddTeacher() {
               type="date"
               name="dateOfBirth"
               required
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             />
           </div>
           <div>
-            <label className="block text-gray-700">Blood group *</label>
+            <label className="block text-gray-700">Blood Group *</label>
             <input
               type="text"
               name="bloodGroup"
               required
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             />
           </div>
           <div>
@@ -115,8 +137,8 @@ function AddTeacher() {
             <select
               name="religion"
               required
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             >
               <option value="">Please Select Religion</option>
               <option value="christianity">Christianity</option>
@@ -130,8 +152,8 @@ function AddTeacher() {
             <input
               type="email"
               name="email"
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             />
           </div>
           <div>
@@ -139,8 +161,8 @@ function AddTeacher() {
             <input
               type="text"
               name="phone"
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             />
           </div>
           <div>
@@ -148,8 +170,8 @@ function AddTeacher() {
             <select
               name="class"
               required
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             >
               <option value="">Please Select Class</option>
               <option value="1">Class 1</option>
@@ -166,8 +188,8 @@ function AddTeacher() {
               type="text"
               name="address"
               required
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             />
           </div>
           <div>
@@ -176,8 +198,8 @@ function AddTeacher() {
               type="date"
               name="admissionDate"
               required
-              style={{ color: '#080808FF' }}
               className="w-full mt-1 p-2 border rounded"
+              style={{ color: '#080808FF' }}
             />
           </div>
           <div className="col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center">
