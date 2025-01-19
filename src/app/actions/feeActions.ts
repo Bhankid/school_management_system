@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import StudentFee from "@/models/StudentFee";
 
-// Add Fee Function
 export async function addFee(formData: FormData) {
   try {
     const dueDateValue = formData.get("dueDate") as string;
@@ -17,44 +16,44 @@ export async function addFee(formData: FormData) {
       email: formData.get("email") as string,
       phone: formData.get("phone") as string,
       dueDate: dueDateValue && !isNaN(Date.parse(dueDateValue))
-        ? new Date(dueDateValue) // Parse valid date
-        : undefined, // Set to undefined if invalid or not provided
+        ? new Date(dueDateValue)
+        : undefined,
     };
 
-    // Save the data in the database
-    await StudentFee.create(feeData);
-
-    // Revalidate relevant paths if necessary
+    const newFee = await StudentFee.create(feeData);
     revalidatePath("/fees");
 
-    return { success: true, message: "Fee added successfully." };
+    return { 
+      success: true, 
+      message: "Fee added successfully.",
+      data: newFee
+    };
   } catch (error) {
     console.error("Error in addFee:", error);
-    throw new Error("Failed to add fee.");
+    throw new Error(`Failed to add fee: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
-// Get All Fees Function
 export async function getAllFees() {
   try {
     const fees = await StudentFee.findAll({
       order: [["id", "DESC"]],
+      raw: true
     });
 
-    // Convert Sequelize instances to plain objects
     return fees.map((fee) => ({
       id: fee.id,
-      name: fee.name || "N/A",
-      gender: fee.gender || "N/A",
-      class: fee.class || "N/A",
-      amount: fee.amount || 0,
-      status: fee.status || "N/A",
-      email: fee.email || "N/A",
-      phone: fee.phone || "N/A",
-      dueDate: fee.dueDate ? fee.dueDate.toISOString().split("T")[0] : "N/A",
+      name: fee.name,
+      gender: fee.gender,
+      class: fee.class,
+      amount: Number(fee.amount),
+      status: fee.status,
+      email: fee.email,
+      phone: fee.phone,
+      dueDate: fee.dueDate ? new Date(fee.dueDate).toISOString().split("T")[0] : null
     }));
   } catch (error) {
     console.error("Failed to fetch fees:", error);
-    throw new Error("Failed to fetch fees");
+    throw new Error(`Failed to fetch fees: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }

@@ -19,20 +19,20 @@ class StudentFee
   extends Model<StudentFeeAttributes, Optional<StudentFeeAttributes, "id">>
   implements StudentFeeAttributes
 {
-  public id!: number;
-  public name!: string;
-  public gender!: string;
-  public class!: string;
-  public amount!: number;
-  public status!: string;
-  public email?: string;
-  public phone?: string;
-  public dueDate?: Date;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  id!: number;
+  name!: string;
+  gender!: string;
+  class!: string;
+  amount!: number;
+  status!: string;
+  email?: string;
+  phone?: string;
+  dueDate?: Date;
+  readonly createdAt!: Date;
+  readonly updatedAt!: Date;
 
   // Getter for formatted due date
-  public get formattedDueDate(): string | null {
+  get formattedDueDate(): string | null {
     const dueDate = this.getDataValue('dueDate'); // Use getDataValue to access the attribute
     return dueDate ? dueDate.toISOString().split("T")[0] : null;
   }
