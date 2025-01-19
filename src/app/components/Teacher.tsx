@@ -1,22 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TeacherProfile from "./TeacherProfile";
+import { getAllTeachers } from "../actions/teacherActions"; // Import server action
 
 interface TeacherType {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   gender: string;
-  class: string;
-  subject: string;
-  address: string;
-  dateOfBirth: string;
+  dateOfBirth: string | null;
+  bloodGroup: string;
+  religion: string;
+  email: string;
   phone: string;
+  class: string;
+  address: string;
+  admissionDate: string | null;
+  photoUrl: string | null;
+  subject?: string;
 }
 
 const ITEMS_PER_PAGE = 13;
 
 const Teacher = () => {
+  const [teachers, setTeachers] = useState<TeacherType[]>([]);
+  const [filteredTeachers, setFilteredTeachers] = useState<TeacherType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
@@ -25,19 +34,19 @@ const Teacher = () => {
   );
   const [isProfileVisible, setIsProfileVisible] = useState(false);
 
-  const allTeachers = Array.from({ length: 50 }, (_, index) => ({
-    id: index + 1,
-    name: "Daniel Grant",
-    gender: "Male",
-    class: "2",
-    subject: "English",
-    address: "59 Australia, Sydney",
-    dateOfBirth: "02/05/2001",
-    phone: "+23359988568",
-  }));
-
-  const [filteredTeachers, setFilteredTeachers] =
-    useState<TeacherType[]>(allTeachers);
+  // Fetch teacher data on component mount
+  useEffect(() => {
+    async function fetchTeachers() {
+      try {
+        const data = await getAllTeachers();
+        setTeachers(data);
+        setFilteredTeachers(data);
+      } catch (error) {
+        console.error("Failed to fetch teachers:", error);
+      }
+    }
+    fetchTeachers();
+  }, []);
 
   const handleTeacherClick = (teacher: TeacherType) => {
     setSelectedTeacher(teacher);
@@ -50,11 +59,13 @@ const Teacher = () => {
   };
 
   const handleSearch = () => {
-    const filtered = allTeachers.filter((teacher) => {
+    const filtered = teachers.filter((teacher) => {
       const matchesSearch =
         searchTerm === "" ||
-        teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        teacher.subject.toLowerCase().includes(searchTerm.toLowerCase());
+        `${teacher.firstName} ${teacher.lastName}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (teacher.subject?.toLowerCase() || '').includes(searchTerm.toLowerCase());
 
       const matchesClass =
         selectedClass === "" || teacher.class === selectedClass;
@@ -155,7 +166,7 @@ const Teacher = () => {
                     {teacher.id}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
-                    {teacher.name}
+                    {teacher.firstName} {teacher.lastName}
                   </td>
                   <td className="py-2 px-4 border-b text-gray-800">
                     {teacher.gender}
