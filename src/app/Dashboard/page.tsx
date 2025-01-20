@@ -38,6 +38,7 @@ import {
   Pie,
 } from "recharts";
 import TeacherStatsCard from "../components/TeacherStatsCard";
+import ParentStatsCard from "../components/ParentStatsCard";
 
 type ActiveTab =
   | "dashboard"
@@ -115,7 +116,7 @@ const Dashboard: React.FC = () => {
 
         {/* Parents Statistics Card */}
         <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
-         
+         <ParentStatsCard />
         </div>
 
         {/* Earnings Statistics Card */}
