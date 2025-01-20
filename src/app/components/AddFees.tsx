@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { addFee } from "../actions/feeActions"; // Import the addFee function
-import Swal from "sweetalert2"; // Import SweetAlert2
+import { addFee } from "../actions/feeActions"; 
+import Swal from "sweetalert2";
 
 function AddFees() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -13,40 +13,36 @@ function AddFees() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formRef.current) return;
+
+    const formData = new FormData(formRef.current);
+
+    try {
+      await addFee(formData);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Fee added successfully!",
+        confirmButtonColor: "#d33",
+      });
+      handleReset();
+    } catch (error) {
+      console.error("Failed to add fee:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to add fee.",
+        confirmButtonColor: "#d33",
+      });
+    }
+  };
+
   const inputClasses =
     "mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500";
   const selectClasses =
     "mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500";
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(formRef.current!);
-
-    try {
-      await addFee(formData); // Call the addFee function
-      handleReset(); // Reset the form after successful submission
-
-      // Show SweetAlert2 success modal
-      Swal.fire({
-        title: "Success!",
-        text: "Fee added successfully.",
-        icon: "success",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#4CAF50",
-      });
-    } catch (error) {
-      console.error("Error adding fee:", error);
-
-      // Show SweetAlert2 error modal
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to add fee. Please try again.",
-        icon: "error",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#F44336",
-      });
-    }
-  };
 
   return (
     <div className="p-4 md:p-8">
@@ -54,20 +50,25 @@ function AddFees() {
         <div className="mb-4">
           <h1 className="text-xl font-bold text-gray-400 pb-4">Account</h1>
           <div className="text-sm text-gray-500">
-            Home <span className="text-red-500">{`>`} Add Fees</span>
+            Home <span className="text-red-500">&gt; Add Fees</span>
           </div>
         </div>
         <div className="bg-white p-4 md:p-8 rounded shadow-sm">
           <h2 className="text-lg font-bold mb-4 text-gray-800">
             Add New Student Fees
           </h2>
-          <form ref={formRef} className="space-y-4" onSubmit={handleSubmit}>
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Student Name *
                 </label>
-                <input type="text" name="name" required className={inputClasses} />
+                <input
+                  name="name"
+                  type="text"
+                  required
+                  className={inputClasses}
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
@@ -96,7 +97,12 @@ function AddFees() {
                 <label className="block text-sm font-medium text-gray-700">
                   Amount *
                 </label>
-                <input type="number" name="amount" required className={inputClasses} />
+                <input
+                  name="amount"
+                  type="number"
+                  required
+                  className={inputClasses}
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
@@ -112,19 +118,19 @@ function AddFees() {
                 <label className="block text-sm font-medium text-gray-700">
                   Parent Email
                 </label>
-                <input type="email" name="email" className={inputClasses} />
+                <input name="email" type="email" className={inputClasses} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Parent Phone
                 </label>
-                <input type="tel" name="phone" className={inputClasses} />
+                <input name="phone" type="tel" className={inputClasses} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Due Date
                 </label>
-                <input type="date" name="dueDate" className={inputClasses} />
+                <input name="dueDate" type="date" className={inputClasses} />
               </div>
             </div>
             <div className="flex space-x-4 mt-4">
