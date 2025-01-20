@@ -58,3 +58,13 @@ export async function getAllTeachers() {
     throw new Error(`Failed to fetch teachers: ${err instanceof Error ? err.message : 'Unknown error'}`);
   }
 }
+
+export async function getTeacherCount(): Promise<number> {
+  try {
+    const count = await Teacher.count();
+    return count;
+  } catch (err) {
+    console.error("Failed to fetch teacher count:", err);
+    throw new Error(`Failed to fetch teacher count: ${err instanceof Error ? err.message : 'Unknown error'}`);
+  }
+}
