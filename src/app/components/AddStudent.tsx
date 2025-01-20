@@ -1,8 +1,10 @@
 "use client";
+
 import { useFormStatus } from "react-dom";
 import { addStudent } from "../actions/studentActions";
 import { useState, useRef } from "react";
 import Image from "next/image";
+import Swal from 'sweetalert2';
 
 function AddStudent() {
   const { pending } = useFormStatus();
@@ -20,15 +22,51 @@ function AddStudent() {
     }
   };
 
-  const handleReset = () => {
-    if (formRef.current) {
+  const handleReset = async () => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You want to reset the form?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, reset it!'
+    });
+
+    if (result.isConfirmed && formRef.current) {
       formRef.current.reset();
       setImagePreview(null);
+      await Swal.fire(
+        'Reset!',
+        'The form has been cleared.',
+        'success'
+      );
     }
   };
 
-  return (
-    <form ref={formRef} action={addStudent}>
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      await addStudent(formData);
+      await Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Student added successfully',
+        confirmButtonColor: '#10B981'
+      });
+      formRef.current?.reset();
+      setImagePreview(null);
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: error instanceof Error ? error.message : 'Failed to add student',
+        confirmButtonColor: '#EF4444'
+      });
+    }
+  };
+
+return (
+  <form ref={formRef} action={handleSubmit}>
       <div className="p-8">
         <div className="text-lg font-bold mb-4 text-gray-800">Students</div>
         <div className="bg-white p-6 rounded-lg shadow-lg">   
