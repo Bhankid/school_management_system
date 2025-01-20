@@ -57,3 +57,13 @@ export async function getAllFees() {
     throw new Error(`Failed to fetch fees: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
+
+export async function getTotalEarnings(): Promise<number> {
+  try {
+    const totalEarnings = await StudentFee.sum("amount"); // Sum the `amount` column
+    return totalEarnings || 0; // Return 0 if no data exists
+  } catch (error) {
+    console.error("Failed to fetch total earnings:", error);
+    throw new Error(`Failed to fetch total earnings: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
+}
