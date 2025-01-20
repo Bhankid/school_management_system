@@ -83,3 +83,13 @@ export async function getAllStudents() {
     throw new Error("Failed to fetch students");
   }
 }
+
+export async function getStudentCount(): Promise<number> {
+  try {
+    const studentCount = await Student.count(); // Get the total count of students
+    return studentCount;
+  } catch (err) {
+    console.error("Failed to fetch student count:", err);
+    throw new Error("Failed to fetch student count");
+  }
+}
