@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import StudentStatsCard from "../components/StudentstatsCard";
 import EventCalendar from "../components/EventCalendar";
 import Reminder from "../components/Reminder";
 import Footer from "../components/Footer";
@@ -103,20 +104,7 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
         {/* Students Statistics Card */}
         <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
-          <div className="flex items-center">
-            <div className="bg-green-100 p-2 sm:p-3 rounded-full w-10 sm:w-10 h-10 sm:h-10 flex items-center justify-center relative">
-              <i className="fas fa-users text-green-500 text-sm sm:text-base"></i>
-              <div className="absolute left-[40px] sm:left-[50px] top-1/2 transform -translate-y-1/2 h-6 sm:h-8 w-0.5 bg-red-500"></div>
-            </div>
-            <div className="ml-4 sm:ml-6">
-              <p className="text-gray-800 font-medium text-sm sm:text-base">
-                Students
-              </p>
-              <p className="text-xl sm:text-2xl font-bold text-gray-900">
-                50000
-              </p>
-            </div>
-          </div>
+          <StudentStatsCard />
         </div>
 
         {/* Teachers Statistics Card */}
