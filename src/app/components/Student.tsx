@@ -10,6 +10,7 @@ interface StudentType {
   gender: string;
   class: string;
   dateOfBirth: string;
+  photoUrl: string | null;
   Parent?: {
     fatherName: string;
     motherName: string;
@@ -34,8 +35,18 @@ const StudentsData = () => {
   useEffect(() => {
     const loadStudents = async () => {
       const data = await getAllStudents();
-      setStudents(data);
-      setFilteredResults(data);
+      const transformedData = data.map(student => ({
+        ...student,
+        photoUrl: null,
+        Parent: {
+          fatherName: student.parents?.split(',')[0] || '',
+          motherName: student.parents?.split(',')[1] || '',
+          phone: student.phone || '',
+          address: student.address || ''
+        }
+      }));
+      setStudents(transformedData);
+      setFilteredResults(transformedData);
     };
     loadStudents();
   }, []);

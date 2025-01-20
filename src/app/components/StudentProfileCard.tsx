@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 interface StudentType {
   id: number;
@@ -6,6 +9,7 @@ interface StudentType {
   gender: string;
   class: string;
   dateOfBirth: string;
+  photoUrl: string | null;
   Parent?: {
     fatherName: string;
     motherName: string;
@@ -19,6 +23,14 @@ interface StudentProfileCardProps {
 }
 
 function StudentProfileCard({ student }: StudentProfileCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Handle base64 image from database
+  const imageSource = student.photoUrl && !imageError
+    ? `data:image/jpeg;base64,${student.photoUrl}`
+    : "/student_profile.png";
+
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
       <div className="mb-6">
@@ -26,14 +38,31 @@ function StudentProfileCard({ student }: StudentProfileCardProps) {
       </div>
 
       <div className="flex gap-8">
-        <div className="ml-4">
-          <Image
-            src="/student_profile.png"
-            alt={`Profile of ${student.name}`}
-            width={150}
-            height={150}
-            className="rounded-full object-cover"
-          />
+        <div className="ml-4 relative w-[150px] h-[150px]">
+          {student.photoUrl && !imageError ? (
+            <Image
+              src={imageSource}
+              alt={`Profile of ${student.name}`}
+              fill
+              className="rounded-full object-cover"
+              onError={() => setImageError(true)}
+              onLoadingComplete={() => setIsLoading(false)}
+              priority
+            />
+          ) : (
+            <Image
+              src="/student_profile.png"
+              alt={`Profile of ${student.name}`}
+              fill
+              className="rounded-full object-cover"
+              onError={() => setImageError(true)}
+              onLoadingComplete={() => setIsLoading(false)}
+              priority
+            />
+          )}
+          {isLoading && (
+            <div className="absolute inset-0 bg-gray-200 rounded-full animate-pulse" />
+          )}
         </div>
 
         <div className="flex-1">

@@ -93,3 +93,20 @@ export async function getStudentCount(): Promise<number> {
     throw new Error("Failed to fetch student count");
   }
 }
+
+export async function getStudentPhoto(studentId: number) {
+  try {
+    const student = await Student.findByPk(studentId, {
+      attributes: ['photoUrl']
+    });
+    
+    if (!student?.photoUrl) {
+      return null;
+    }
+
+    return student.photoUrl;
+  } catch (err) {
+    console.error("Failed to fetch student photo:", err);
+    throw new Error("Failed to fetch student photo");
+  }
+}
