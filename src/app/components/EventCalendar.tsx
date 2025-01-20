@@ -4,7 +4,9 @@ import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Calendar.css";
-import EventReminder from "../components/EventReminder"; 
+import EventReminder from "../components/EventReminder";
+import { addEvent } from "../actions/eventActions";
+import Swal from 'sweetalert2';
 
 function EventCalendar() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -15,10 +17,29 @@ function EventCalendar() {
     setShowPopup(true);
   };
 
-  const handleSaveEvent = (title: string, description: string) => {
-    // Logic to save the event (e.g., store in state or send to an API)
-    console.log("Event Saved:", { title, description, date: selectedDate });
-    setShowPopup(false);
+  const handleSaveEvent = async (title: string, description: string) => {
+    if (!selectedDate) return;
+
+    try {
+      const result = await addEvent(title, description, selectedDate);
+      if (result.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Event successfully saved!',
+          confirmButtonColor: '#10B981'
+        });
+        setShowPopup(false);
+      }
+    } catch (error) {
+      console.error("Failed to save event:", error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to save event. Please try again.',
+        confirmButtonColor: '#EF4444'
+      });
+    }
   };
 
   return (
