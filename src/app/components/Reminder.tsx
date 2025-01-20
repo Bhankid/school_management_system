@@ -1,4 +1,50 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { getAllEvents } from "../actions/eventActions"; // Import the server action
+
+interface EventType {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+}
+
 function Reminder() {
+  const [events, setEvents] = useState<EventType[]>([]);
+
+  const dateColors = [
+    "bg-teal-400",
+    "bg-yellow-400",
+    "bg-pink-400",
+    "bg-purple-400",
+    "bg-blue-400",
+    "bg-red-400",
+    "bg-green-400",
+  ];
+
+  // Fetch events on component mount
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const eventsData = await getAllEvents();
+        // Sort events by date in descending order
+        const sortedEvents = eventsData.sort(
+          (a: EventType, b: EventType) =>
+            new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        setEvents(sortedEvents);
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      }
+    }
+    fetchEvents();
+  }, []);
+
+  const getRandomColor = () => {
+    return dateColors[Math.floor(Math.random() * dateColors.length)];
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md w-full">
       <div className="flex flex-col">
@@ -7,45 +53,29 @@ function Reminder() {
           <i className="fas fa-ellipsis-h text-gray-400 cursor-pointer"></i>
         </div>
         <div className="flex flex-col space-y-6">
-          <div className="flex flex-col space-y-2">
-            <div className="bg-teal-400 text-white px-3 py-1 rounded-full text-sm font-semibold w-fit">
-              16 June, 2021
-            </div>
-            <p className="text-gray-700 truncate">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <div className="bg-yellow-400 text-white px-3 py-1 rounded-full text-sm font-semibold w-fit">
-              16 June, 2021
-            </div>
-            <p className="text-gray-700 truncate">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <div className="bg-pink-400 text-white px-3 py-1 rounded-full text-sm font-semibold w-fit">
-              16 June, 2021
-            </div>
-            <p className="text-gray-700 truncate">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <div className="bg-purple-400 text-white px-3 py-1 rounded-full text-sm font-semibold w-fit">
-              17 June, 2021
-            </div>
-            <p className="text-gray-700 truncate">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
+          {events.length > 0 ? (
+            events.map((event) => (
+              <div key={event.id} className="flex flex-col space-y-2">
+                <div
+                  className={`${
+                    getRandomColor()
+                  } text-white px-3 py-1 rounded-full text-sm font-semibold w-fit`}
+                >
+                  {new Date(event.date).toLocaleDateString("en-US", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </div>
+                <p className="text-gray-700 truncate">{event.title}</p>
+                <p className="text-gray-500 truncate text-sm">
+                  {event.description}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No reminders available</p>
+          )}
         </div>
       </div>
     </div>
