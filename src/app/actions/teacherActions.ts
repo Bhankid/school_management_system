@@ -2,11 +2,31 @@
 
 import Teacher from "@/models/Teacher";
 import { revalidatePath } from "next/cache";
+import fs from "fs";
+import path from "path";
 
 export async function addTeacher(formData: FormData): Promise<void> {
   try {
     const file = formData.get("photoUrl") as File;
-    const photoUrl = file ? file.name : undefined;
+    let photoUrl: string | undefined;
+
+    if (file) {
+      // Define the path where you want to save the image
+      const uploadDir = path.join(process.cwd(), "public/uploads"); // Ensure this directory exists
+      const filePath = path.join(uploadDir, file.name);
+
+      // Create the uploads directory if it doesn't exist
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      // Save the file to the uploads directory
+      const buffer = await file.arrayBuffer();
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+
+      // Set the photoUrl to the relative path
+      photoUrl = `/uploads/${file.name}`; // Adjust the path as necessary
+    }
 
     const teacherData = {
       firstName: formData.get("firstName") as string,
@@ -30,7 +50,6 @@ export async function addTeacher(formData: FormData): Promise<void> {
     throw new Error(`Failed to add teacher: ${err instanceof Error ? err.message : 'Unknown error'}`);
   }
 }
-
 export async function getAllTeachers() {
   try {
     const teachers = await Teacher.findAll({

@@ -43,7 +43,7 @@ function EventCalendar() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl w-full border border-gray-100">
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-gradient-to-br from-white to-gray-50 shadow rounded-xl w-full border border-gray-100">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-800">Event Calendar</h2>
         <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">

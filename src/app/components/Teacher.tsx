@@ -18,7 +18,7 @@ interface TeacherType {
   address: string;
   admissionDate: string | null;
   photoUrl: string | null;
-  subject?: string;
+  subject?: string; 
 }
 
 const ITEMS_PER_PAGE = 13;
@@ -35,19 +35,24 @@ const Teacher = () => {
   const [isProfileVisible, setIsProfileVisible] = useState(false);
 
   // Fetch teacher data on component mount
-  useEffect(() => {
-    async function fetchTeachers() {
-      try {
-        const data = await getAllTeachers();
-        setTeachers(data);
-        setFilteredTeachers(data);
-      } catch (error) {
-        console.error("Failed to fetch teachers:", error);
-      }
+ useEffect(() => {
+  async function fetchTeachers() {
+    try {
+      const data = await getAllTeachers();
+      // Map the data to include the name property
+      const teachersWithFullName = data.map((teacher) => ({
+        ...teacher,
+        name: `${teacher.firstName} ${teacher.lastName}`, // Combine first and last name
+      }));
+      setTeachers(teachersWithFullName);
+      setFilteredTeachers(teachersWithFullName);
+    } catch (error) {
+      console.error("Failed to fetch teachers:", error);
     }
-    fetchTeachers();
-  }, []);
-
+  }
+  fetchTeachers();
+ }, []);
+  
   const handleTeacherClick = (teacher: TeacherType) => {
     setSelectedTeacher(teacher);
     setIsProfileVisible(true);

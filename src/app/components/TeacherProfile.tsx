@@ -2,13 +2,19 @@ import Image from "next/image";
 
 interface TeacherType {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   gender: string;
-  class: string;
-  subject: string;
-  address: string;
-  dateOfBirth: string;
+  dateOfBirth: string | null;
+  bloodGroup: string;
+  religion: string;
+  email: string;
   phone: string;
+  class: string;
+  address: string;
+  admissionDate: string | null;
+  photoUrl: string | null;
+  subject?: string; 
 }
 
 interface TeacherProfileProps {
@@ -16,6 +22,9 @@ interface TeacherProfileProps {
 }
 
 function TeacherProfile({ teacher }: TeacherProfileProps) {
+  // Ensure the photoUrl is a valid path
+  const profilePhotoUrl = teacher.photoUrl ? teacher.photoUrl : "/student_profile.png"; // Use the photoUrl or a default image
+
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
       <div className="mb-6">
@@ -25,8 +34,8 @@ function TeacherProfile({ teacher }: TeacherProfileProps) {
       <div className="flex gap-8">
         <div className="ml-4">
           <Image
-            src="/student_profile.png"
-            alt={`Profile of ${teacher.name}`}
+            src={profilePhotoUrl} // Use the constructed profile photo URL
+            alt={`Profile of ${teacher.firstName} ${teacher.lastName}`}
             width={150}
             height={150}
             className="rounded-full object-cover"
@@ -35,14 +44,14 @@ function TeacherProfile({ teacher }: TeacherProfileProps) {
 
         <div className="flex-1">
           <h2 className="text-xl font-bold text-blue-600 mb-4">
-            {teacher.name}
+            {teacher.firstName} {teacher.lastName}
           </h2>
           <div className="text-gray-800 grid grid-cols-2 gap-4">
             <p className="mb-2">
               <span className="font-medium">ID Number:</span> {teacher.id}
             </p>
             <p className="mb-2">
-              <span className="font-medium">Name:</span> {teacher.name}
+              <span className="font-medium">Name:</span> {teacher.firstName} {teacher.lastName}
             </p>
             <p className="mb-2">
               <span className="font-medium">Gender:</span> {teacher.gender}
