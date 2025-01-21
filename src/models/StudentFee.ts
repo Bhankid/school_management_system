@@ -33,7 +33,7 @@ class StudentFee
 
   // Getter for formatted due date
   get formattedDueDate(): string | null {
-    const dueDate = this.getDataValue('dueDate'); // Use getDataValue to access the attribute
+    const dueDate = this.getDataValue('dueDate'); 
     return dueDate ? dueDate.toISOString().split("T")[0] : null;
   }
 }

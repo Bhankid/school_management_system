@@ -3,6 +3,7 @@
 import StudentFee from "@/models/StudentFee";
 import { revalidatePath } from "next/cache";
 
+// Function to add a new fee
 export async function addFee(formData: FormData) {
   const name = formData.get("name") as string;
   const gender = formData.get("gender") as string;
@@ -44,19 +45,22 @@ export async function addFee(formData: FormData) {
   }
 }
 
+// Function to get all fees
 export async function getAllFees() {
   try {
     const fees = await StudentFee.findAll({ order: [["id", "DESC"]] });
     return fees.map((fee) => ({
-      id: fee.id,
-      name: fee.name,
-      gender: fee.gender,
-      class: fee.class,
-      amount: fee.amount,
-      status: fee.status,
-      email: fee.email || "",
-      phone: fee.phone || "",
-      dueDate: fee.dueDate ? fee.dueDate.toISOString().split("T")[0] : "",
+      id: fee.dataValues.id,
+      name: fee.dataValues.name,
+      gender: fee.dataValues.gender,
+      class: fee.dataValues.class,
+      amount: fee.dataValues.amount, 
+      status: fee.dataValues.status,
+      email: fee.dataValues.email || "",
+      phone: fee.dataValues.phone || "",
+      dueDate: fee.dataValues.dueDate ? fee.dataValues.dueDate.toISOString().split("T")[0] : null,
+      createdAt: fee.dataValues.createdAt,
+      updatedAt: fee.dataValues.updatedAt,
     }));
   } catch (error) {
     console.error("Failed to fetch fees:", error);
@@ -64,6 +68,8 @@ export async function getAllFees() {
   }
 }
 
+
+// Function to get total earnings
 export async function getTotalEarnings(): Promise<number> {
   try {
     const totalEarnings = await StudentFee.sum("amount"); // Sum the `amount` column

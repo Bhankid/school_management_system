@@ -1,51 +1,53 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getAllFees } from "../actions/feeActions"; 
+import { getAllFees } from "../actions/feeActions";
 
 interface FeeType {
   id: number;
-  name: string;
-  gender: string;
-  class: string;
-  amount: string;
-  status: string;
-  email: string;
-  phone: string;
-  dueDate: string;
+  name: string | null; 
+  gender: string | null;
+  class: string | null;
+  amount: number; 
+  status: string | null;
+  email: string | null;
+  phone: string | null;
 }
-
 const ITEMS_PER_PAGE = 13;
 
 const Fees = () => {
   const [fees, setFees] = useState<FeeType[]>([]);
-  const [filteredFees, setFilteredFees] = useState<FeeType[]>([]); // Add this state
+  const [filteredFees, setFilteredFees] = useState<FeeType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
 
-  // Fetch data from the server when the component mounts
   useEffect(() => {
-    async function fetchFees() {
+  async function fetchFees() {
+    try {
       const data = await getAllFees();
       setFees(data);
-      setFilteredFees(data); // Initialize filteredFees with the fetched data
+      setFilteredFees(data);
+      console.log("Fees Data:", data);
+    } catch (error) {
+      console.error("Failed to fetch fees:", error);
     }
-    fetchFees();
-  }, []);
+  }
+  fetchFees();
+}, []);
 
   const handleSearch = () => {
     const filtered = fees.filter((fee) => {
       const matchesName =
         searchName === "" ||
-        fee.name.toLowerCase().includes(searchName.toLowerCase());
+        (fee.name?.toLowerCase() || "").includes(searchName.toLowerCase());
 
       const matchesClass = selectedClass === "" || fee.class === selectedClass;
 
       const matchesStatus =
         selectedStatus === "" ||
-        fee.status.toLowerCase() === selectedStatus.toLowerCase();
+        (fee.status?.toLowerCase() || "") === selectedStatus.toLowerCase();
 
       return matchesName && matchesClass && matchesStatus;
     });
@@ -137,52 +139,34 @@ const Fees = () => {
                   <th className="py-2 px-4 border-b text-red-500">Class</th>
                   <th className="py-2 px-4 border-b text-red-500">Amount</th>
                   <th className="py-2 px-4 border-b text-red-500">Status</th>
-                  <th className="py-2 px-4 border-b text-red-500">
-                    Parent Email
-                  </th>
-                  <th className="py-2 px-4 border-b text-red-500">
-                    Parent Phone
-                  </th>
+                  <th className="py-2 px-4 border-b text-red-500">Parent Email</th>
+                  <th className="py-2 px-4 border-b text-red-500">Parent Phone</th>
                 </tr>
               </thead>
               <tbody>
                 {currentFees.map((fee) => (
                   <tr
-                    key={fee.id}
+                    key={fee.id} // Unique key for React
                     className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-md cursor-pointer"
                   >
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.id}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.name}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.gender}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.class}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.amount}
-                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">{fee.id}</td>
+                    <td className="py-2 px-4 border-b text-gray-800">{fee.name || <span className="text-gray-400">No Name Provided</span>}</td>
+                    <td className="py-2 px-4 border-b text-gray-800">{fee.gender || <span className="text-gray-400">No Gender Provided</span>}</td>
+                    <td className="py-2 px-4 border-b text-gray-800">{fee.class || <span className="text-gray-400">No Class Provided</span>}</td>
+                    <td className="py-2 px-4 border-b text-gray-800">{fee.amount}</td>
                     <td className="py-2 px-4 border-b text-gray-800">
                       <span
                         className={`px-2 py-1 rounded text-white ${
-                          fee.status.toLowerCase() === "unpaid"
+                          fee.status?.toLowerCase() === "unpaid"
                             ? "bg-red-500"
                             : "bg-blue-600"
                         }`}
                       >
-                        {fee.status}
+                        {fee.status || <span className="text-gray-400">No Status Provided</span>}
                       </span>
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.email}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {fee.phone}
-                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">{fee.email || <span className="text-gray-400">No Email Provided</span>}</td>
+                    <td className="py-2 px-4 border-b text-gray-800">{fee.phone || <span className="text-gray-400">No Phone Provided</span>}</td>
                   </tr>
                 ))}
               </tbody>
@@ -202,21 +186,19 @@ const Fees = () => {
               Previous
             </button>
             <div className="flex space-x-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`px-3 py-1 rounded ${
-                      currentPage === page
-                        ? "bg-red-500 text-white"
-                        : "bg-white border hover:bg-gray-50"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                )
-              )}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page} // Unique key for pagination buttons
+                  onClick={() => handlePageChange(page)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === page
+                      ? "bg-red-500 text-white"
+                      : "bg-white border hover:bg-gray-50"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
             </div>
             <button
               className={`text-gray-500 ${
