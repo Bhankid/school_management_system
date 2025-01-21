@@ -24,7 +24,7 @@ const earningsData = [
 
 function EarningsSection() {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
+    <div className="bg-white p-4 rounded-lg">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
         <h2 className="text-lg font-bold text-gray-800 mb-2 sm:mb-0">
           Earnings
