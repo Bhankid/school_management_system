@@ -24,12 +24,11 @@ interface StudentProfileCardProps {
 
 function StudentProfileCard({ student }: StudentProfileCardProps) {
   const [imageError, setImageError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Handle base64 image from database
-  const imageSource = student.photoUrl && !imageError
-    ? `data:image/jpeg;base64,${student.photoUrl}`
-    : "/student_profile.png";
+  // Use the photoUrl or a default image if there's an error
+  const profilePhotoUrl = imageError || !student.photoUrl
+    ? "/student_profile.png"
+    : student.photoUrl;
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
@@ -39,36 +38,17 @@ function StudentProfileCard({ student }: StudentProfileCardProps) {
 
       <div className="flex gap-8">
         <div className="ml-4 relative w-[150px] h-[150px]">
-          {student.photoUrl && !imageError ? (
-            <Image
-              src={imageSource}
-              alt={`Profile of ${student.name}`}
-              fill
-              className="rounded-full object-cover"
-              onError={() => setImageError(true)}
-              onLoadingComplete={() => setIsLoading(false)}
-              priority
-            />
-          ) : (
-            <Image
-              src="/student_profile.png"
-              alt={`Profile of ${student.name}`}
-              fill
-              className="rounded-full object-cover"
-              onError={() => setImageError(true)}
-              onLoadingComplete={() => setIsLoading(false)}
-              priority
-            />
-          )}
-          {isLoading && (
-            <div className="absolute inset-0 bg-gray-200 rounded-full animate-pulse" />
-          )}
+          <Image
+            src={profilePhotoUrl}
+            alt={`Profile of ${student.name}`}
+            fill
+            className="rounded-full object-cover"
+            onError={() => setImageError(true)}
+          />
         </div>
 
         <div className="flex-1">
-          <h2 className="text-xl font-bold text-blue-600 mb-4">
-            {student.name}
-          </h2>
+          <h2 className="text -xl font-bold text-blue-600 mb-4">{student.name}</h2>
           <div className="text-gray-800 grid grid-cols-2 gap-4">
             <p className="mb-2">
               <span className="font-medium">ID Number:</span> {student.id}
@@ -80,27 +60,22 @@ function StudentProfileCard({ student }: StudentProfileCardProps) {
               <span className="font-medium">Gender:</span> {student.gender}
             </p>
             <p className="mb-2">
-              <span className="font-medium">Father Name:</span>{" "}
-              {student.Parent?.fatherName}
+              <span className="font-medium">Father Name:</span> {student.Parent?.fatherName}
             </p>
             <p className="mb-2">
-              <span className="font-medium">Mother Name:</span>{" "}
-              {student.Parent?.motherName}
+              <span className="font-medium">Mother Name:</span> {student.Parent?.motherName}
             </p>
             <p className="mb-2">
-              <span className="font-medium">Date Of Birth:</span>{" "}
-              {new Date(student.dateOfBirth).toLocaleDateString()}
+              <span className="font-medium">Date Of Birth:</span> {new Date(student.dateOfBirth).toLocaleDateString()}
             </p>
             <p className="mb-2">
               <span className="font-medium">Class:</span> {student.class}
             </p>
             <p className="mb-2">
-              <span className="font-medium">Phone:</span>{" "}
-              {student.Parent?.phone}
+              <span className="font-medium">Phone:</span> {student.Parent?.phone}
             </p>
             <p className="mb-2 col-span-2">
-              <span className="font-medium">Address:</span>{" "}
-              {student.Parent?.address}
+              <span className="font-medium">Address:</span> {student.Parent?.address}
             </p>
           </div>
         </div>

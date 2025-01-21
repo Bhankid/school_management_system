@@ -3,6 +3,8 @@
 import Student from "@/models/Student";
 import Parent from "@/models/Parent";
 import { revalidatePath } from "next/cache";
+import fs from "fs";
+import path from "path";
 
 export async function addStudent(formData: FormData): Promise<void> {
   try {
@@ -17,7 +19,25 @@ export async function addStudent(formData: FormData): Promise<void> {
     };
 
     const file = formData.get("photoUrl") as File;
-    const photoUrl = file ? file.name : null;
+    let photoUrl: string | null = null;
+
+    if (file) {
+      // Define the path where you want to save the image
+      const uploadDir = path.join(process.cwd(), "public/uploads"); // Ensure this directory exists
+      const filePath = path.join(uploadDir, file.name);
+
+      // Create the uploads directory if it doesn't exist
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      // Save the file to the uploads directory
+      const buffer = await file.arrayBuffer();
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+
+      // Set the photoUrl to the relative path
+      photoUrl = `/uploads/${file.name}`; // Adjust the path as necessary
+    }
 
     const studentData = {
       name: formData.get("name") as string,
@@ -52,9 +72,22 @@ interface StudentWithParent extends Student {
   };
 }
 
-export async function getAllStudents() {
+// Define a type for the transformed student data sent to the client
+interface TransformedStudent {
+  id: number;
+  name: string;
+  gender: string;
+  class: string;
+  parents: string;
+  address: string | undefined;
+  dateOfBirth: string; // Always as a string
+  phone: string | undefined;
+  photoUrl: string | null;
+}
+
+export async function getAllStudents(): Promise<TransformedStudent[]> {
   try {
-    const students = (await Student.findAll({
+    const students = await Student.findAll({
       include: [
         {
           model: Parent,
@@ -62,19 +95,23 @@ export async function getAllStudents() {
           attributes: ["fatherName", "motherName", "address", "phone"],
         },
       ],
-      attributes: ["id", "name", "gender", "class", "dateOfBirth"],
+      attributes: ["id", "name", "gender", "class", "dateOfBirth", "photoUrl"],
       order: [["createdAt", "DESC"]],
-    })) as StudentWithParent[];
+    }) as StudentWithParent[];
 
-    const transformedStudents = students.map((student) => ({
+    // Transform students for the client
+    const transformedStudents: TransformedStudent[] = students.map((student) => ({
       id: student.id,
       name: student.name,
       gender: student.gender,
       class: student.class,
-      parents: `${student.Parent?.fatherName}, ${student.Parent?.motherName}`,
+      parents: `${student.Parent?.fatherName || ""}, ${student.Parent?.motherName || ""}`,
       address: student.Parent?.address,
-      dateOfBirth: new Date(student.dateOfBirth).toISOString().split("T")[0],
+      dateOfBirth: student.dateOfBirth
+        ? new Date(student.dateOfBirth).toISOString().split("T")[0]
+        : "",
       phone: student.Parent?.phone,
+      photoUrl: student.photoUrl || null,
     }));
 
     return transformedStudents;
@@ -94,19 +131,18 @@ export async function getStudentCount(): Promise<number> {
   }
 }
 
-export async function getStudentPhoto(studentId: number) {
-  try {
-    const student = await Student.findByPk(studentId, {
-      attributes: ['photoUrl']
-    });
+// export async function getStudentPhoto(studentId: number) {
+//   try {
+//     const student = await Student.findByPk(studentId, {
+//       attributes: ['photoUrl']
+//     });
     
-    if (!student?.photoUrl) {
-      return null;
-    }
+//     if (!student?.photoUrl) {
+//       return null;
+//     }
 
-    return student.photoUrl;
-  } catch (err) {
-    console.error("Failed to fetch student photo:", err);
-    throw new Error("Failed to fetch student photo");
-  }
-}
+//     return student.photoUrl;
+//   } catch (err) console.error("Failed to fetch student photo:", err);
+//     throw new Error("Failed to fetch student photo");
+//   }
+// }

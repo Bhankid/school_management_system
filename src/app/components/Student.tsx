@@ -27,29 +27,32 @@ const StudentsData = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [filteredResults, setFilteredResults] = useState<StudentType[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<StudentType | null>(
-    null
-  );
+  const [selectedStudent, setSelectedStudent] = useState<StudentType | null>(null);
   const [isProfileVisible, setIsProfileVisible] = useState(false);
 
   useEffect(() => {
     const loadStudents = async () => {
       const data = await getAllStudents();
-      const transformedData = data.map(student => ({
-        ...student,
-        photoUrl: null,
+      const transformedData: StudentType[] = data.map((student) => ({
+        id: student.id,
+        name: student.name,
+        gender: student.gender,
+        class: student.class,
+        dateOfBirth: student.dateOfBirth, // Already transformed into a string on the server
+        photoUrl: student.photoUrl,
         Parent: {
-          fatherName: student.parents?.split(',')[0] || '',
-          motherName: student.parents?.split(',')[1] || '',
-          phone: student.phone || '',
-          address: student.address || ''
-        }
+          fatherName: student.parents.split(",")[0] || "",
+          motherName: student.parents.split(",")[1] || "",
+          phone: student.phone || "",
+          address: student.address || "",
+        },
       }));
       setStudents(transformedData);
       setFilteredResults(transformedData);
     };
     loadStudents();
   }, []);
+
 
   const handleSearch = () => {
     const filtered = students.filter((student) => {
@@ -179,8 +182,7 @@ const StudentsData = () => {
                     </td>
                     <td className="py-2 px-4 border-b text-gray-800">
                       {`${student.Parent?.fatherName}, ${student.Parent?.motherName}`}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    </td ><td className="py-2 px-4 border-b text-gray-800">
                       {student.Parent?.address}
                     </td>
                     <td className="py-2 px-4 border-b text-gray-800">
