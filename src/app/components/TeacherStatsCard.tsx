@@ -1,24 +1,53 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getTeacherCount } from "../actions/teacherActions"; // Import the server action
+import { getTeacherCount, getPreviousTeacherCount } from "../actions/teacherActions"; 
+import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow icons
 
 const TeacherStatsCard = () => {
   const [teacherCount, setTeacherCount] = useState<number | null>(null);
+  const [previousTeacherCount, setPreviousTeacherCount] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchTeacherCount() {
       try {
-        const count = await getTeacherCount(); // Fetch live teacher count from server
+        const count = await getTeacherCount(); // Fetch the current teacher count
+        const previousCount = await getPreviousTeacherCount(); // Fetch the previous teacher count
         setTeacherCount(count);
+        setPreviousTeacherCount(previousCount);
       } catch (err) {
         console.error("Failed to fetch teacher count:", err);
         setTeacherCount(0); // Handle error gracefully
+        setPreviousTeacherCount(0); // Handle error gracefully
       }
     }
 
     fetchTeacherCount();
   }, []);
+
+  const getArrowIcon = () => {
+    if (teacherCount === null || previousTeacherCount === null) {
+      return null;
+    }
+
+    if (teacherCount > previousTeacherCount) {
+      return (
+        <FaArrowUp
+          className="text-green-500 text-sm sm:text-base ml-1"
+          title="Increase in teacher count"
+        />
+      );
+    } else if (teacherCount < previousTeacherCount) {
+      return (
+        <FaArrowDown
+          className="text-red-500 text-sm sm:text-base ml-1"
+          title="Decrease in teacher count"
+        />
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div className="flex items-center">
@@ -28,8 +57,9 @@ const TeacherStatsCard = () => {
       </div>
       <div className="ml-4 sm:ml-6">
         <p className="text-gray-800 font-medium text-sm sm:text-base">Teachers</p>
-        <p className="text-xl sm:text-2xl font-bold text-gray-900">
+        <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
           {teacherCount !== null ? teacherCount : "Loading..."}
+          {getArrowIcon()}
         </p>
       </div>
     </div>

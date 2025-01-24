@@ -4,6 +4,7 @@ import Teacher from "@/models/Teacher";
 import { revalidatePath } from "next/cache";
 import fs from "fs";
 import path from "path";
+import { Op } from "sequelize";
 
 export async function addTeacher(formData: FormData): Promise<void> {
   try {
@@ -85,5 +86,43 @@ export async function getTeacherCount(): Promise<number> {
   } catch (err) {
     console.error("Failed to fetch teacher count:", err);
     throw new Error(`Failed to fetch teacher count: ${err instanceof Error ? err.message : 'Unknown error'}`);
+  }
+}
+
+// Simple in-memory cache for the previous teacher count
+let cachedPreviousTeacherCount: number | null = null;
+let cacheTimestamp: number | null = null;
+const CACHE_DURATION = 5 * 60 * 1000; // Cache duration: 5 minutes
+
+export async function getPreviousTeacherCount(): Promise<number> {
+  try {
+    // Check if the cached result is still valid
+    const now = Date.now();
+    if (cachedPreviousTeacherCount !== null && cacheTimestamp !== null && now - cacheTimestamp < CACHE_DURATION) {
+      return cachedPreviousTeacherCount;
+    }
+
+    // Get the current date and the previous day's date
+    const currentDate = new Date();
+    const previousDate = new Date(currentDate);
+    previousDate.setDate(currentDate.getDate() - 1); // Subtract one day
+
+    // Fetch the count of teachers created before the previous day
+    const previousTeacherCount = await Teacher.count({
+      where: {
+        createdAt: {
+          [Op.lt]: previousDate, // Less than the previous day
+        },
+      },
+    });
+
+    // Update the cache
+    cachedPreviousTeacherCount = previousTeacherCount;
+    cacheTimestamp = now;
+
+    return previousTeacherCount;
+  } catch (err) {
+    console.error("Failed to fetch previous teacher count:", err);
+    throw new Error("Failed to fetch previous teacher count");
   }
 }
