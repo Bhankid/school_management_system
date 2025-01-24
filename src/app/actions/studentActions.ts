@@ -5,6 +5,7 @@ import Parent from "@/models/Parent";
 import { revalidatePath } from "next/cache";
 import fs from "fs";
 import path from "path";
+import { Op } from "sequelize"; 
 
 export async function addStudent(formData: FormData): Promise<void> {
   try {
@@ -128,6 +129,44 @@ export async function getStudentCount(): Promise<number> {
   } catch (err) {
     console.error("Failed to fetch student count:", err);
     throw new Error("Failed to fetch student count");
+  }
+}
+
+// Simple in-memory cache for the previous student count
+let cachedPreviousStudentCount: number | null = null;
+let cacheTimestamp: number | null = null;
+const CACHE_DURATION = 5 * 60 * 1000; // Cache duration: 5 minutes
+
+export async function getPreviousStudentCount(): Promise<number> {
+  try {
+    // Check if the cached result is still valid
+    const now = Date.now();
+    if (cachedPreviousStudentCount !== null && cacheTimestamp !== null && now - cacheTimestamp < CACHE_DURATION) {
+      return cachedPreviousStudentCount;
+    }
+
+    // Get the current date and the previous day's date
+    const currentDate = new Date();
+    const previousDate = new Date(currentDate);
+    previousDate.setDate(currentDate.getDate() - 1); // Subtract one day
+
+    // Fetch the count of students created on the previous day
+    const previousStudentCount = await Student.count({
+      where: {
+        createdAt: {
+          [Op.between]: [previousDate, currentDate], // Between previous day and current day
+        },
+      },
+    });
+
+    // Update the cache
+    cachedPreviousStudentCount = previousStudentCount;
+    cacheTimestamp = now;
+
+    return previousStudentCount;
+  } catch (err) {
+    console.error("Failed to fetch previous student count:", err);
+    throw new Error("Failed to fetch previous student count");
   }
 }
 
