@@ -15,21 +15,8 @@ interface StudentFeeAttributes {
   updatedAt?: Date;
 }
 
-class StudentFee
-  extends Model<StudentFeeAttributes, Optional<StudentFeeAttributes, "id">>
-  implements StudentFeeAttributes
-{
-  id!: number;
-  name!: string;
-  gender!: string;
-  class!: string;
-  amount!: number;
-  status!: string;
-  email?: string;
-  phone?: string;
-  dueDate?: Date;
-  readonly createdAt!: Date;
-  readonly updatedAt!: Date;
+class StudentFee extends Model<StudentFeeAttributes, Optional<StudentFeeAttributes, "id">> {
+  // No need to declare attributes here
 
   // Getter for formatted due date
   get formattedDueDate(): string | null {
