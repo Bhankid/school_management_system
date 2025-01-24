@@ -8,7 +8,7 @@ interface FeeType {
   name: string;
   gender: string;
   class: string;
-  amount: string;
+  amount: number;
   status: string;
   email: string;
   phone: string;
