@@ -1,6 +1,7 @@
 "use server";
 
 import Parent from "@/models/Parent";
+import { Op } from "sequelize";
 
 export async function getAllParents() {
   try {
@@ -33,5 +34,43 @@ export async function getParentCount(): Promise<number> {
   } catch (err) {
     console.error("Failed to fetch parent count:", err);
     throw new Error(`Failed to fetch parent count: ${err instanceof Error ? err.message : "Unknown error"}`);
+  }
+}
+
+// Simple in-memory cache for the previous parent count
+let cachedPreviousParentCount: number | null = null;
+let cacheTimestamp: number | null = null;
+const CACHE_DURATION = 5 * 60 * 1000; // Cache duration: 5 minutes
+
+export async function getPreviousParentCount(): Promise<number> {
+  try {
+    // Check if the cached result is still valid
+    const now = Date.now();
+    if (cachedPreviousParentCount !== null && cacheTimestamp !== null && now - cacheTimestamp < CACHE_DURATION) {
+      return cachedPreviousParentCount;
+    }
+
+    // Get the current date and the previous day's date
+    const currentDate = new Date();
+    const previousDate = new Date(currentDate);
+    previousDate.setDate(currentDate.getDate() - 1); // Subtract one day
+
+    // Fetch the count of parents created before the previous day
+    const previousParentCount = await Parent.count({
+      where: {
+        createdAt: {
+          [Op.lt]: previousDate, // Less than the previous day
+        },
+      },
+    });
+
+    // Update the cache
+    cachedPreviousParentCount = previousParentCount;
+    cacheTimestamp = now;
+
+    return previousParentCount;
+  } catch (err) {
+    console.error("Failed to fetch previous parent count:", err);
+    throw new Error("Failed to fetch previous parent count");
   }
 }

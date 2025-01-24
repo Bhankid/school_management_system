@@ -1,24 +1,53 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getParentCount } from "../actions/parentActions"; 
+import { getParentCount, getPreviousParentCount } from "../actions/parentActions"; // Import the server actions
+import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow icons
 
 const ParentStatsCard = () => {
   const [parentCount, setParentCount] = useState<number | null>(null);
+  const [previousParentCount, setPreviousParentCount] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchParentCount() {
       try {
-        const count = await getParentCount(); // Fetch live parent count from server
+        const count = await getParentCount(); // Fetch the current parent count
+        const previousCount = await getPreviousParentCount(); // Fetch the previous parent count
         setParentCount(count);
+        setPreviousParentCount(previousCount);
       } catch (err) {
         console.error("Failed to fetch parent count:", err);
         setParentCount(0); // Handle error gracefully
+        setPreviousParentCount(0); // Handle error gracefully
       }
     }
 
     fetchParentCount();
   }, []);
+
+  const getArrowIcon = () => {
+    if (parentCount === null || previousParentCount === null) {
+      return null;
+    }
+
+    if (parentCount > previousParentCount) {
+      return (
+        <FaArrowUp
+          className="text-green-500 text-sm sm:text-base ml-1"
+          title="Increase in parent count"
+        />
+      );
+    } else if (parentCount < previousParentCount) {
+      return (
+        <FaArrowDown
+          className="text-red-500 text-sm sm:text-base ml-1"
+          title="Decrease in parent count"
+        />
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div className="flex items-center">
@@ -28,8 +57,9 @@ const ParentStatsCard = () => {
       </div>
       <div className="ml-4 sm:ml-6">
         <p className="text-gray-800 font-medium text-sm sm:text-base">Parents</p>
-        <p className="text-xl sm:text-2xl font-bold text-gray-900">
+        <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
           {parentCount !== null ? parentCount : "Loading..."}
+          {getArrowIcon()}
         </p>
       </div>
     </div>
