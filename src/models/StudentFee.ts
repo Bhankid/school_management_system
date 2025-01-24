@@ -16,11 +16,22 @@ interface StudentFeeAttributes {
 }
 
 class StudentFee extends Model<StudentFeeAttributes, Optional<StudentFeeAttributes, "id">> {
-  // No need to declare attributes here
+  // Declare instance properties
+  declare id: number;
+  declare name: string;
+  declare gender: string;
+  declare class: string;
+  declare amount: number;
+  declare status: string;
+  declare email: string | null;
+  declare phone: string | null;
+  declare dueDate: Date | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 
   // Getter for formatted due date
   get formattedDueDate(): string | null {
-    const dueDate = this.getDataValue('dueDate'); 
+    const dueDate = this.getDataValue("dueDate");
     return dueDate ? dueDate.toISOString().split("T")[0] : null;
   }
 }

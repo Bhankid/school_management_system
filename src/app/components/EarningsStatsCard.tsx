@@ -1,24 +1,53 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getTotalEarnings } from "../actions/feeActions"; // Import the server action
+import { getTotalEarnings, getPreviousTotalEarnings } from "../actions/feeActions"; // Import the server actions
+import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow icons
 
 const EarningsStatsCard = () => {
   const [earnings, setEarnings] = useState<number | null>(null);
+  const [previousEarnings, setPreviousEarnings] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchEarnings() {
       try {
         const total = await getTotalEarnings(); // Fetch the total earnings
+        const previousTotal = await getPreviousTotalEarnings(); // Fetch the previous total earnings
         setEarnings(total);
+        setPreviousEarnings(previousTotal);
       } catch (error) {
         console.error("Failed to fetch earnings:", error);
         setEarnings(0); // Handle error gracefully
+        setPreviousEarnings(0); // Handle error gracefully
       }
     }
 
     fetchEarnings();
   }, []);
+
+  const getArrowIcon = () => {
+    if (earnings === null || previousEarnings === null) {
+      return null;
+    }
+
+    if (earnings > previousEarnings) {
+      return (
+        <FaArrowUp
+          className="text-green-500 text-sm sm:text-base ml-1"
+          title="Increase in earnings"
+        />
+      );
+    } else if (earnings < previousEarnings) {
+      return (
+        <FaArrowDown
+          className="text-red-500 text-sm sm:text-base ml-1"
+          title="Decrease in earnings"
+        />
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div className="flex items-center">
@@ -30,8 +59,9 @@ const EarningsStatsCard = () => {
         <p className="text-gray-800 font-medium text-sm sm:text-base">
           Earnings
         </p>
-        <p className="text-xl sm:text-2xl font-bold text-gray-900">
+        <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
           {earnings !== null ? `₵${earnings.toLocaleString()}` : "Loading..."}
+          {getArrowIcon()}
         </p>
       </div>
     </div>

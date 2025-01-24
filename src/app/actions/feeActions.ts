@@ -2,6 +2,7 @@
 
 import StudentFee from "@/models/StudentFee";
 import { revalidatePath } from "next/cache";
+import { Op } from "sequelize"; 
 
 export async function addFee(formData: FormData) {
   const name = formData.get("name") as string;
@@ -71,5 +72,28 @@ export async function getTotalEarnings(): Promise<number> {
   } catch (error) {
     console.error("Failed to fetch total earnings:", error);
     throw new Error(`Failed to fetch total earnings: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
+}
+
+export async function getPreviousTotalEarnings(): Promise<number> {
+  try {
+    // Get the current date and the previous day's date
+    const currentDate = new Date();
+    const previousDate = new Date(currentDate);
+    previousDate.setDate(currentDate.getDate() - 1); // Subtract one day
+
+    // Fetch the sum of `amount` for fees created on the previous day
+    const previousTotalEarnings = await StudentFee.sum("amount", {
+      where: {
+        createdAt: {
+          [Op.between]: [previousDate, currentDate], // Between previous day and current day
+        },
+      },
+    });
+
+    return previousTotalEarnings || 0; // Return 0 if no data exists
+  } catch (error) {
+    console.error("Failed to fetch previous total earnings:", error);
+    throw new Error("Failed to fetch previous total earnings");
   }
 }
