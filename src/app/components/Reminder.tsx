@@ -12,6 +12,7 @@ interface EventType {
 
 function Reminder() {
   const [events, setEvents] = useState<EventType[]>([]);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const dateColors = [
     "bg-teal-500",
@@ -41,24 +42,60 @@ function Reminder() {
     fetchEvents();
   }, []);
 
-  const getRandomColor = () => {
-    return dateColors[Math.floor(Math.random() * dateColors.length)];
+  const getRandomColor = (index: number) => {
+    return dateColors[index % dateColors.length];
   };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md w-full">
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-700">Reminders</h2>
-          <i className="fas fa-ellipsis-h text-gray-400 cursor-pointer"></i>
+          <h2 className="text-xl font-semibold text-gray-700 text-center">Reminders</h2>
+          <div className="relative">
+            <i
+              className="fas fa-ellipsis-h text-gray-400 cursor-pointer"
+              title="More options"
+              onClick={() => setDropdownVisible(!dropdownVisible)}
+            ></i>
+            {dropdownVisible && (
+              <div className="absolute top-full right-0 bg-white shadow-md p-4 w-40 border border-gray-200 rounded-md">
+                <ul>
+                  <li>
+                    <a
+                      href="#"
+                      className="block p-2 hover:bg-gray-100 text-gray-700 font-medium"
+                    >
+                      Edit
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="block p-2 hover:bg-gray-100 text-gray-700 font-medium"
+                    >
+                      Delete
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="block p-2 hover:bg-gray-100 text-gray-700 font-medium"
+                    >
+                      Share
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex flex-col space-y-6">
           {events.length > 0 ? (
-            events.map((event) => (
+            events.map((event, index) => (
               <div key={event.id} className="flex flex-col space-y-2">
                 <div
                   className={`${
-                    getRandomColor()
+                    getRandomColor(index)
                   } text-white px-3 py-1 rounded-full text-sm font-semibold w-fit`}
                 >
                   {new Date(event.date).toLocaleDateString("en-US", {
@@ -71,6 +108,9 @@ function Reminder() {
                 <p className="text-gray-500 truncate text-sm">
                   {event.description}
                 </p>
+                <div
+                  className={`h-0.5 w-full ${getRandomColor(index)} mt-2`}
+                ></div>
               </div>
             ))
           ) : (
