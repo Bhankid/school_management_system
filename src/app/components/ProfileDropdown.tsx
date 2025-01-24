@@ -3,12 +3,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
+import { ActiveTab } from "../Dashboard/page"; // Import the ActiveTab type
 
 interface ProfileDropdownProps {
   isOpen: boolean;
+  setActiveTab?: (tab: ActiveTab) => void; // Optional to handle cases where it's not passed
 }
 
-const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen }) => {
+const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen, setActiveTab }) => {
+  const handleAccountSettingsClick = () => {
+    if (setActiveTab) {
+      setActiveTab("settings"); // Update the active tab to "settings"
+      console.log("Account Settings clicked"); // Debugging
+    }
+  };
+
   return (
     <div
       className={`
@@ -25,14 +34,15 @@ const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen }) => {
     >
       <div className="px-4 py-3 border-b border-gray-100">
         <div className="flex items-center space-x-3">
-          <div className="relative w-10 h-10 md:w-12 md:h-12">
-            <Image
-              src="/profile-picture.png"
-              alt="User  profile picture"
-              fill
-              className="rounded-full object-cover"
-            />
-          </div>
+          <div className="relative w-8 h-8 md:w-10 md:h-10">
+  <Image
+    src="/profile-picture.png"
+    alt="User  profile picture"
+    width={40} // Fixed width
+    height={40} // Fixed height
+    className="rounded-full object-cover"
+  />
+</div>
           <div>
             <h4 className="text-sm font-semibold text-gray-800">Dev Fred</h4>
             <p className="text-xs text-gray-500">dev.fred@yahoo.com</p>
@@ -45,10 +55,13 @@ const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen }) => {
           <i className="fas fa-user-circle w-5 text-gray-400"></i>
           <span className="ml-3">My Profile</span>
         </Link>
-        <Link href="/account-settings" className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+        <div
+          onClick={handleAccountSettingsClick} // Add onClick handler
+          className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+        >
           <i className="fas fa-cog w-5 text-gray-400"></i>
           <span className="ml-3">Account Settings</span>
-        </Link>
+        </div>
         <Link href="/privacy-settings" className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
           <i className="fas fa-user-shield w-5 text-gray-400"></i>
           <span className="ml-3">Privacy Settings</span>

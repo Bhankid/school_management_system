@@ -29,7 +29,8 @@ import EarningsSection from "../components/EarningsSection";
 import ExpenseSection from "../components/ExpenseSection";
 import StudentSection from "../components/StudentSection";
 
-type ActiveTab =
+// Export the ActiveTab type
+export type ActiveTab =
   | "dashboard"
   | "students"
   | "add-student"
@@ -75,7 +76,7 @@ const Dashboard: React.FC = () => {
 
         {/* Parents Statistics Card */}
         <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
-         <ParentStatsCard />
+          <ParentStatsCard />
         </div>
 
         {/* Earnings Statistics Card */}
@@ -146,11 +147,13 @@ const Dashboard: React.FC = () => {
       case "expenses":
         return <Expense />;
       case "add-expenses":
-        return <AddExpense
-  onAdd={(expense) => {
-    console.log("New Expense Added:", expense);
-  }}
-/>
+        return (
+          <AddExpense
+            onAdd={(expense) => {
+              console.log("New Expense Added:", expense);
+            }}
+          />
+        );
       case "add-teacher":
         return <AddTeacher />;
       case "settings":
@@ -164,7 +167,7 @@ const Dashboard: React.FC = () => {
     <div className="flex flex-col lg:flex-row min-h-screen bg-blue-50">
       <Sidebar setActiveTab={setActiveTab} activeTab={activeTab} />
       <div className="flex-1">
-        <Header />
+        <Header setActiveTab={setActiveTab} /> {/* Pass setActiveTab */}
         <div className="p-6">{renderActiveComponent()}</div>
         <Footer />
       </div>

@@ -23,7 +23,7 @@ export async function addStudent(formData: FormData): Promise<void> {
 
     if (file) {
       // Define the path where you want to save the image
-      const uploadDir = path.join(process.cwd(), "public/uploads"); // Ensure this directory exists
+      const uploadDir = path.join(process.cwd(), "public/uploads");
       const filePath = path.join(uploadDir, file.name);
 
       // Create the uploads directory if it doesn't exist

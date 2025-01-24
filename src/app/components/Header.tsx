@@ -6,6 +6,7 @@ import Search from "./Search";
 import ProfileDropdown from "./ProfileDropdown";
 import NotificationDropdown from "./NotificationDropdown";
 import MessageDropdown from "./MessageDropdown";
+import { ActiveTab } from "../Dashboard/page"; 
 
 interface SearchResult {
   id: string;
@@ -14,7 +15,19 @@ interface SearchResult {
   type: "student" | "teacher" | "parent" | "earning";
 }
 
-function Header() {
+interface SearchResult {
+  id: string;
+  title: string;
+  value: string | number;
+  type: "student" | "teacher" | "parent" | "earning";
+}
+
+interface HeaderProps {
+  setActiveTab?: (tab: ActiveTab) => void; // Optional to handle cases where it's not passed
+}
+
+
+function Header({ setActiveTab }: HeaderProps) {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -24,6 +37,7 @@ function Header() {
   const notificationRef = useRef<HTMLDivElement>(null);
   const messageRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -50,6 +64,7 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Dashboard data for search functionality
   const getDashboardData = (): SearchResult[] => [
     { id: "1", title: "Students", value: "50000", type: "student" },
     { id: "2", title: "Teachers", value: "1500", type: "teacher" },
@@ -77,11 +92,14 @@ function Header() {
   return (
     <div className="relative w-full">
       <div className="flex flex-col md:flex-row items-center justify-between p-4 bg-white shadow">
+        {/* Search Bar */}
         <div className="w-full md:w-auto mb-4 md:mb-0">
           <Search onSearch={handleSearch} />
         </div>
 
+        {/* Icons and Profile Dropdown */}
         <div className="flex items-center justify-center w-full md:w-auto space-x-4">
+          {/* Messages and Notifications */}
           <div className="flex items-center space-x-4">
             <div className="relative" ref={messageRef}>
               <i
@@ -99,8 +117,10 @@ function Header() {
             </div>
           </div>
 
+          {/* Divider */}
           <div className="hidden md:block border-l-2 border-red-500 h-8 mx-4"></div>
 
+          {/* Profile Dropdown */}
           <div
             className="flex items-center cursor-pointer relative"
             ref={profileMenuRef}
@@ -112,8 +132,9 @@ function Header() {
               <div className="relative w-8 h-8 md:w-10 md:h-10">
                 <Image
                   src="/profile-picture.png"
-                  alt="User profile picture"
-                  fill
+                  alt="User  profile picture"
+                  width={40} 
+                  height={40} 
                   className="rounded-full object-cover"
                 />
               </div>
@@ -124,11 +145,15 @@ function Header() {
               ></i>
             </div>
 
-            <ProfileDropdown isOpen={showProfileMenu} />
+            <ProfileDropdown
+              isOpen={showProfileMenu}
+              setActiveTab={setActiveTab} // Optional for setting active tab
+            />
           </div>
         </div>
       </div>
 
+      {/* Search Results */}
       {showResults && searchResults.length > 0 && (
         <div className="absolute top-full left-0 right-0 md:left-auto md:right-4 md:w-80 mt-2 bg-white shadow-lg rounded-lg overflow-hidden z-50 mx-4 md:mx-0">
           {searchResults.map((item) => (
