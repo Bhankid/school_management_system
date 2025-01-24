@@ -13,6 +13,7 @@ interface EventType {
 function Reminder() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = React.createRef<HTMLDivElement>();
 
   const dateColors = [
     "bg-teal-500",
@@ -46,6 +47,20 @@ function Reminder() {
     return dateColors[index % dateColors.length];
   };
 
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownVisible(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [dropdownRef]);
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md w-full">
       <div className="flex flex-col">
@@ -58,7 +73,10 @@ function Reminder() {
               onClick={() => setDropdownVisible(!dropdownVisible)}
             ></i>
             {dropdownVisible && (
-              <div className="absolute top-full right-0 bg-white shadow-md p-4 w-40 border border-gray-200 rounded-md">
+              <div
+                ref={dropdownRef}
+                className="absolute top-full right-0 bg-white shadow-md p-4 w-40 border border-gray-200 rounded-md"
+              >
                 <ul>
                   <li>
                     <a
