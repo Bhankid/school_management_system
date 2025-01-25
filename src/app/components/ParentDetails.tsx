@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FaEdit, FaTrash, FaFilePdf } from "react-icons/fa";
 
 interface ParentType {
   id: number;
@@ -14,8 +15,23 @@ interface ParentType {
 interface ParentDetailsProps {
   parent: ParentType;
 }
-
 function ParentDetails({ parent }: ParentDetailsProps) {
+  // Placeholder functions for update, delete, and export as PDF
+  const handleUpdate = () => {
+    console.log("Update parent:", parent.id);
+    // Add your update logic here
+  };
+
+  const handleDelete = () => {
+    console.log("Delete parent:", parent.id);
+    // Add your delete logic here
+  };
+
+  const handleExportPdf = () => {
+    console.log("Export parent as PDF:", parent.id);
+    // Add your PDF export logic here
+  };
+
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
       <div className="mb-6">
@@ -62,8 +78,26 @@ function ParentDetails({ parent }: ParentDetailsProps) {
             <p className="mb-2">
               <span className="font-medium">Email:</span> {parent.email}
             </p>
-            <p className="mb-2 col-span-2">
+            <p className="mb-2 col-span-2 flex items-center gap-4">
               <span className="font-medium">Address:</span> {parent.address}
+              <span className="flex items-center gap-2 ml-auto">
+    {/* Icons for Update, Delete, and Export as PDF */}
+    <FaEdit
+      className="text-blue-500 cursor-pointer hover:text-blue-700 text-xl" // Added text-xl
+      onClick={handleUpdate}
+      title="Update"
+    />
+    <FaTrash
+      className="text-red-500 cursor-pointer hover:text-red-700 text-xl" // Added text-xl
+      onClick={handleDelete}
+      title="Delete"
+    />
+    <FaFilePdf
+      className="text-green-500 cursor-pointer hover:text-green-700 text-xl" // Added text-xl
+      onClick={handleExportPdf}
+      title="Export as PDF"
+    />
+  </span>
             </p>
           </div>
         </div>

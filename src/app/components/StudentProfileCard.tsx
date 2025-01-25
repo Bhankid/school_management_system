@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { FaEdit, FaTrash, FaFilePdf } from "react-icons/fa";
 
 interface StudentType {
   id: number;
@@ -29,6 +30,22 @@ function StudentProfileCard({ student }: StudentProfileCardProps) {
   const profilePhotoUrl = imageError || !student.photoUrl
     ? "/student_profile.png"
     : student.photoUrl;
+  
+    // Placeholder functions for update, delete, and export as PDF
+  const handleUpdate = () => {
+    console.log("Update student:", student.id);
+    // Add your update logic here
+  };
+
+  const handleDelete = () => {
+    console.log("Delete student:", student.id);
+    // Add your delete logic here
+  };
+
+  const handleExportPdf = () => {
+    console.log("Export student as PDF:", student.id);
+    // Add your PDF export logic here
+  };
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
@@ -74,8 +91,26 @@ function StudentProfileCard({ student }: StudentProfileCardProps) {
             <p className="mb-2">
               <span className="font-medium">Phone:</span> {student.Parent?.phone}
             </p>
-            <p className="mb-2 col-span-2">
+            <p className="mb-2 col-span-2 flex items-center gap-4">
               <span className="font-medium">Address:</span> {student.Parent?.address}
+             <span className="flex items-center gap-2 ml-auto">
+                {/* Icons for Update, Delete, and Export as PDF */}
+                <FaEdit
+                  className="text-blue-500 cursor-pointer hover:text-blue-700 text-xl"
+                  onClick={handleUpdate}
+                  title="Update"
+                />
+                <FaTrash
+                  className="text-red-500 cursor-pointer hover:text-red-700 text-xl"
+                  onClick={handleDelete}
+                  title="Delete"
+                />
+                <FaFilePdf
+                  className="text-green-500 cursor-pointer hover:text-green-700 text-xl"
+                  onClick={handleExportPdf}
+                  title="Export as PDF"
+                />
+              </span>
             </p>
           </div>
         </div>
