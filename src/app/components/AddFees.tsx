@@ -85,13 +85,23 @@ function AddFees() {
                   Class *
                 </label>
                 <select name="class" required className={selectClasses}>
-                  <option value="">Select Class</option>
-                  {[1, 2, 3, 4, 5, 6].map((num) => (
-                    <option key={num} value={num.toString()}>
-                      Class {num}
-                    </option>
-                  ))}
-                </select>
+  <option value="">Select Class</option>
+  <option value="Creche">Creche</option>
+  <option value="Nursery 1">Nursery 1</option>
+  <option value="Nursery 2">Nursery 2</option>
+  <option value="KG1">KG1</option>
+  <option value="KG2">KG2</option>
+  {[1, 2, 3, 4, 5, 6].map((num) => (
+    <option key={num} value={num.toString()}>
+      Class {num}
+    </option>
+  ))}
+  {[1, 2, 3].map((num) => (
+    <option key={num} value={`JHS ${num}`}>
+      JHS {num}
+    </option>
+  ))}
+</select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
