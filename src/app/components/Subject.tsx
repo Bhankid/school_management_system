@@ -104,32 +104,42 @@ const Subject = () => {
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-bold mb-4 text-gray-600">All Subjects</h2>
         <div className="flex mb-4">
-          <input
-            type="text"
-            placeholder="Search by subject name or teacher..."
-            className="border border-gray-300 p-2 rounded mr-2 flex-1"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <select
-            className="border border-gray-300 p-2 rounded mr-2"
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-          >
-            <option value="">Select Class</option>
-            {[1, 2, 3, 4, 5, 6].map((num) => (
-              <option key={num} value={`Basic ${num}`}>
-                Basic {num}
-              </option>
-            ))}
-          </select>
-          <button
-            className="bg-red-500 text-white p-2 rounded"
-            onClick={handleSearch}
-          >
-            SEARCH
-          </button>
-        </div>
+  <input
+    type="text"
+    placeholder="Search by subject name or teacher..."
+    className="border border-gray-300 p-2 rounded mr-2 basis-1/3 focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-900"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  <select
+    className="basis-1/3 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg  text-gray-900"
+    value={selectedClass}
+    onChange={(e) => setSelectedClass(e.target.value)}
+  >
+    <option value="">Select Class</option>
+    <option value="Creche">Creche</option>
+    <option value="Nursery 1">Nursery 1</option>
+    <option value="Nursery 2">Nursery 2</option>
+    <option value="KG1">KG1</option>
+    <option value="KG2">KG2</option>
+    {[1, 2, 3, 4, 5, 6].map((num) => (
+      <option key={num} value={num.toString()}>
+        Class {num}
+      </option>
+    ))}
+    {[1, 2, 3].map((num) => (
+      <option key={num} value={`JHS ${num}`}>
+        JHS {num}
+      </option>
+    ))}
+  </select>
+  <button
+    className="bg-red-500 text-white p-2 rounded basis-1/3"
+    onClick={handleSearch}
+  >
+    SEARCH
+  </button>
+</div>
 
         <table className="w-full border-collapse">
           <thead>

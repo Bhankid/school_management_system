@@ -119,24 +119,34 @@ const StudentsData = () => {
 
           <div className="grid grid-cols-3 gap-6 mb-4">
             <input
-              type="text"
-              placeholder="Search by name or parent..."
-              className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <select
-              className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
-            >
-              <option value="">Select Class</option>
-              {[1, 2, 3, 4, 5, 6].map((num) => (
-                <option key={num} value={num.toString()}>
-                  Class {num}
-                </option>
-              ))}
-            </select>
+  type="text"
+  placeholder="Search by name or parent..."
+  className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg text-gray-900"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
+           <select
+  className="border border-gray-300 rounded-lg p-3 w-48 focus:ring-2 focus:ring-red-500 focus:outline-none text-lg font-medium text-gray-700"
+  value={selectedClass}
+  onChange={(e) => setSelectedClass(e.target.value)}
+>
+  <option value="">Select Class</option>
+  <option value="Creche">Creche</option>
+  <option value="Nursery 1">Nursery 1</option>
+  <option value="Nursery 2">Nursery 2</option>
+  <option value="KG1">KG1</option>
+  <option value="KG2">KG2</option>
+  {[1, 2, 3, 4, 5, 6].map((num) => (
+    <option key={num} value={num.toString()}>
+      Class {num}
+    </option>
+  ))}
+  {[1, 2, 3].map((num) => (
+    <option key={num} value={`JHS ${num}`}>
+      JHS {num}
+    </option>
+  ))}
+</select>
             <button
               onClick={handleSearch}
               className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition-colors"

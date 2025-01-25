@@ -108,20 +108,27 @@ return (
               </div>
               <div>
                 <label className="block text-gray-700">Class *</label>
-                <select
-                  name="class"
-                  className="w-full p-2 border border-gray-300 rounded"
-                  required
-                  style={{ color: '#080808FF' }}
-                >
-                  <option value="">Please Select Class</option>
-                  <option value="1">Class 1</option>
-                  <option value="2">Class 2</option>
-                  <option value="3">Class 3</option>
-                  <option value="4">Class 4</option>
-                  <option value="5">Class 5</option>
-                  <option value="6">Class 6</option>
-                </select>
+               <select
+  name="class"
+  className="w-full p-2 border border-gray-300 rounded text-lg text-gray-900"
+  required
+>
+  <option value="">Please Select Class</option>
+  <option value="Creche">Creche</option>
+  <option value="Nursery 1">Nursery 1</option>
+  <option value="Nursery 2">Nursery 2</option>
+  <option value="KG1">KG1</option>
+  <option value="KG2">KG2</option>
+  <option value="1">Class 1</option>
+  <option value="2">Class 2</option>
+  <option value="3">Class 3</option>
+  <option value="4">Class 4</option>
+  <option value="5">Class 5</option>
+  <option value="6">Class 6</option>
+  <option value="JHS 1">JHS 1</option>
+  <option value="JHS 2">JHS 2</option>
+  <option value="JHS 3">JHS 3</option>
+</select>
               </div>
               <div>
                 <label className="block text-gray-700">Date Of Birth *</label>

@@ -88,7 +88,7 @@ const Parent = () => {
     <div className="p-4">
       <div className="bg-white p-4 rounded shadow-md">
         <div className="mb-4">
-          <h1 className="text-xl font-bold pb-4 text-black">Account</h1>
+          <h1 className="text-xl font-bold pb-4 text-black">Parents</h1>
           <div className="text-sm text-gray-800">
             <span>Home</span> <i className="fas fa-chevron-right mx-2"></i>{" "}
             <span className="text-red-500">All Parents</span>
@@ -101,24 +101,34 @@ const Parent = () => {
           </h2>
           <div className="flex flex-wrap mb-4 gap-2">
             <input
-              type="text"
-              placeholder="Search by name or email..."
-              className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+  type="text"
+  placeholder="Search by name or email..."
+  className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg text-gray-900"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
             <select
-              className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
-            >
-              <option value="">Select Class</option>
-              {[1, 2, 3, 4, 5, 6].map((num) => (
-                <option key={num} value={num.toString()}>
-                  Class {num}
-                </option>
-              ))}
-            </select>
+  className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg text-gray-900"
+  value={selectedClass}
+  onChange={(e) => setSelectedClass(e.target.value)}
+>
+  <option value="">Select Class</option>
+  <option value="Creche">Creche</option>
+  <option value="Nursery 1">Nursery 1</option>
+  <option value="Nursery 2">Nursery 2</option>
+  <option value="KG1">KG1</option>
+  <option value="KG2">KG2</option>
+  {[1, 2, 3, 4, 5, 6].map((num) => (
+    <option key={num} value={num.toString()}>
+      Class {num}
+    </option>
+  ))}
+  {[1, 2, 3].map((num) => (
+    <option key={num} value={`JHS ${num}`}>
+      JHS {num}
+    </option>
+  ))}
+</select>
             <button
               className="flex-1 min-w-[200px] bg-red-500 text-white p-2 rounded hover:bg-red-600 transition-colors duration-200"
               onClick={handleSearch}
