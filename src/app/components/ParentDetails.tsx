@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FaEdit, FaTrash, FaFilePdf } from "react-icons/fa";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 interface ParentType {
   id: number;
@@ -27,11 +28,113 @@ function ParentDetails({ parent }: ParentDetailsProps) {
     // Add your delete logic here
   };
 
-  const handleExportPdf = () => {
-    console.log("Export parent as PDF:", parent.id);
-    // Add your PDF export logic here
-  };
+  // Function to export the parent details as PDF
+  const handleExportPdf = async () => {
+    try {
+      // Create a new PDF document
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([600, 800]); // Set page size
 
+      // Load a standard font
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+      // Fetch the school logo image
+      const logoUrl = "/logo.png"; // Path to the logo image
+      const logoResponse = await fetch(logoUrl);
+      const logoArrayBuffer = await logoResponse.arrayBuffer();
+
+      // Determine the logo image format and embed it
+      let logoImage;
+      if (logoUrl.endsWith(".png")) {
+        logoImage = await pdfDoc.embedPng(logoArrayBuffer);
+      } else if (logoUrl.endsWith(".jpg") || logoUrl.endsWith(".jpeg")) {
+        logoImage = await pdfDoc.embedJpg(logoArrayBuffer);
+      } else {
+        throw new Error("Unsupported logo image format. Use PNG or JPG.");
+      }
+
+      // Scale the logo to fit within the page width
+      const logoMaxWidth = 100; // Maximum width for the logo
+      const logoScale = logoMaxWidth / logoImage.width;
+      const logoDims = logoImage.scale(logoScale);
+
+      // Add the logo to the PDF
+      page.drawImage(logoImage, {
+        x: 50, // X position
+        y: 750 - logoDims.height, // Y position (below the top margin)
+        width: logoDims.width,
+        height: logoDims.height,
+      });
+
+      // Fetch the parent's profile photo (if available)
+      const profilePhotoUrl = "/student_profile.png"; // Default profile photo
+      const profilePhotoResponse = await fetch(profilePhotoUrl);
+      const profilePhotoArrayBuffer = await profilePhotoResponse.arrayBuffer();
+
+      // Determine the profile photo format and embed it
+      let profilePhotoImage;
+      if (profilePhotoUrl.endsWith(".png")) {
+        profilePhotoImage = await pdfDoc.embedPng(profilePhotoArrayBuffer);
+      } else if (profilePhotoUrl.endsWith(".jpg") || profilePhotoUrl.endsWith(".jpeg")) {
+        profilePhotoImage = await pdfDoc.embedJpg(profilePhotoArrayBuffer);
+      } else {
+        throw new Error("Unsupported profile photo format. Use PNG or JPG.");
+      }
+
+      // Scale the profile photo to fit within the page width
+      const profilePhotoMaxWidth = 150; // Maximum width for the profile photo
+      const profilePhotoScale = profilePhotoMaxWidth / profilePhotoImage.width;
+      const profilePhotoDims = profilePhotoImage.scale(profilePhotoScale);
+
+      // Add the profile photo to the PDF
+      page.drawImage(profilePhotoImage, {
+        x: 400, // X position (right side of the page)
+        y: 750 - profilePhotoDims.height, // Y position (aligned with the logo)
+        width: profilePhotoDims.width,
+        height: profilePhotoDims.height,
+      });
+
+      // Add the parent's details to the PDF
+      const { fatherName, motherName, id, fatherOccupation, religion, phone, email, address } = parent;
+
+      const text = `
+        Parent Profile
+        ==============
+
+        ID Number: ${id}
+        Father's Name: ${fatherName}
+        Mother's Name: ${motherName}
+        Occupation: ${fatherOccupation}
+        Religion: ${religion}
+        Phone: ${phone}
+        Email: ${email}
+        Address: ${address}
+      `;
+
+      // Draw the text on the page (below the logo and profile photo)
+      page.drawText(text, {
+        x: 50,
+        y: 750 - logoDims.height - 50, // Adjust Y position to leave space for the logo and profile photo
+        size: 12,
+        font,
+        color: rgb(0, 0, 0),
+      });
+
+      // Serialize the PDF to bytes
+      const pdfBytes = await pdfDoc.save();
+
+      // Create a Blob and trigger a download
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Parent_Profile_${fatherName}.pdf`;
+      link.click();
+
+      console.log("PDF exported successfully!");
+    } catch (error) {
+      console.error("Failed to export PDF:", error);
+    }
+  };
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
       <div className="mb-6">
