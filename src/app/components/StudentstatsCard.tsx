@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import {
   getStudentCount,
   getPreviousStudentCount,
-} from "../actions/studentActions"; // Import the server actions
-import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow icons
+} from "../actions/studentActions"; 
+import { FaArrowUp, FaArrowDown } from "react-icons/fa"; 
 
 const StudentStatsCard = () => {
   const [studentCount, setStudentCount] = useState<number | null>(null);

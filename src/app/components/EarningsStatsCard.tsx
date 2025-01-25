@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getTotalEarnings, getPreviousTotalEarnings } from "../actions/feeActions"; // Import the server actions
-import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow icons
+import { getTotalEarnings, getPreviousTotalEarnings } from "../actions/feeActions"; 
+import { FaArrowUp, FaArrowDown } from "react-icons/fa"; 
 
 const EarningsStatsCard = () => {
   const [earnings, setEarnings] = useState<number | null>(null);

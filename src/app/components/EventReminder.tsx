@@ -25,14 +25,14 @@ function EventReminder({ selectedDate, onClose, onSave }: EventReminderProps) {
           <input
             type="text"
             placeholder="Event Title"
-            className="p-3 border border-gray-300 rounded-lg text-lg"
+            className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none text-lg text-gray-900"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
           <textarea
             placeholder="Event Description"
-            className="p-3 border border-gray-300 rounded-lg text-lg"
+             className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none text-lg text-gray-900"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
