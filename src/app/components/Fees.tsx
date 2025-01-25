@@ -92,33 +92,43 @@ const Fees = () => {
           </h2>
           <div className="flex flex-wrap mb-4 gap-2">
             <input
-              type="text"
-              placeholder="Search by name..."
-              className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-            />
-            <select
-              className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
+  type="text"
+  placeholder="Search by name..."
+  className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg  text-gray-900"
+  value={searchName}
+  onChange={(e) => setSearchName(e.target.value)}
+/>
+                  <select
+              className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg font-medium text-gray-700"
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
             >
               <option value="">Select Class</option>
+              <option value="Creche">Creche</option>
+              <option value="Nursery 1">Nursery 1</option>
+              <option value="Nursery 2">Nursery 2</option>
+              <option value="KG1">KG1</option>
+              <option value="KG2">KG2</option>
               {[1, 2, 3, 4, 5, 6].map((num) => (
                 <option key={num} value={num.toString()}>
                   Class {num}
                 </option>
               ))}
+              {[1, 2, 3].map((num) => (
+                <option key={num} value={`JHS ${num}`}>
+                  JHS {num}
+                </option>
+              ))}
             </select>
-            <select
-              className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-            >
-              <option value="">Select Status</option>
-              <option value="paid">Paid</option>
-              <option value="unpaid">Unpaid</option>
-            </select>
+           <select
+  className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg font-medium text-gray-700 bg-white"
+  value={selectedStatus}
+  onChange={(e) => setSelectedStatus(e.target.value)}
+>
+  <option value="">Select Status</option>
+  <option value="paid">Paid</option>
+  <option value="unpaid">Unpaid</option>
+</select>
             <button
               className="flex-1 min-w-[200px] bg-red-500 text-white p-2 rounded hover:bg-red-600 transition-colors duration-200"
               onClick={handleSearch}
