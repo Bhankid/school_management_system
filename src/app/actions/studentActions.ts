@@ -170,6 +170,36 @@ export async function getPreviousStudentCount(): Promise<number> {
   }
 }
 
+export async function deleteStudent(studentId: number): Promise<void> {
+  try {
+    const student = await Student.findByPk(studentId);
+
+    if (!student) {
+      throw new Error("Student not found");
+    }
+
+    // Delete the student's photo if it exists
+    if (student.photoUrl) {
+      const photoPath = path.join(process.cwd(), "public", student.photoUrl);
+      if (fs.existsSync(photoPath)) {
+        fs.unlinkSync(photoPath);
+      }
+    }
+
+    // Delete the student and their parent
+    const parent = await Parent.findByPk(student.parentId);
+    await student.destroy();
+    if (parent) {
+      await parent.destroy();
+    }
+
+    revalidatePath("/students");
+  } catch (err) {
+    console.error("Failed to delete student:", err);
+    throw new Error("Failed to delete student");
+  }
+}
+
 // export async function getStudentPhoto(studentId: number) {
 //   try {
 //     const student = await Student.findByPk(studentId, {

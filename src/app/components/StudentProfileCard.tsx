@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { FaEdit, FaTrash, FaFilePdf } from "react-icons/fa";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import Swal from 'sweetalert2';
+import { deleteStudent } from "../actions/studentActions"; 
 
 interface StudentType {
   id: number;
@@ -38,10 +40,37 @@ function StudentProfileCard({ student }: StudentProfileCardProps) {
     // Add your update logic here
   };
 
-  const handleDelete = () => {
-    console.log("Delete student:", student.id);
-    // Add your delete logic here
-  };
+// Function to delete a student
+const handleDelete = async () => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteStudent(student.id).then(() => {
+        Swal.fire(
+          'Deleted!',
+          'Student has been deleted.',
+          'success'
+        );
+        // Refresh the page or update the UI
+        window.location.reload();
+      }).catch((error) => {
+        console.error('Failed to delete student:', error);
+        Swal.fire(
+          'Error!',
+          'Failed to delete student.',
+          'error'
+        );
+      });
+    }
+  });
+};
 
    // Function to export the student profile as PDF
   const handleExportPdf = async () => {
