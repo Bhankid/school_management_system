@@ -1,38 +1,37 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link"; // Import the Link component
-import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useState } from "react";
+import { signInAction } from "../app/actions/auth";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
+      // Call the signInAction function to validate credentials
+      const user = await signInAction({ email, password });
 
-      if (result?.ok) {
-        // Login successful, redirect to dashboard
+      if (user) {
+        // Redirect to the dashboard after successful login
         window.location.href = "/Dashboard";
-      } else if (result) {
-        setError(result.error);
-      } else {
-        setError("Failed to login");
       }
     } catch (error) {
-  if (error instanceof Error) {
-    setError(error.message);
-  } else {
-    setError("An unexpected error occurred");
-  }
-}
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -75,44 +74,47 @@ const [error, setError] = useState<string | null>(null);
             }}
           >
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                className="w-full p-3 mb-4 border border-gray-300 rounded"
-              />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full p-3 mb-4 border border-gray-300 rounded"
-              />
-              <Link
-                href="/forgot-password" 
-                className="text-blue-500 text-sm mb-4 block hover:underline"
-              >
-                Forgot your password?
-              </Link>
-              <button
-                className="w-full bg-red-600 text-white p-3 rounded hover:bg-red-700 transition-colors"
-                onClick={handleSubmit}
-              >
-                SIGN IN
-              </button>
-              <p className="text-sm text-gray-600 mt-4">
-                Don&apos;t have an account?{" "}
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                  className="w-full p-3 mb-4 border border-gray-300 rounded"
+                />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  className="w-full p-3 mb-4 border border-gray-300 rounded"
+                />
                 <Link
-                  href="/signup"
-                  className="text-blue-500 hover:underline"
+                  href="/forgot-password" 
+                  className="text-blue-500 text-sm mb-4 block hover:underline"
                 >
-                  Sign up
+                  Forgot your password?
                 </Link>
-              </p>
-              {error && (
-                <div className="text-red-600 text-sm mt-4">{error}</div>
-              )}
+                <button
+                  type="submit"
+                  className="w-full bg-red-600 text-white p-3 rounded hover:bg-red-700 transition-colors"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Loading..." : "SIGN IN"}
+                </button>
+                <p className="text-sm text-gray-600 mt-4">
+                  Don&apos;t have an account?{" "}
+                  <Link
+                    href="/signup"
+                    className="text-blue-500 hover:underline"
+                  >
+                    Sign up
+                  </Link>
+                </p>
+                {error && (
+                  <div className="text-red-600 text-sm mt-4">{error}</div>
+                )}
+              </form>
             </div>
           </div>
         </div>

@@ -23,10 +23,25 @@ export async function signUpAction({ name, email, password }: { name: string; em
 }
 
 export async function signInAction({ email, password }: { email: string; password: string }) {
-  const user = await User.findOne({ where: { email } });
-
-  if (user && bcrypt.compareSync(password, user.password)) {
-    return { id: user.id, name: user.name, email: user.email };
+  if (!email || !password) {
+    throw new Error("Email and password are required");
   }
-  throw new Error("Invalid email or password");
+
+  const user = await User.findOne({ where: { email }, raw: true });
+
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
+
+  if (!user.password) {
+    throw new Error("User  password is not set");
+  }
+
+  const isValidPassword = await bcrypt.compare(password, user.password);
+
+  if (!isValidPassword) {
+    throw new Error("Invalid email or password");
+  }
+
+  return { id: user.id, name: user.name, email: user.email };
 }
