@@ -2,6 +2,8 @@
 
 import Parent from "@/models/Parent";
 import { Op } from "sequelize";
+import { revalidatePath } from "next/cache";
+import Student from "@/models/Student";
 
 export async function getAllParents() {
   try {
@@ -72,5 +74,33 @@ export async function getPreviousParentCount(): Promise<number> {
   } catch (err) {
     console.error("Failed to fetch previous parent count:", err);
     throw new Error("Failed to fetch previous parent count");
+  }
+}
+
+
+export async function deleteParent(parentId: number): Promise<void> {
+  try {
+    const parent = await Parent.findByPk(parentId);
+
+    if (!parent) {
+      throw new Error("Parent not found");
+    }
+
+    // Delete the parent's students
+    const students = await Student.findAll({
+      where: {
+        parentId: parent.id,
+      },
+    });
+
+    await Promise.all(students.map((student) => student.destroy()));
+
+    // Delete the parent
+    await parent.destroy();
+
+    revalidatePath("/parents");
+  } catch (err) {
+    console.error("Failed to delete parent:", err);
+    throw new Error("Failed to delete parent");
   }
 }
