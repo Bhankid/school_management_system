@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signUpAction } from "../actions/auth";
 
 function SignUp() {
   const [name, setName] = useState("");
@@ -12,31 +12,30 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
+      setSuccess(null);
       return;
     }
 
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-        name,
-      });
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
-      if (result?.ok) {
-        setSuccess("User   created successfully");
+    try {
+      const result = await signUpAction({ name, email, password });
+
+      if (result.status === 201) {
+        setSuccess("User created successfully");
         setName("");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
-      } else if (result) {
-        setError(result.error);
       } else {
         setError("Failed to create user");
       }
@@ -44,8 +43,10 @@ function SignUp() {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError('An unexpected error occurred');
+        setError("An unexpected error occurred");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,6 +100,7 @@ function SignUp() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Full Name"
                   className="w-full p-2 mb-3 border border-gray-300 rounded"
+                  required
                 />
                 <input
                   type="email"
@@ -106,6 +108,7 @@ function SignUp() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email Address"
                   className="w-full p-2 mb-3 border border-gray-300 rounded"
+                  required
                 />
                 <input
                   type="password"
@@ -113,6 +116,7 @@ function SignUp() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Create Password"
                   className="w-full p-2 mb-3 border border-gray-300 rounded"
+                  required
                 />
                 <input
                   type="password"
@@ -120,6 +124,7 @@ function SignUp() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm Password"
                   className="w-full p-2 mb-3 border border-gray-300 rounded"
+                  required
                 />
                 {error && (
                   <div className="mb-3 text-red-600 text-sm">{error}</div>
@@ -127,12 +132,17 @@ function SignUp() {
                 {success && (
                   <div className="mb-3 text-green-600 text-sm">{success}</div>
                 )}
-                <button className="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700 transition-colors">
-                  SIGN UP
+                <button
+                  className={`w-full ${
+                    loading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
+                  } text-white p-2 rounded transition-colors`}
+                  disabled={loading}
+                >
+                  {loading ? "Processing..." : "SIGN UP"}
                 </button>
                 <p className="text-sm text-gray-600 mt-3">
                   Already have an account?{" "}
-                  <Link href="/" className="text-blue-500 hover :underline">
+                  <Link href="/" className="text-blue-500 hover:underline">
                     Log in
                   </Link>
                 </p>

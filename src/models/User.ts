@@ -6,11 +6,11 @@ class User extends Model {
   public name!: string;
   public email!: string;
   public password!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public createdAt!: Date;
+  public updatedAt!: Date;
 }
 
-User.init(
+User .init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -29,6 +29,16 @@ User.init(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: "createdAt",
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: "updatedAt",
+      defaultValue: DataTypes.NOW,
     },
   },
   {

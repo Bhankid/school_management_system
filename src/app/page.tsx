@@ -2,8 +2,39 @@
 
 import Image from "next/image";
 import Link from "next/link"; // Import the Link component
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.ok) {
+        // Login successful, redirect to dashboard
+        window.location.href = "/Dashboard";
+      } else if (result) {
+        setError(result.error);
+      } else {
+        setError("Failed to login");
+      }
+    } catch (error) {
+  if (error instanceof Error) {
+    setError(error.message);
+  } else {
+    setError("An unexpected error occurred");
+  }
+}
+  };
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-6xl">
@@ -46,21 +77,28 @@ function Login() {
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
               <input
                 type="text"
-                placeholder="Prince Afful Quansah"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
                 className="w-full p-3 mb-4 border border-gray-300 rounded"
               />
               <input
                 type="password"
-                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
                 className="w-full p-3 mb-4 border border-gray-300 rounded"
               />
               <Link
-                href="/forgot-password" // Replace with your forgot password route
+                href="/forgot-password" 
                 className="text-blue-500 text-sm mb-4 block hover:underline"
               >
                 Forgot your password?
               </Link>
-              <button className="w-full bg-red-600 text-white p-3 rounded hover:bg-red-700 transition-colors">
+              <button
+                className="w-full bg-red-600 text-white p-3 rounded hover:bg-red-700 transition-colors"
+                onClick={handleSubmit}
+              >
                 SIGN IN
               </button>
               <p className="text-sm text-gray-600 mt-4">
@@ -72,6 +110,9 @@ function Login() {
                   Sign up
                 </Link>
               </p>
+              {error && (
+                <div className="text-red-600 text-sm mt-4">{error}</div>
+              )}
             </div>
           </div>
         </div>

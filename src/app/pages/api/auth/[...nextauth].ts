@@ -6,10 +6,9 @@ import bcrypt from "bcryptjs";
 declare module "next-auth" {
   interface Session {
     user: {
-      id: string;
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
+      id: string; 
+      name: string; 
+      email: string; 
     };
   }
 }
@@ -31,25 +30,42 @@ export default NextAuth({
         const user = await User.findOne({ where: { email: credentials.email } });
 
         if (user) {
-          throw new Error("User   with this email already exists");
+          const isValidPassword = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+
+          if (!isValidPassword) {
+            throw new Error("Invalid password");
+          }
+
+          return {
+            id: user.id.toString(),
+            name: user.name || "", 
+            email: user.email || "",
+          };
         }
 
         const hashedPassword = bcrypt.hashSync(credentials.password, 10);
 
         try {
-          const newUser = await User.create({
+          const newUser  = await User.create({
             name: credentials.name,
             email: credentials.email,
             password: hashedPassword,
           });
 
           return {
-            id: newUser.id.toString(),
-            email: newUser.email,
-            name: newUser.name,
+            id: newUser .id.toString(),
+            name: newUser .name || "", 
+            email: newUser .email || "", 
           };
         } catch (error) {
-          throw new Error(`Failed to create user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          if (error instanceof Error) {
+            throw new Error(`Failed to create user: ${error.message}`);
+          } else {
+            throw new Error("An unexpected error occurred");
+          }
         }
       },
     }),
@@ -60,23 +76,31 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id; 
+        token.name = user.name || "";
+        token.email = user.email || ""; 
       }
       return token;
     },
-    async session({ session, token }) {
-      if (token) {
-        if (session.user) {
-          session.user.id = token.id as string;
-        }
+   async session({ session, token }) {
+  if (token) {
+    if (session.user) {
+      if (typeof token.id === "string") {
+        session.user.id = token.id;
+      } else {
+        throw new Error("Invalid token.id type");
       }
-      return session;
+      session.user.name = token.name || "";
+      session.user.email = token.email || "";
+    }
+  }
+  return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/",
-    signOut: "/",
-    error: "/",
-  },
-});
+  signIn: "/login",
+  signOut: "/signout",
+  error: "/error",
+},
+}); 

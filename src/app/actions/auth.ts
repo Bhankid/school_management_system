@@ -8,9 +8,17 @@ export async function signUpAction({ name, email, password }: { name: string; em
 
   try {
     const user = await User.create({ name, email, password: hashedPassword });
-    return { status: 201, user };
-  } catch {
-    throw new Error("User already exists or database error");
+    return { status: 201, user: { id: user.id, name: user.name, email: user.email } };
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.name === "SequelizeUniqueConstraintError") {
+        throw new Error("User already exists");
+      } else {
+        throw new Error(`Database error: ${error.message}`);
+      }
+    } else {
+      throw new Error("Unknown error");
+    }
   }
 }
 
