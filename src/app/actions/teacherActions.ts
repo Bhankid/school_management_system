@@ -126,3 +126,29 @@ export async function getPreviousTeacherCount(): Promise<number> {
     throw new Error("Failed to fetch previous teacher count");
   }
 }
+
+export async function deleteTeacher(teacherId: number): Promise<void> {
+  try {
+    const teacher = await Teacher.findByPk(teacherId);
+
+    if (!teacher) {
+      throw new Error("Teacher not found");
+    }
+
+    // Delete the teacher's photo if it exists
+    if (teacher.photoUrl) {
+      const photoPath = path.join(process.cwd(), "public", teacher.photoUrl);
+      if (fs.existsSync(photoPath)) {
+        fs.unlinkSync(photoPath);
+      }
+    }
+
+    // Delete the teacher
+    await teacher.destroy();
+
+    revalidatePath("/teachers");
+  } catch (err) {
+    console.error("Failed to delete teacher:", err);
+    throw new Error("Failed to delete teacher");
+  }
+}

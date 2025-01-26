@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { FaEdit, FaTrash, FaFilePdf } from "react-icons/fa";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { deleteTeacher } from "../actions/teacherActions";
+import Swal from 'sweetalert2';
 
 interface TeacherType {
   id: number;
@@ -33,10 +35,36 @@ function TeacherProfile({ teacher }: TeacherProfileProps) {
     // Add your update logic here
   };
 
-  const handleDelete = () => {
-    console.log("Delete teacher:", teacher.id);
-    // Add your delete logic here
-  };
+const handleDelete = async () => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteTeacher(teacher.id).then(() => {
+        Swal.fire(
+          'Deleted!',
+          'Teacher has been deleted.',
+          'success'
+        );
+        // Refresh the page or update the UI
+        window.location.reload();
+      }).catch((error) => {
+        console.error('Failed to delete teacher:', error);
+        Swal.fire(
+          'Error!',
+          'Failed to delete teacher.',
+          'error'
+        );
+      });
+    }
+  });
+};
 
 const handleExportPdf = async () => {
   try {
