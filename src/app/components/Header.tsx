@@ -147,7 +147,7 @@ function Header({ setActiveTab }: HeaderProps) {
 
             <ProfileDropdown
               isOpen={showProfileMenu}
-              setActiveTab={setActiveTab} // Optional for setting active tab
+              setActiveTab={setActiveTab} 
             />
           </div>
         </div>
@@ -155,11 +155,11 @@ function Header({ setActiveTab }: HeaderProps) {
 
       {/* Search Results */}
       {showResults && searchResults.length > 0 && (
-        <div className="absolute top-full left-0 right-0 md:left-auto md:right-4 md:w-80 mt-2 bg-white shadow-lg rounded-lg overflow-hidden z-50 mx-4 md:mx-0">
+        <div className="absolute top-full left-0 right-0 md:left-auto md:right-4 md:w-80 mt-1 bg-white shadow-lg rounded-lg overflow-hidden z-50 mx-4 md:mx-0">
           {searchResults.map((item) => (
             <div
               key={item.id}
-              className="p-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between text-sm md:text-base"
+              className="p-3 hover:bg-gray-50 text-gray-800 cursor-pointer flex items-center justify-between text-sm md:text-base"
             >
               <div className="flex items-center">
                 <span
@@ -175,7 +175,7 @@ function Header({ setActiveTab }: HeaderProps) {
                 ></span>
                 <span>{item.title}</span>
               </div>
-              <span className="text-gray-600">{item.value}</span>
+              <span className="text-gray-800">{item.value}</span>
             </div>
           ))}
         </div>

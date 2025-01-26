@@ -92,12 +92,12 @@ const Fees = () => {
           </h2>
           <div className="flex flex-wrap mb-4 gap-2">
             <input
-  type="text"
-  placeholder="Search by name..."
-  className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg  text-gray-900"
-  value={searchName}
-  onChange={(e) => setSearchName(e.target.value)}
-/>
+              type="text"
+              placeholder="Search by name..."
+              className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg  text-gray-900"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+            />
                   <select
               className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg font-medium text-gray-700"
               value={selectedClass}
