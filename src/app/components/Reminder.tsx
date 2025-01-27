@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getAllEvents } from "../actions/eventActions"; // Import the server action
+import { getAllEvents } from "../actions/eventActions";
 
 interface EventType {
   id: number;
