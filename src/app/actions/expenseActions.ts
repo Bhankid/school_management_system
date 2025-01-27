@@ -55,3 +55,21 @@ export async function getAllExpenses(): Promise<ExpenseAttributes[]> {
     throw new Error("Failed to fetch expenses.");
   }
 }
+
+export async function deleteExpense(expenseId: number): Promise<void> {
+  try {
+    const expense = await Expense.findByPk(expenseId);
+
+    if (!expense) {
+      throw new Error("Expense not found");
+    }
+
+    // Delete the expense
+    await expense.destroy();
+
+    revalidatePath("/expenses");
+  } catch (err) {
+    console.error("Failed to delete expense:", err);
+    throw new Error("Failed to delete expense");
+  }
+}
