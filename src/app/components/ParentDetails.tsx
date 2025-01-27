@@ -164,7 +164,7 @@ const handleDelete = async () => {
     }
   };
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full">
+    <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full transform scale-95 opacity-0 animate-bounceIn">
       <div className="mb-6">
         <Image src="/logo.png" alt="School Logo" width={48} height={48} />
       </div>
