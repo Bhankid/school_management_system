@@ -2,6 +2,7 @@ import { FaEdit, FaTrash, FaFilePdf } from "react-icons/fa";
 import { useState } from "react";
 import { deleteExpense } from "../actions/expenseActions";
 import Swal from "sweetalert2";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 interface ExpenseType {
   id: number;
@@ -53,10 +54,136 @@ const ExpenseProfile = ({ expense }: ExpenseProfileProps) => {
         });
     }
   });
-};
-  const handleExportPdf = () => {
-    console.log("Export expense as PDF");
   };
+  
+const handleExportPdf = async () => {
+  try {
+    // Create a new PDF document
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([600, 800]); // Set page size
+
+    // Load a standard font
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    // Fetch the school logo image
+    const logoUrl = "/logo.png"; // Path to the logo image
+    const logoResponse = await fetch(logoUrl);
+    const logoArrayBuffer = await logoResponse.arrayBuffer();
+
+    // Determine the logo image format and embed it
+    let logoImage;
+    if (logoUrl.endsWith(".png")) {
+      logoImage = await pdfDoc.embedPng(logoArrayBuffer);
+    } else if (logoUrl.endsWith(".jpg") || logoUrl.endsWith(".jpeg")) {
+      logoImage = await pdfDoc.embedJpg(logoArrayBuffer);
+    } else {
+      throw new Error("Unsupported logo image format. Use PNG or JPG.");
+    }
+
+    // Scale the logo to fit within the page width
+    const logoMaxWidth = 100; // Maximum width for the logo
+    const logoScale = logoMaxWidth / logoImage.width;
+    const logoDims = logoImage.scale(logoScale);
+
+    // Add the school's name at the top of the page
+    page.drawText("Bhankid International IT Institute", {
+      x: 50,
+      y: 750,
+      size: 24,
+      font: boldFont,
+      color: rgb(0, 0, 0),
+    });
+
+    // Add the logo to the PDF
+    page.drawImage(logoImage, {
+      x: 450, // X position (right side of the school's name)
+      y: 750 - logoDims.height, // Y position (aligned with the school's name)
+      width: logoDims.width,
+      height: logoDims.height,
+    });
+
+    // Add the expense receipt title
+    page.drawText("Expense Receipt", {
+      x: 250,
+      y: 700,
+      size: 18,
+      font: boldFont,
+      color: rgb(0, 0, 0),
+    });
+
+    page.drawText("===============", {
+      x: 250,
+      y: 680,
+      size: 18,
+      font: boldFont,
+      color: rgb(0, 0, 0),
+    });
+
+    // Add the expense details below the school's name
+    const expenseDetailsLeft = `
+      ID Number: ${expense.id}
+      Name: ${expense.name}
+      Expense Type: ${expense.expenseType}
+      Amount: ${expense.amount}
+    `;
+
+    const expenseDetailsRight = `
+      Status: ${expense.status}
+      Parent Email: ${expense.email}
+      Parent Phone: ${expense.phone}
+      Due Date: ${expense.dueDate}
+    `;
+
+    // Draw the expense details on the page in 2 columns
+    page.drawText(expenseDetailsLeft, {
+      x: 50,
+      y: 620,
+      size: 14,
+      font,
+      color: rgb(0, 0, 0),
+    });
+
+    page.drawText(expenseDetailsRight, {
+      x: 300,
+      y: 620,
+      size: 14,
+      font,
+      color: rgb(0, 0, 0),
+    });
+
+    // Add a signature field
+    page.drawText("Signature:", {
+      x: 50,
+      y: 500,
+      size: 14,
+      font,
+      color: rgb(0, 0, 0),
+    });
+
+    page.drawText("................................", {
+      x: 150,
+      y: 500,
+      size: 14,
+      font,
+      color: rgb(0, 0, 0),
+    });
+
+    // Serialize the PDF to bytes
+    const pdfBytes = await pdfDoc.save();
+
+    // Create a Blob and trigger a download
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Expense_Receipt_${expense.name}.pdf`;
+    link.click();
+
+    console.log("PDF exported successfully!");
+  } catch (error) {
+    console.error("Failed to export PDF:", error);
+  }
+};
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full transform scale-95 opacity-0 animate-bounceIn">
