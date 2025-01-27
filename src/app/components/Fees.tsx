@@ -76,7 +76,7 @@ const Fees = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 relative">
       <div className="bg-white p-4 rounded shadow-md">
         <div className="mb-4">
           <h1 className="text-xl font-bold pb-4 text-black">Account</h1>
@@ -86,11 +86,11 @@ const Fees = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="bg-white p-4 rounded-lg shadow-sm">
           <h2 className="text-2xl font-bold mb-4 text-gray-800">
             All Student Fees Data
           </h2>
-          <div className="flex flex-wrap mb-4 gap-2">
+          <div className="grid grid-cols-4 gap-6 mb-4">
             <input
               type="text"
               placeholder="Search by name..."
@@ -141,16 +141,16 @@ const Fees = () => {
             <table className="min-w-full bg-white">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-b text-red-500">ID</th>
-                  <th className="py-2 px-4 border-b text-red-500">Name</th>
-                  <th className="py-2 px-4 border-b text-red-500">Gender</th>
-                  <th className="py-2 px-4 border-b text-red-500">Class</th>
-                  <th className="py-2 px-4 border-b text-red-500">Amount</th>
-                  <th className="py-2 px-4 border-b text-red-500">Status</th>
-                  <th className="py-2 px-4 border-b text-red-500">
+                  <th className="py-2 px-2 border-b text-red-500">ID</th>
+                  <th className="py-2 px-2 border-b text-red-500">Name</th>
+                  <th className="py-2 px-2 border-b text-red-500">Gender</th>
+                  <th className="py-2 px-2 border-b text-red-500">Class</th>
+                  <th className="py-2 px-2 border-b text-red-500">Amount</th>
+                  <th className="py-2 px-2 border-b text-red-500">Status</th>
+                  <th className="py-2 px-2 border-b text-red-500">
                     Parent Email
                   </th>
-                  <th className="py-2 px-4 border-b text-red-500">
+                  <th className="py-2 px-2 border-b text-red-500">
                     Parent Phone
                   </th>
                 </tr>
@@ -161,22 +161,22 @@ const Fees = () => {
                     key={fee.id}
                     className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-md cursor-pointer"
                   >
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-2 border-b text-gray-800">
                       {fee.id}
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-2 border-b text-gray-800">
                       {fee.name}
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-2 border-b text-gray-800">
                       {fee.gender}
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-2 border-b text-gray-800">
                       {fee.class}
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-2 border-b text-gray-800">
                       {fee.amount}
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-2 border-b text-gray-800">
                       <span
                         className={`px-2 py-1 rounded text-white ${
                           fee.status.toLowerCase() === "unpaid"
@@ -187,10 +187,10 @@ const Fees = () => {
                         {fee.status}
                       </span>
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-2 border-b text-gray-800">
                       {fee.email}
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
+                    <td className="py-2 px-2 border-b text-gray-800">
                       {fee.phone}
                     </td>
                   </tr>

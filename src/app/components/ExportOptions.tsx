@@ -131,18 +131,18 @@ const ExportOptions: React.FC<ExportOptionsProps> = ({ timetable }) => {
   }
 
   return (
-    <div className="mt-4 flex space-x-4">
+    <div className="flex justify-between items-center mt-4">
       <CSVLink
         data={[headers, ...data]}
         filename="timetable.csv"
-        className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800"
+        className="bg-blue-700 text-white px-2 py-2 rounded hover:bg-blue-800"
       >
         Export CSV
       </CSVLink>
 
       <button
         onClick={exportToPDF}
-        className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+        className="bg-red-600 text-white px-2 py-2 rounded hover:bg-red-700"
       >
         Export PDF
       </button>

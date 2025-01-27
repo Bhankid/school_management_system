@@ -48,7 +48,7 @@ function AccountSettings() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="p-4 relative">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         {/* Header */}
         <div className="bg-gray-100 p-4">

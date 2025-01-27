@@ -80,7 +80,7 @@ const Expense = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 relative">
       <div className="mb-4">
         <h1 className="text-xl font-bold text-gray-700">Account</h1>
         <div className="border-b-2 border-red-500 w-12 my-1"></div>
@@ -100,19 +100,19 @@ const Expense = () => {
           <input
             type="text"
             placeholder="Search by name..."
-            className="p-2 border rounded w-1/3 text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none"
+            className="p-2 border rounded w-1/4 text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none"
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
           />
           <input
             type="text"
             placeholder="Search by expense type..."
-            className="p-2 border rounded w-1/3 text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none"
+            className="p-2 border rounded w-1/4 text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none"
             value={searchExpenseType}
             onChange={(e) => setSearchExpenseType(e.target.value)}
           />
           <select
-            className="p-2 border rounded w-1/3 text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none"
+            className="p-2 border rounded w-1/4 text-gray-800 focus:ring-2 focus:ring-red-500 focus:outline-none"
             value={searchStatus}
             onChange={(e) => setSearchStatus(e.target.value)}
           >
@@ -122,7 +122,7 @@ const Expense = () => {
             <option value="due">Due</option>
           </select>
           <button
-            className="bg-red-600 text-white p-2 rounded hover:bg-red-700 transition-colors duration-200"
+            className="bg-red-600 text-white w-1/4 p-2 rounded hover:bg-red-700 transition-colors duration-200"
             onClick={handleSearch}
           >
             SEARCH

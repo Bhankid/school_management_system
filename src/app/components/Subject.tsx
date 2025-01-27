@@ -92,7 +92,7 @@ const Subject = () => {
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="p-6">
+    <div className="p-6 relative">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-black pb-4">Subjects</h1>
         <div className="text-sm text-gray-500">
@@ -103,7 +103,7 @@ const Subject = () => {
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-bold mb-4 text-gray-600">All Subjects</h2>
-        <div className="flex mb-4">
+        <div className="grid grid-cols-3 gap-4 mb-4">
   <input
     type="text"
     placeholder="Search by subject name or teacher..."

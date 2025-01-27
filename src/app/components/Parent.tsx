@@ -85,7 +85,7 @@ const Parent = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 relative">
       <div className="bg-white p-4 rounded shadow-md">
         <div className="mb-4">
           <h1 className="text-xl font-bold pb-4 text-black">Parents</h1>
@@ -95,11 +95,11 @@ const Parent = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">
+        <div className="bg-white p-6 rounded shadow-sm">
+          <h2 className="text-2xl font-bold mb-4 text-gray-500">
             All Parents Data
           </h2>
-          <div className="flex flex-wrap mb-4 gap-2">
+          <div className="grid grid-cols-3 gap-6 mb-4">
             <input
   type="text"
   placeholder="Search by name or email..."
@@ -141,14 +141,14 @@ const Parent = () => {
             <table className="min-w-full bg-white">
               <thead>
                 <tr>
-                  <th className="py- 2 px-4 border-b text-red-500">ID</th>
-                  <th className="py-2 px-4 border-b text-red-500">Father&apos;s Name</th>
-                  <th className="py-2 px-4 border-b text-red-500">Mother&apos;s Name</th>
-                  <th className="py-2 px-4 border-b text-red-500">Occupation</th>
-                  <th className="py-2 px-4 border-b text-red-500">Address</th>
-                  <th className="py-2 px-4 border-b text-red-500">E-mail</th>
-                  <th className="py-2 px-4 border-b text-red-500">Phone</th>
-                  <th className="py-2 px-4 border-b text-red-500">Religion</th>
+                  <th className="py- 2 px-2 border-b text-red-500">ID</th>
+                  <th className="py-2 px-2 border-b text-red-500">Father&apos;s Name</th>
+                  <th className="py-2 px-2 border-b text-red-500">Mother&apos;s Name</th>
+                  <th className="py-2 px-2 border-b text-red-500">Occupation</th>
+                  <th className="py-2 px-2 border-b text-red-500">Address</th>
+                  <th className="py-2 px-2 border-b text-red-500">E-mail</th>
+                  <th className="py-2 px-2 border-b text-red-500">Phone</th>
+                  <th className="py-2 px-2 border-b text-red-500">Religion</th>
                 </tr>
               </thead>
               <tbody>
@@ -158,14 +158,14 @@ const Parent = () => {
                     onClick={() => handleParentClick(parent)}
                     className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-md cursor-pointer"
                   >
-                    <td className="py-2 px-4 border-b text-gray-800">{parent.id}</td>
-                    <td className="py-2 px-4 border-b text-gray-800">{parent.fatherName}</td>
-                    <td className="py-2 px-4 border-b text-gray-800">{parent.motherName}</td>
-                    <td className="py-2 px-4 border-b text-gray-800">{parent.fatherOccupation}</td>
-                    <td className="py-2 px-4 border-b text-gray-800">{parent.address}</td>
-                    <td className="py-2 px-4 border-b text-gray-800">{parent.email}</td>
-                    <td className="py-2 px-4 border-b text-gray-800">{parent.phone}</td>
-                    <td className="py-2 px-4 border-b text-gray-800">{parent.religion}</td>
+                    <td className="py-2 px-2 border-b text-gray-800">{parent.id}</td>
+                    <td className="py-2 px-2 border-b text-gray-800">{parent.fatherName}</td>
+                    <td className="py-2 px-2 border-b text-gray-800">{parent.motherName}</td>
+                    <td className="py-2 px-2 border-b text-gray-800">{parent.fatherOccupation}</td>
+                    <td className="py-2 px-2 border-b text-gray-800">{parent.address}</td>
+                    <td className="py-2 px-2 border-b text-gray-800">{parent.email}</td>
+                    <td className="py-2 px-2 border-b text-gray-800">{parent.phone}</td>
+                    <td className="py-2 px-2 border-b text-gray-800">{parent.religion}</td>
                   </tr>
                 ))}
               </tbody>
