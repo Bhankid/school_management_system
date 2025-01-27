@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getAllExpenses } from "../actions/expenseActions";
+import ExpenseProfile from "../components/ExpenseProfile";
 
 interface ExpenseType {
   id: number;
@@ -16,13 +17,15 @@ interface ExpenseType {
 
 const ITEMS_PER_PAGE = 15;
 
-const Expense = () => {
+const Expenses = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
   const [searchExpenseType, setSearchExpenseType] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
   const [allExpenses, setAllExpenses] = useState<ExpenseType[]>([]);
   const [filteredExpenses, setFilteredExpenses] = useState<ExpenseType[]>([]);
+  const [selectedExpense, setSelectedExpense] = useState<ExpenseType | null>(null);
+  const [isExpenseVisible, setIsExpenseVisible] = useState(false);
 
   useEffect(() => {
     const loadExpenses = async () => {
@@ -56,6 +59,16 @@ const Expense = () => {
 
     setFilteredExpenses(filtered);
     setCurrentPage(1);
+  };
+
+  const handleExpenseClick = (expense: ExpenseType) => {
+    setSelectedExpense(expense);
+    setIsExpenseVisible(true);
+  };
+
+  const handleCloseExpense = () => {
+    setIsExpenseVisible(false);
+    setTimeout(() => setSelectedExpense(null), 300);
   };
 
   const totalPages = Math.ceil(filteredExpenses.length / ITEMS_PER_PAGE);
@@ -133,25 +146,25 @@ const Expense = () => {
           <table className="min-w-full bg-white">
             <thead>
               <tr className="bg-gray-100">
-                <th className="py-2 px-4 border-b text-gray-900 font-semibold">
+                <th className="py-2 px-2 border-b text-gray-900 font-semibold">
                   Name
                 </th>
-                <th className="py-2 px-4 border-b text-gray-900 font-semibold">
+                <th className="py-2 px-2 border-b text-gray-900 font-semibold">
                   Expense Type
                 </th>
-                <th className="py-2 px-4 border-b text-gray-900 font-semibold">
+                <th className="py-2 px-2 border-b text-gray-900 font-semibold">
                   Amount
                 </th>
-                <th className="py-2 px-4 border-b text-gray-900 font-semibold">
+                <th className="py-2 px-2 border-b text-gray-900 font-semibold">
                   Status
                 </th>
-                <th className="py-2 px-4 border-b text-gray-900 font-semibold">
+                <th className="py-2 px-2 border-b text-gray-900 font-semibold">
                   Parent Email
                 </th>
-                <th className="py-2 px-4 border-b text-gray-900 font-semibold">
+                <th className="py-2 px-2 border-b text-gray-900 font-semibold">
                   Parent Phone
                 </th>
-                <th className="py-2 px-4 border-b text-gray-900 font-semibold">
+                <th className="py-2 px-2 border-b text-gray-900 font-semibold">
                   Due Date
                 </th>
               </tr>
@@ -160,18 +173,19 @@ const Expense = () => {
               {currentExpenses.map((expense) => (
                 <tr
                   key={expense.id}
+                  onClick={() => handleExpenseClick(expense)}
                   className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-sm cursor-pointer"
                 >
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-2 border-b text-gray-800">
                     {expense.name}
                   </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-2 border-b text-gray-800">
                     {expense.expenseType}
                   </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-2 border-b text-gray-800">
                     {expense.amount}
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-2 border-b">
                     <span
                       className={`px-2 py-1 rounded text-white font-medium ${
                         expense.status.toLowerCase() === "unpaid"
@@ -184,13 +198,13 @@ const Expense = () => {
                       {expense.status}
                     </span>
                   </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-2 border-b text-gray-800">
                     {expense.email}
                   </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-2 border-b text-gray-800">
                     {expense.phone}
                   </td>
-                  <td className="py-2 px-4 border-b text-gray-800">
+                  <td className="py-2 px-2 border-b text-gray-800">
                     {expense.dueDate}
                   </td>
                 </tr>
@@ -239,8 +253,28 @@ const Expense = () => {
           </button>
         </div>
       </div>
+
+      {selectedExpense && (
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${
+            isExpenseVisible ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={handleCloseExpense}
+        >
+          <div
+            className={`transform transition-all duration-300 ${
+              isExpenseVisible
+                ? "scale-100 translate-y-0"
+                : "scale-95 translate-y-4"
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ExpenseProfile expense={selectedExpense} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Expense;
+export default Expenses;
