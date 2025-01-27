@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getAllFees } from "../actions/feeActions"; 
+import { getAllFees } from "../actions/feeActions";
+import FeeCard from "../components/FeeCard";
 
 interface FeeType {
   id: number;
@@ -18,21 +19,22 @@ interface FeeType {
 const ITEMS_PER_PAGE = 13;
 
 const Fees = () => {
-  const [fees, setFees] = useState<FeeType[]>([]);
-  const [filteredFees, setFilteredFees] = useState<FeeType[]>([]); // Add this state
   const [currentPage, setCurrentPage] = useState(1);
+  const [fees, setFees] = useState<FeeType[]>([]);
+  const [filteredFees, setFilteredFees] = useState<FeeType[]>([]);
   const [searchName, setSearchName] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedFee, setSelectedFee] = useState<FeeType | null>(null);
+  const [isFeeVisible, setIsFeeVisible] = useState(false);
 
-  // Fetch data from the server when the component mounts
   useEffect(() => {
-    async function fetchFees() {
+    const loadFees = async () => {
       const data = await getAllFees();
       setFees(data);
-      setFilteredFees(data); // Initialize filteredFees with the fetched data
-    }
-    fetchFees();
+      setFilteredFees(data);
+    };
+    loadFees();
   }, []);
 
   const handleSearch = () => {
@@ -52,6 +54,16 @@ const Fees = () => {
 
     setFilteredFees(filtered);
     setCurrentPage(1);
+  };
+
+  const handleFeeClick = (fee: FeeType) => {
+    setSelectedFee(fee);
+    setIsFeeVisible(true);
+  };
+
+  const handleCloseFee = () => {
+    setIsFeeVisible(false);
+    setTimeout(() => setSelectedFee(null), 300);
   };
 
   const totalPages = Math.ceil(filteredFees.length / ITEMS_PER_PAGE);
@@ -98,7 +110,7 @@ const Fees = () => {
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
             />
-                  <select
+            <select
               className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg font-medium text-gray-700"
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
@@ -120,15 +132,15 @@ const Fees = () => {
                 </option>
               ))}
             </select>
-           <select
-  className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg font-medium text-gray-700 bg-white"
-  value={selectedStatus}
-  onChange={(e) => setSelectedStatus(e.target.value)}
->
-  <option value="">Select Status</option>
-  <option value="paid">Paid</option>
-  <option value="unpaid">Unpaid</option>
-</select>
+            <select
+              className="flex-1 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg font-medium text-gray-700 bg-white"
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+            >
+              <option value="">Select Status</option>
+              <option value="paid">Paid</option>
+              <option value="unpaid">Unpaid</option>
+            </select>
             <button
               className="flex-1 min-w-[200px] bg-red-500 text-white p-2 rounded hover:bg-red-600 transition-colors duration-200"
               onClick={handleSearch}
@@ -159,6 +171,7 @@ const Fees = () => {
                 {currentFees.map((fee) => (
                   <tr
                     key={fee.id}
+                    onClick={() => handleFeeClick(fee)}
                     className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-md cursor-pointer"
                   >
                     <td className="py-2 px-2 border-b text-gray-800">
@@ -242,6 +255,26 @@ const Fees = () => {
           </div>
         </div>
       </div>
+
+      {selectedFee && (
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${
+            isFeeVisible ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={handleCloseFee}
+        >
+          <div
+            className={`transform transition-all duration-300 ${
+              isFeeVisible
+                ? "scale-100 translate-y-0"
+                : "scale-95 translate-y-4"
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <FeeCard fee={selectedFee} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
