@@ -1,4 +1,8 @@
+"use client";
 import { FaEdit, FaTrash, FaFilePdf } from "react-icons/fa";
+import { useState } from "react";
+import { deleteFee } from "../actions/feeActions";
+import Swal from "sweetalert2";
 
 interface Fee {
   id: number;
@@ -17,12 +21,40 @@ interface FeeCardProps {
 }
 
 const FeeCard = ({ fee }: FeeCardProps) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleUpdate = () => {
     console.log("Update fee");
   };
 
-  const handleDelete = () => {
-    console.log("Delete fee");
+  const handleDelete = async () => {
+    if (isDeleting) return;
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setIsDeleting(true);
+
+        deleteFee(fee.id)
+          .then(() => {
+            Swal.fire("Deleted!", "Fee has been deleted.", "success");
+          })
+          .catch ((err) => {
+  console.error("Failed to delete fee:", err);
+  Swal.fire("Error!", "Failed to delete fee.", "error");
+})
+          .finally(() => {
+            setIsDeleting(false);
+          });
+      }
+    });
   };
 
   const handleExportPdf = () => {
@@ -70,7 +102,9 @@ const FeeCard = ({ fee }: FeeCardProps) => {
                 title="Update"
               />
               <FaTrash
-                className="text-red-500 cursor-pointer hover:text-red-700 text-xl"
+                className={`text-red-500 cursor-pointer hover:text-red-700 text-xl ${
+                  isDeleting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={handleDelete}
                 title="Delete"
               />

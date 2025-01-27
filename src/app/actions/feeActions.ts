@@ -97,3 +97,21 @@ export async function getPreviousTotalEarnings(): Promise<number> {
     throw new Error("Failed to fetch previous total earnings");
   }
 }
+
+export async function deleteFee(feeId: number): Promise<void> {
+  try {
+    const fee = await StudentFee.findByPk(feeId);
+
+    if (!fee) {
+      throw new Error("Fee not found");
+    }
+
+    // Delete the fee
+    await fee.destroy();
+
+    revalidatePath("/fees");
+  } catch (err) {
+    console.error("Failed to delete fee:", err);
+    throw new Error("Failed to delete fee");
+  }
+}
