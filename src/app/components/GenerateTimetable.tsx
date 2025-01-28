@@ -84,7 +84,7 @@ const GenerateTimetable = () => {
             placeholder="Enter a class (e.g., Grade 1)"
             value={newClass}
             onChange={(e) => setNewClass(e.target.value)}
-            className="border p-2 rounded mr-2"
+            className="border p-2 rounded mr-2 text-gray-700"
           />
           <button
             onClick={addClass}
@@ -124,7 +124,7 @@ const GenerateTimetable = () => {
                 updated[idx].subject = e.target.value;
                 setSubjectInputs(updated);
               }}
-              className="border p-2 rounded"
+              className="border p-2 rounded text-gray-700"
             />
             <input
               type="text"
