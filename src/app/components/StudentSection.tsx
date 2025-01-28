@@ -27,10 +27,10 @@ function StudentSection() {
     const fetchStudents = async () => {
       try {
         const students = await getAllStudents();
-        console.log(students);
 
         if (students.length === 0) {
           toastr.error("No students found!");
+          setLoading(false);
           return;
         }
 
@@ -39,6 +39,7 @@ function StudentSection() {
 
         if (boys === 0 && girls === 0) {
           toastr.error("No boys or girls found!");
+          setLoading(false);
           return;
         }
 
@@ -68,7 +69,11 @@ function StudentSection() {
   }, []);
 
   if (loading) {
-    return <div className="text-gray-700">Loading...</div>;
+    return (
+      <div className="bg-white p-4 rounded-lg flex justify-center items-center min-h-[250px] sm:min-h-[300px]">
+        <h2 className="text-lg text-gray-800 animate-pulse">Loading Students...</h2>
+      </div>
+    );
   }
 
   if (error) {
@@ -116,18 +121,18 @@ function StudentSection() {
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 space-y-2 sm:space-y-0">
-  {studentData.map((student, index) => (
-    <div key={index} className="flex items-center">
-      <div
-        style={{ backgroundColor: student.fill }}
-        className="w-3 sm:w-4 h-3 sm:h-4 rounded-full mr-2"
-      ></div>
-      <p className="text-sm sm:text-base text-gray-600">
-        {student.name}: {student.value}
-      </p>
-    </div>
-  ))}
-</div>
+        {studentData.map((student, index) => (
+          <div key={index} className="flex items-center">
+            <div
+              style={{ backgroundColor: student.fill }}
+              className="w-3 sm:w-4 h-3 sm:h-4 rounded-full mr-2"
+            ></div>
+            <p className="text-sm sm:text-base text-gray-600">
+              {student.name}: {student.value}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
