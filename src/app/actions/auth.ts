@@ -2,6 +2,11 @@
 
 import bcrypt from "bcryptjs";
 import User from "../../models/User";
+import jwt from "jsonwebtoken";
+
+interface DecodedToken {
+  id: number;
+}
 
 export async function signUpAction({ name, email, password }: { name: string; email: string; password: string }) {
   const hashedPassword = bcrypt.hashSync(password, 10);
@@ -12,7 +17,7 @@ export async function signUpAction({ name, email, password }: { name: string; em
   } catch (error) {
     if (error instanceof Error) {
       if (error.name === "SequelizeUniqueConstraintError") {
-        throw new Error("User already exists");
+        throw new Error("User  already exists");
       } else {
         throw new Error(`Database error: ${error.message}`);
       }
@@ -34,7 +39,7 @@ export async function signInAction({ email, password }: { email: string; passwor
   }
 
   if (!user.password) {
-    throw new Error("User  password is not set");
+    throw new Error("User   password is not set");
   }
 
   const isValidPassword = await bcrypt.compare(password, user.password);
@@ -43,5 +48,29 @@ export async function signInAction({ email, password }: { email: string; passwor
     throw new Error("Invalid email or password");
   }
 
-  return { id: user.id, name: user.name, email: user.email };
+  if (!process.env.SECRET_KEY) {
+    throw new Error("SECRET_KEY environment variable is not set");
+  }
+
+  const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+    expiresIn: "1h",
+  });
+
+  return { token, id: user.id, name: user.name, email: user.email };
+}
+
+export async function getUserDetails({ token }: { token: string }) {
+  if (!token) {
+    throw new Error("Token is required");
+  }
+
+  const decoded = jwt.verify(token, process.env.SECRET_KEY as string) as DecodedToken;
+  const user = await User.findOne({ where: { id: decoded.id }, raw: true, attributes: ['id', 'name', 'email', 'password'] });
+
+  if (!user) {
+    throw new Error("User   not found");
+  }
+
+  // Return the password in plain text
+  return { id: user.id, name: user.name, email: user.email, password: user.password };
 }

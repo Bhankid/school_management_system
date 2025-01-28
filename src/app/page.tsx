@@ -17,9 +17,12 @@ function Login() {
 
     try {
       // Call the signInAction function to validate credentials
-      const user = await signInAction({ email, password });
+      const response = await signInAction({ email, password });
 
-      if (user) {
+      if (response) {
+        // Store the token in local storage
+        localStorage.setItem("token", response.token);
+
         // Redirect to the dashboard after successful login
         window.location.href = "/Dashboard";
       }

@@ -1,17 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getUserDetails } from "../actions/auth";
 
 function AccountSettings() {
   const [formData, setFormData] = useState({
     schoolName: "Firm Foundation School - Accra",
-    email: "arabqgrant@gmail.com",
+    email: "",
     mobile: "0264622310",
     city: "Accra",
     address: "Greater-Accra",
-    username: "Prince Afful Quansah",
-    password: "password123", // Actual password
+    username: "Bhankid the Admin",
+    password: "",
     language: "English",
   });
 
@@ -46,6 +47,27 @@ function AccountSettings() {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Token not found");
+        }
+
+        const userDetails = await getUserDetails({ token });
+        setFormData({
+          ...formData,
+          email: userDetails.email,
+          password: userDetails.password,
+        });
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+      }
+    };
+    fetchUserDetails();
+  }, [formData]);
 
   return (
     <div className="p-4 relative">
