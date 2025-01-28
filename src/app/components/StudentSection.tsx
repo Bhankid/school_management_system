@@ -116,17 +116,18 @@ function StudentSection() {
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 space-y-2 sm:space-y-0">
-        {studentData.map((student, index) => (
-          <div key={index} className="flex items-center">
-            <div
-              className={`w-3 sm:w-4 h-3 sm:h-4 ${student.fill} rounded-full mr-2`}
-            ></div>
-            <p className="text-sm sm:text-base text-gray-600">
-              {student.name}: {student.value}
-            </p>
-          </div>
-        ))}
-      </div>
+  {studentData.map((student, index) => (
+    <div key={index} className="flex items-center">
+      <div
+        style={{ backgroundColor: student.fill }}
+        className="w-3 sm:w-4 h-3 sm:h-4 rounded-full mr-2"
+      ></div>
+      <p className="text-sm sm:text-base text-gray-600">
+        {student.name}: {student.value}
+      </p>
+    </div>
+  ))}
+</div>
     </div>
   );
 }
