@@ -68,7 +68,7 @@ function StudentSection() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-gray-700">Loading...</div>;
   }
 
   if (error) {
@@ -76,7 +76,7 @@ function StudentSection() {
   }
 
   if (studentData.length === 0) {
-    return <div>No data available.</div>;
+    return <div className="text-gray-700">No data available.</div>;
   }
 
   return (

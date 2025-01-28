@@ -10,19 +10,85 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { getAllFees, getTotalEarnings } from "../actions/feeActions";
+import { useState, useEffect } from "react";
+import toastr from "toastr";
 
-
-const earningsData = [
-  { day: "Mon", totalCollections: 85000, feesCollections: 70000 },
-  { day: "Tue", totalCollections: 88000, feesCollections: 72000 },
-  { day: "Wed", totalCollections: 86000, feesCollections: 71000 },
-  { day: "Thu", totalCollections: 89000, feesCollections: 73000 },
-  { day: "Fri", totalCollections: 87000, feesCollections: 74000 },
-  { day: "Sat", totalCollections: 90000, feesCollections: 75000 },
-  { day: "Sun", totalCollections: 92000, feesCollections: 76000 },
-];
+interface EarningsData {
+  day: string;
+  totalCollections: number;
+  feesCollections: number;
+}
 
 function EarningsSection() {
+  const [earningsData, setEarningsData] = useState<EarningsData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalEarnings, setTotalEarnings] = useState<number>(0);
+  const [totalFeesCollections, setTotalFeesCollections] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchFees = async () => {
+      try {
+        const fees = await getAllFees();
+        console.log("Fees:", fees);
+
+        if (fees.length === 0) {
+          toastr.error("No fees found!");
+          return;
+        }
+
+        const totalEarnings = await getTotalEarnings();
+        setTotalEarnings(totalEarnings);
+
+        const paidFees = fees.filter((fee) => fee.status.toLowerCase() === "paid");
+        console.log("Paid Fees:", paidFees);
+
+        if (paidFees.length === 0) {
+          console.log("No paid fees found!");
+        }
+
+        const totalFeesCollections = paidFees
+          .reduce((acc, fee) => acc + parseFloat(fee.amount), 0)
+          .toFixed(2);
+        console.log("Total Fees Collections:", totalFeesCollections);
+        setTotalFeesCollections(Number(totalFeesCollections));
+
+        const earningsData = fees.map((fee) => {
+          const day = new Date(fee.dueDate).toLocaleString("en-US", { weekday: "short" });
+          return {
+            day,
+            totalCollections: parseFloat(fee.amount),
+            feesCollections: fee.status.toLowerCase() === "paid" ? parseFloat(fee.amount) : 0,
+          };
+        });
+        console.log("Earnings Data:", earningsData);
+        setEarningsData(earningsData);
+
+        toastr.success("Fees data fetched successfully!");
+      } catch (error) {
+        setError(error as string);
+        toastr.error("Error fetching fees data: " + (error as string));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFees();
+  }, []);
+
+  if (loading) {
+    return <div className="text-gray-700">Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (earningsData.length === 0) {
+    return <div className="text-gray-700">No data available.</div>;
+  }
+
   return (
     <div className="bg-white p-4 rounded-lg">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
@@ -30,7 +96,7 @@ function EarningsSection() {
           Earnings
         </h2>
         <div className="text-sm sm:text-base text-gray-700">
-          Jan 11, 2025
+          {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
         </div>
       </div>
       
@@ -40,7 +106,7 @@ function EarningsSection() {
             Total Collections
           </p>
           <p className="text-xl sm:text-2xl font-bold text-gray-500">
-            $90,000
+            ₵{totalEarnings.toLocaleString()}
           </p>
         </div>
         <div>
@@ -48,7 +114,7 @@ function EarningsSection() {
             Fees Collections
           </p>
           <p className="text-xl sm:text-2xl font-bold text-gray-500">
-            $75,000
+            ₵{totalFeesCollections.toLocaleString()}
           </p>
         </div>
       </div>
@@ -60,7 +126,7 @@ function EarningsSection() {
             <XAxis dataKey="day" />
             <YAxis />
             <Tooltip
-              formatter={(value) => `$${value}`}
+              formatter={(value: number) => `₵${value.toLocaleString()}`}
               contentStyle={{
                 backgroundColor: "white",
                 borderRadius: "8px",
