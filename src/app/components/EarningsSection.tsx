@@ -31,10 +31,10 @@ function EarningsSection() {
     const fetchFees = async () => {
       try {
         const fees = await getAllFees();
-        console.log("Fees:", fees);
 
         if (fees.length === 0) {
           toastr.error("No fees found!");
+          setLoading(false);
           return;
         }
 
@@ -42,16 +42,10 @@ function EarningsSection() {
         setTotalEarnings(totalEarnings);
 
         const paidFees = fees.filter((fee) => fee.status.toLowerCase() === "paid");
-        console.log("Paid Fees:", paidFees);
-
-        if (paidFees.length === 0) {
-          console.log("No paid fees found!");
-        }
 
         const totalFeesCollections = paidFees
           .reduce((acc, fee) => acc + parseFloat(fee.amount), 0)
           .toFixed(2);
-        console.log("Total Fees Collections:", totalFeesCollections);
         setTotalFeesCollections(Number(totalFeesCollections));
 
         const earningsData = fees.map((fee) => {
@@ -62,7 +56,6 @@ function EarningsSection() {
             feesCollections: fee.status.toLowerCase() === "paid" ? parseFloat(fee.amount) : 0,
           };
         });
-        console.log("Earnings Data:", earningsData);
         setEarningsData(earningsData);
 
         toastr.success("Fees data fetched successfully!");
@@ -78,7 +71,11 @@ function EarningsSection() {
   }, []);
 
   if (loading) {
-    return <div className="text-gray-700">Loading...</div>;
+    return (
+      <div className="bg-white p-4 rounded-lg flex justify-center items-center min-h-[250px] sm:min-h-[300px]">
+        <h2 className="text-lg text-gray-800 animate-pulse">Loading Earnings...</h2>
+      </div>
+    );
   }
 
   if (error) {
@@ -99,26 +96,18 @@ function EarningsSection() {
           {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
         </div>
       </div>
-      
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 mb-4">
         <div>
-          <p className="text-gray-700 text-sm sm:text-base">
-            Total Collections
-          </p>
-          <p className="text-xl sm:text-2xl font-bold text-gray-500">
-            ₵{totalEarnings.toLocaleString()}
-          </p>
+          <p className="text-gray-700 text-sm sm:text-base">Total Collections</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-500">₵{totalEarnings.toLocaleString()}</p>
         </div>
         <div>
-          <p className="text-gray-700 text-sm sm:text-base">
-            Fees Collections
-          </p>
-          <p className="text-xl sm:text-2xl font-bold text-gray-500">
-            ₵{totalFeesCollections.toLocaleString()}
-          </p>
+          <p className="text-gray-700 text-sm sm:text-base">Fees Collections</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-500">₵{totalFeesCollections.toLocaleString()}</p>
         </div>
       </div>
-      
+
       <div className="h-[250px] sm:h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={earningsData}>
