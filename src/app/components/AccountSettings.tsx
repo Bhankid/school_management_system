@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getUserDetails } from "../actions/auth";
+import { createAccount, updateAccount } from "../actions/Account";
 
 function AccountSettings() {
   const [formData, setFormData] = useState({
@@ -17,8 +18,9 @@ function AccountSettings() {
   });
 
   const [profileImage, setProfileImage] = useState("/profile-picture.png");
-  const [isUsernameEditable, setIsUsernameEditable] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isUsernameEditable, setIsUsernameEditable] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,13 +42,39 @@ function AccountSettings() {
     });
   };
 
-  const toggleUsernameEditable = () => {
-    setIsUsernameEditable(!isUsernameEditable);
-  };
-
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+
+  const toggleUsernameEditable = () => {
+    setIsUsernameEditable((prevState) => !prevState);
+  };
+
+const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  try {
+    const data = {
+      schoolName: formData.schoolName,
+      email: formData.email,
+      mobile: formData.mobile,
+      city: formData.city,
+      address: formData.address,
+      username: formData.username,
+      password: formData.password,
+      language: formData.language,
+      profileImage: profileImage,
+    };
+    if (userId) {
+      await updateAccount(userId, data);
+    } else {
+      const account = await createAccount(data);
+      setUserId(account.id);
+    }
+    console.log("Account saved successfully");
+  } catch (error) {
+    console.error("Error saving account:", error);
+  }
+};
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -56,12 +84,18 @@ function AccountSettings() {
           throw new Error("Token not found");
         }
 
-        const userDetails = await getUserDetails({ token });
+        const userDetails: {
+          id: number;
+          name: string;
+          email: string;
+          password: string;
+        } = await getUserDetails({ token });
         setFormData({
           ...formData,
           email: userDetails.email,
           password: userDetails.password,
         });
+        setUserId(userDetails.id);
       } catch (error) {
         console.error("Failed to fetch user details:", error);
       }
@@ -92,6 +126,7 @@ function AccountSettings() {
             width={800}
             height={200}
             className="w-full h-48 object-cover"
+            priority
           />
           <div className="absolute top-4 left-4 text-white text-lg font-bold">
             Account Setting
@@ -118,10 +153,10 @@ function AccountSettings() {
 
         {/* Form Section */}
         <div className="p-6 pt-16">
-          <h2 className="text-xl font-semibold text-black">
-            Prince Afful Quansah - Admin
+          <h2 className=" text-xl font-semibold text-black">
+            {formData.username}
           </h2>
-          <form className="mt-6 space-y-4 text-gray-800">
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-gray-800">
             {/* School Name */}
             <div>
               <label className="block text-sm font-medium">School Name *</label>
@@ -188,7 +223,7 @@ function AccountSettings() {
               <input
                 type="text"
                 name="username"
-                value={isUsernameEditable ? formData.username : "*****"}
+                value={formData.username}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 readOnly={!isUsernameEditable}
@@ -210,11 +245,11 @@ function AccountSettings() {
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
               <i
-      className={`fas ${
-        isPasswordVisible ? "fa-eye-slash" : "fa-eye"
-      } absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer`}
-      onClick={togglePasswordVisibility}
-    ></i>
+                className={`fas ${
+                  isPasswordVisible ? "fa-eye-slash" : "fa-eye"
+                } absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer`}
+                onClick={togglePasswordVisibility}
+              ></i>
             </div>
 
             {/* Language */}

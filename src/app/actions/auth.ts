@@ -53,7 +53,7 @@ export async function signInAction({ email, password }: { email: string; passwor
   }
 
   const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
-    expiresIn: "1h",
+    expiresIn: "30d",
   });
 
   return { token, id: user.id, name: user.name, email: user.email };
