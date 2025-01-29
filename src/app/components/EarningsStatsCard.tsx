@@ -7,6 +7,7 @@ import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 const EarningsStatsCard = () => {
   const [earnings, setEarnings] = useState<number | null>(null);
   const [previousEarnings, setPreviousEarnings] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchEarnings() {
@@ -19,6 +20,8 @@ const EarningsStatsCard = () => {
         console.error("Failed to fetch earnings:", error);
         setEarnings(0); // Handle error gracefully
         setPreviousEarnings(0); // Handle error gracefully
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -60,8 +63,14 @@ const EarningsStatsCard = () => {
           Earnings
         </p>
         <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-          {earnings !== null ? `₵${earnings.toLocaleString()}` : "Loading..."}
-          {getArrowIcon()}
+          {loading ? (
+            <span className="animate-pulse text-gray-500">Loading...</span>
+          ) : (
+            <>
+              {earnings !== null ? `₵${earnings.toLocaleString()}` : ""}
+              {getArrowIcon()}
+            </>
+          )}
         </p>
       </div>
     </div>
