@@ -48,9 +48,9 @@ Account.init({
     type: DataTypes.STRING,
   },
   profileImage: {
-    type: DataTypes.STRING,
-    field: 'profile_image',
-  },
+  type: DataTypes.STRING(1000),
+  field: 'profile_image',
+},
   createdAt: {
     type: DataTypes.DATE,
     field: 'created_at',

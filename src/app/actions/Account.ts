@@ -37,11 +37,24 @@ const updateAccount = async (id: number, data: Partial<AccountData>) => {
     }
 
     await account.update(data);
-    return account;
+    return account.get({ plain: true }); 
   } catch (error) {
     console.error('Error updating account:', error);
     throw error;
   }
 };
 
-export { createAccount, updateAccount };
+const getAccount = async () => {
+  try {
+    const account = await Account.findOne({ where: { /* add conditions to fetch the desired account */ } });
+    if (!account) {
+      throw new Error('Account not found');
+    }
+    return account.get({ plain: true }); 
+  } catch (error) {
+    console.error('Error fetching account:', error);
+    throw error;
+  }
+};
+
+export { createAccount, updateAccount , getAccount};

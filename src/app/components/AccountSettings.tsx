@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getUserDetails } from "../actions/auth";
-import { createAccount, updateAccount } from "../actions/Account";
+import { createAccount, updateAccount, getAccount } from "../actions/Account";
 
 function AccountSettings() {
   const [formData, setFormData] = useState({
@@ -19,7 +19,7 @@ function AccountSettings() {
 
   const [profileImage, setProfileImage] = useState("/profile-picture.png");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isUsernameEditable, setIsUsernameEditable] = useState(false);
+  const [, setIsUsernameEditable] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,38 +70,69 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       const account = await createAccount(data);
       setUserId(account.id);
     }
+    const token = localStorage.getItem("token");
+    if (token) {
+      const userDetails: {
+        id: number;
+        name: string;
+        email: string;
+        password: string;
+      } = await getUserDetails({ token });
+      setFormData({
+        schoolName: "",
+        email: userDetails.email,
+        mobile: "",
+        city: "",
+        address: "",
+        username: userDetails.name,
+        password: userDetails.password,
+        language: "English",
+      });
+    }
+    const accountData = await getAccount();
+    setFormData({
+      schoolName: accountData.schoolName,
+      email: accountData.email,
+      mobile: accountData.mobile,
+      city: accountData.city,
+      address: accountData.address,
+      username: accountData.username,
+      password: accountData.password,
+      language: accountData.language,
+    });
     console.log("Account saved successfully");
   } catch (error) {
     console.error("Error saving account:", error);
   }
 };
 
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("Token not found");
-        }
-
-        const userDetails: {
-          id: number;
-          name: string;
-          email: string;
-          password: string;
-        } = await getUserDetails({ token });
-        setFormData({
-          ...formData,
-          email: userDetails.email,
-          password: userDetails.password,
-        });
-        setUserId(userDetails.id);
-      } catch (error) {
-        console.error("Failed to fetch user details:", error);
+useEffect(() => {
+  const fetchUserDetails = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token not found");
       }
-    };
-    fetchUserDetails();
-  }, [formData]);
+
+      const userDetails: {
+        id: number;
+        name: string;
+        email: string;
+        password: string;
+      } = await getUserDetails({ token });
+      setFormData((prevData) => ({
+        ...prevData,
+        email: userDetails.email,
+        password: userDetails.password,
+      }));
+      setUserId(userDetails.id);
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+    }
+  };
+  fetchUserDetails();
+}, []); 
+
 
   return (
     <div className="p-4 relative">
@@ -226,7 +257,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                 value={formData.username}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                readOnly={!isUsernameEditable}
+                onClick={toggleUsernameEditable}
               />
               <i
                 className="fas fa-pen absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"

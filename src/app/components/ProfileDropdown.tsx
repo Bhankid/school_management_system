@@ -1,20 +1,49 @@
 "use client";
 
+
 import Image from "next/image";
 import Link from "next/link";
-import { FC } from "react";
-import { ActiveTab } from "../Dashboard/page"; // Import the ActiveTab type
+import { FC, useState, useEffect } from "react";
+import { ActiveTab } from "../Dashboard/page"; 
+import { getAccount } from "../actions/Account"; 
 
 interface ProfileDropdownProps {
   isOpen: boolean;
   setActiveTab?: (tab: ActiveTab) => void; // Optional to handle cases where it's not passed
 }
 
+interface AccountData {
+  id?: number;
+  schoolName: string;
+  email: string;
+  mobile: string;
+  city: string;
+  address: string;
+  username: string;
+  password: string;
+  language: string;
+  profileImage: string;
+}
+
 const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen, setActiveTab }) => {
+  const [account, setAccount] = useState<AccountData | null>(null);
+
+  useEffect(() => {
+    const fetchAccount = async () => {
+      try {
+        const data = await getAccount();
+        setAccount(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAccount();
+  }, []);
+
   const handleAccountSettingsClick = () => {
     if (setActiveTab) {
       setActiveTab("settings"); // Update the active tab to "settings"
-      console.log("Account Settings clicked"); // Debugging
+      console.log("Account Settings clicked"); 
     }
   };
 
@@ -35,26 +64,50 @@ const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen, setActiveTab }) => 
       <div className="px-4 py-3 border-b border-gray-100">
         <div className="flex items-center space-x-3">
           <div className="relative w-8 h-8 md:w-10 md:h-10">
-  <Image
-    src="/profile-picture.png"
-    alt="User  profile picture"
-    width={40} // Fixed width
-    height={40} // Fixed height
-    className="rounded-full object-cover"
-  />
-</div>
+            {account ? (
+              <Image
+                src={account.profileImage}
+                alt="User       profile picture"
+                width={40} // Fixed width
+                height={40} // Fixed height
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <Image
+                src="/profile-picture.png"
+                alt="User       profile picture"
+                width={40} // Fixed width
+                height={40} // Fixed height
+                className="rounded-full object-cover"
+              />
+            )}
+          </div>
           <div>
-            <h4 className="text-sm font-semibold text-gray-800">Dev Fred</h4>
-            <p className="text-xs text-gray-500">dev.fred@yahoo.com</p>
+            {account ? (
+              <>
+                <h4 className="text-sm font-semibold text-gray-800">{account.username}</h4>
+                <p className="text-xs text-gray-500">{account.email}</p>
+              </>
+            ) : (
+              <>
+                <h4 className="text-sm font-semibold text-gray-800">Dev Fred</h4>
+                <p className="text-xs text-gray-500">dev.fred@yahoo.com</p>
+              </>
+            )}
           </div>
         </div>
       </div>
 
       <div className="py-2">
-        <Link href="/profile" className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
-          <i className="fas fa-user-circle w-5 text-gray-400"></i>
-          <span className="ml-3">My Profile</span>
-        </Link>
+              <div
+        onClick={() => {
+          handleAccountSettingsClick();
+        }} // Add onClick handler
+        className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+      >
+        <i className="fas fa-user-circle w-5 text-gray-400"></i>
+        <span className="ml-3">My Profile</span>
+      </div>
         <div
           onClick={handleAccountSettingsClick} // Add onClick handler
           className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
@@ -62,10 +115,15 @@ const ProfileDropdown: FC<ProfileDropdownProps> = ({ isOpen, setActiveTab }) => 
           <i className="fas fa-cog w-5 text-gray-400"></i>
           <span className="ml-3">Account Settings</span>
         </div>
-        <Link href="/privacy-settings" className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
-          <i className="fas fa-user-shield w-5 text-gray-400"></i>
-          <span className="ml-3">Privacy Settings</span>
-        </Link>
+              <div
+        onClick={() => {
+          handleAccountSettingsClick();
+        }} // Add onClick handler
+        className="flex items-center px-4 py-3 md:py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+      >
+        <i className="fas fa-user-shield w-5 text-gray-400"></i>
+        <span className="ml-3">Privacy Settings</span>
+      </div>
       </div>
 
       <div className="border-t border-gray-100"></div>
