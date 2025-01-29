@@ -62,7 +62,7 @@ Account.init({
 }, {
   sequelize,
   modelName: 'Account',
-  tableName: 'Account',
+  tableName: 'account',
 });
 
 export default Account;

@@ -75,6 +75,10 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // Fetch the updated account data
     if (userId) {
       const updatedAccountData = await getAccount(userId);
+      console.log("Updated account data:", updatedAccountData);
+      if (!updatedAccountData.password) {
+        console.error("Password field is empty in updated account data");
+      }
       setFormData({
         schoolName: updatedAccountData.schoolName,
         email: updatedAccountData.email,
@@ -82,7 +86,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         city: updatedAccountData.city,
         address: updatedAccountData.address,
         username: updatedAccountData.username,
-        password: '', // Reset the password field
+        password: updatedAccountData.password, // Update the password field
         language: updatedAccountData.language,
       });
       setProfileImage(updatedAccountData.profileImage);
@@ -109,16 +113,23 @@ useEffect(() => {
         password: string;
       } = await getUserDetails({ token });
 
+      console.log("User details:", userDetails);
+      if (!userDetails.password) {
+        console.error("Password field is empty in user details");
+      }
       setFormData((prevData) => ({
         ...prevData,
         email: userDetails.email,
-        password: userDetails.password,
       }));
       setUserId(userDetails.id);
 
       // Fetch account data after setting the user ID
       if (userDetails.id) {
         const accountData = await getAccount(userDetails.id);
+        console.log("Account data:", accountData);
+        if (!accountData.password) {
+          console.error("Password field is empty in account data");
+        }
         setFormData((prevData) => ({
           ...prevData,
           schoolName: accountData.schoolName,
@@ -127,7 +138,6 @@ useEffect(() => {
           city: accountData.city,
           address: accountData.address,
           username: accountData.username,
-          password: accountData.password,
           language: accountData.language,
         }));
         setProfileImage(accountData.profileImage);
@@ -144,6 +154,10 @@ useEffect(() => {
     const fetchUpdatedAccountData = async () => {
       try {
         const updatedAccountData = await getAccount(userId);
+        console.log("Updated account data:", updatedAccountData);
+        if (!updatedAccountData.password) {
+          console.error("Password field is empty in updated account data");
+        }
         setFormData((prevData) => ({
           ...prevData,
           schoolName: updatedAccountData.schoolName,
@@ -152,7 +166,7 @@ useEffect(() => {
           city: updatedAccountData.city,
           address: updatedAccountData.address,
           username: updatedAccountData.username,
-          password: '', // Reset the password field
+          password: updatedAccountData.password,
           language: updatedAccountData.language,
         }));
         setProfileImage(updatedAccountData.profileImage);
@@ -219,74 +233,75 @@ useEffect(() => {
           </h2>
           <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-gray-800">
             {/* School Name */}
-            <div>
+               <div>
               <label className="block text-sm font-medium">School Name *</label>
               <input
                 type="text"
                 name="schoolName"
                 value={formData.schoolName}
                 onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="mt-1 block w-full border border-gray-200 rounded-md p-2 focus:border-red-500 focus:outline-none"
               />
             </div>
 
             {/* Email */}
-            <div>
-              <label className="block text-sm font-medium">Email *</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-medium">Email *</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-200 rounded-md p-2 focus:border-red-500 focus:outline-none"
+                />
+              </div>
 
-            {/* Mobile */}
-            <div>
-              <label className="block text-sm font-medium">Mobile No</label>
-              <input
-                type="text"
-                name="mobile"
-                value={formData.mobile}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              />
-            </div>
+              {/* Mobile */}
+              <div>
+                <label className="block text-sm font-medium">Mobile No</label>
+                <input
+                  type="text"
+                  name="mobile"
+                  value={formData.mobile}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-200 rounded-md p-2 focus:border-red-500 focus:outline-none"
+                />
+              </div>
 
-            {/* City */}
-            <div>
-              <label className="block text-sm font-medium">City</label>
-              <input
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              />
-            </div>
+              {/* City */}
+              <div>
+                <label className="block text-sm font-medium">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-200 rounded-md p-2 focus:border-red-500 focus:outline-none"
+                />
+              </div>
 
-            {/* Address */}
-            <div>
-              <label className="block text-sm font-medium">Address</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              />
-            </div>
+              {/* Address */}
+              <div>
+                <label className="block text-sm font-medium">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-200 rounded-md p-2 focus:border-red-500 focus:outline-none"
+                />
+              </div>
 
-            {/* Username */}
+          {/* Username */}
+          <div className="relative">
+            <label className="block text-sm font-medium">Username</label>
             <div className="relative">
-              <label className="block text-sm font-medium">Username</label>
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="mt-1 block w-full border border-gray-200 rounded-md p-2 pr-10 focus:border-red-500 focus:outline-none"
                 onClick={toggleUsernameEditable}
               />
               <i
@@ -294,16 +309,18 @@ useEffect(() => {
                 onClick={toggleUsernameEditable}
               ></i>
             </div>
+          </div>
 
-            {/* Password */}
+          {/* Password */}
+          <div className="relative">
+            <label className="block text-sm font-medium">Password</label>
             <div className="relative">
-              <label className="block text-sm font-medium">Password</label>
               <input
                 type={isPasswordVisible ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="mt-1 block w-full border border-gray-200 rounded-md p-2 pr-10 focus:border-red-500 focus:outline-none"
               />
               <i
                 className={`fas ${
@@ -312,6 +329,7 @@ useEffect(() => {
                 onClick={togglePasswordVisibility}
               ></i>
             </div>
+          </div>
 
             {/* Language */}
             <div>
