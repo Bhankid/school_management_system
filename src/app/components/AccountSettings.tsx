@@ -64,42 +64,30 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       language: formData.language,
       profileImage: profileImage,
     };
+
     if (userId) {
       await updateAccount(userId, data);
     } else {
       const account = await createAccount(data);
       setUserId(account.id);
     }
-    const token = localStorage.getItem("token");
-    if (token) {
-      const userDetails: {
-        id: number;
-        name: string;
-        email: string;
-        password: string;
-      } = await getUserDetails({ token });
+
+    // Fetch the updated account data
+    if (userId) {
+      const updatedAccountData = await getAccount(userId);
       setFormData({
-        schoolName: "",
-        email: userDetails.email,
-        mobile: "",
-        city: "",
-        address: "",
-        username: userDetails.name,
-        password: userDetails.password,
-        language: "English",
+        schoolName: updatedAccountData.schoolName,
+        email: updatedAccountData.email,
+        mobile: updatedAccountData.mobile,
+        city: updatedAccountData.city,
+        address: updatedAccountData.address,
+        username: updatedAccountData.username,
+        password: '', // Reset the password field
+        language: updatedAccountData.language,
       });
+      setProfileImage(updatedAccountData.profileImage);
     }
-    const accountData = await getAccount();
-    setFormData({
-      schoolName: accountData.schoolName,
-      email: accountData.email,
-      mobile: accountData.mobile,
-      city: accountData.city,
-      address: accountData.address,
-      username: accountData.username,
-      password: accountData.password,
-      language: accountData.language,
-    });
+
     console.log("Account saved successfully");
   } catch (error) {
     console.error("Error saving account:", error);
@@ -120,19 +108,61 @@ useEffect(() => {
         email: string;
         password: string;
       } = await getUserDetails({ token });
+
       setFormData((prevData) => ({
         ...prevData,
         email: userDetails.email,
         password: userDetails.password,
       }));
       setUserId(userDetails.id);
+
+      // Fetch account data after setting the user ID
+      if (userDetails.id) {
+        const accountData = await getAccount(userDetails.id);
+        setFormData((prevData) => ({
+          ...prevData,
+          schoolName: accountData.schoolName,
+          email: accountData.email,
+          mobile: accountData.mobile,
+          city: accountData.city,
+          address: accountData.address,
+          username: accountData.username,
+          password: accountData.password,
+          language: accountData.language,
+        }));
+        setProfileImage(accountData.profileImage);
+      }
     } catch (error) {
       console.error("Failed to fetch user details:", error);
     }
   };
   fetchUserDetails();
-}, []); 
+}, []);
 
+useEffect(() => {
+  if (userId) {
+    const fetchUpdatedAccountData = async () => {
+      try {
+        const updatedAccountData = await getAccount(userId);
+        setFormData((prevData) => ({
+          ...prevData,
+          schoolName: updatedAccountData.schoolName,
+          email: updatedAccountData.email,
+          mobile: updatedAccountData.mobile,
+          city: updatedAccountData.city,
+          address: updatedAccountData.address,
+          username: updatedAccountData.username,
+          password: '', // Reset the password field
+          language: updatedAccountData.language,
+        }));
+        setProfileImage(updatedAccountData.profileImage);
+      } catch (error) {
+        console.error("Failed to fetch updated account data:", error);
+      }
+    };
+    fetchUpdatedAccountData();
+  }
+}, [userId]);
 
   return (
     <div className="p-4 relative">

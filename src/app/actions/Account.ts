@@ -44,13 +44,17 @@ const updateAccount = async (id: number, data: Partial<AccountData>) => {
   }
 };
 
-const getAccount = async () => {
+// Add a check to ensure userId is set before calling getAccount
+const getAccount = async (userId: number) => {
+  if (!userId) {
+    throw new Error("User  ID is required");
+  }
   try {
-    const account = await Account.findOne({ where: { /* add conditions to fetch the desired account */ } });
+    const account = await Account.findOne({ where: { id: userId } });
     if (!account) {
       throw new Error('Account not found');
     }
-    return account.get({ plain: true }); 
+    return account.get({ plain: true });
   } catch (error) {
     console.error('Error fetching account:', error);
     throw error;
