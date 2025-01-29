@@ -33,7 +33,13 @@ function EarningsSection() {
         const fees = await getAllFees();
 
         if (fees.length === 0) {
-          toastr.error("No fees found!");
+          toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-bottom-right",
+            timeOut: 3000,
+          };
+          toastr.error("No fees found!", "Error");
           setLoading(false);
           return;
         }
@@ -43,25 +49,40 @@ function EarningsSection() {
 
         const paidFees = fees.filter((fee) => fee.status.toLowerCase() === "paid");
 
-        const totalFeesCollections = paidFees
-          .reduce((acc, fee) => acc + parseFloat(fee.amount), 0)
-          .toFixed(2);
-        setTotalFeesCollections(Number(totalFeesCollections));
+        // Sum fees amounts and round them to the nearest whole number
+        const totalFeesCollections = Math.round(
+          paidFees.reduce((acc, fee) => acc + Number(fee.amount), 0)
+        );
+        setTotalFeesCollections(totalFeesCollections);
 
         const earningsData = fees.map((fee) => {
-          const day = new Date(fee.dueDate).toLocaleString("en-US", { weekday: "short" });
+          const day = new Date(fee.dueDate).toLocaleString("en-US", {
+            weekday: "short",
+          });
           return {
             day,
-            totalCollections: parseFloat(fee.amount),
-            feesCollections: fee.status.toLowerCase() === "paid" ? parseFloat(fee.amount) : 0,
+            totalCollections: Number(fee.amount),
+            feesCollections: fee.status.toLowerCase() === "paid" ? Number(fee.amount) : 0,
           };
         });
         setEarningsData(earningsData);
 
-        toastr.success("Fees data fetched successfully!");
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          positionClass: "toast-bottom-right",
+          timeOut: 3000,
+        };
+        toastr.success("Fees data fetched successfully!", "Success");
       } catch (error) {
-        setError(error as string);
-        toastr.error("Error fetching fees data: " + (error as string));
+        setError((error as Error).message);
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          positionClass: "toast-bottom-right",
+          timeOut: 3000,
+        };
+        toastr.error("Error fetching fees data: " + (error as Error).message, "Error");
       } finally {
         setLoading(false);
       }
@@ -93,18 +114,27 @@ function EarningsSection() {
           Earnings
         </h2>
         <div className="text-sm sm:text-base text-gray-700">
-          {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+          {new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 mb-4">
         <div>
           <p className="text-gray-700 text-sm sm:text-base">Total Collections</p>
-          <p className="text-xl sm:text-2xl font-bold text-gray-500">₵{totalEarnings.toLocaleString()}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-500">
+            ₵{totalEarnings.toLocaleString()}
+          </p>
         </div>
         <div>
           <p className="text-gray-700 text-sm sm:text-base">Fees Collections</p>
-          <p className="text-xl sm:text-2xl font-bold text-gray-500">₵{totalFeesCollections.toLocaleString()}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-500">
+            ₵{totalFeesCollections.toLocaleString()}
+          </p>
         </div>
       </div>
 
