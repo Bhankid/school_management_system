@@ -7,6 +7,7 @@ import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow ico
 const ParentStatsCard = () => {
   const [parentCount, setParentCount] = useState<number | null>(null);
   const [previousParentCount, setPreviousParentCount] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchParentCount() {
@@ -19,6 +20,8 @@ const ParentStatsCard = () => {
         console.error("Failed to fetch parent count:", err);
         setParentCount(0); // Handle error gracefully
         setPreviousParentCount(0); // Handle error gracefully
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -58,8 +61,14 @@ const ParentStatsCard = () => {
       <div className="ml-4 sm:ml-6">
         <p className="text-gray-800 font-medium text-sm sm:text-base">Parents</p>
         <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-          {parentCount !== null ? parentCount : "Loading..."}
-          {getArrowIcon()}
+          {loading ? (
+            <span className="animate-pulse text-gray-500">Loading...</span>
+          ) : (
+            <>
+              {parentCount}
+              {getArrowIcon()}
+            </>
+          )}
         </p>
       </div>
     </div>
