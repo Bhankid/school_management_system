@@ -4,26 +4,27 @@ import React, { useState, useEffect } from "react";
 import {
   getStudentCount,
   getPreviousStudentCount,
-} from "../actions/studentActions"; 
-import { FaArrowUp, FaArrowDown } from "react-icons/fa"; 
+} from "../actions/studentActions";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 const StudentStatsCard = () => {
   const [studentCount, setStudentCount] = useState<number | null>(null);
-  const [previousStudentCount, setPreviousStudentCount] = useState<
-    number | null
-  >(null);
+  const [previousStudentCount, setPreviousStudentCount] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchStudentCount() {
       try {
-        const count = await getStudentCount(); // Fetch the student count
-        const previousCount = await getPreviousStudentCount(); // Fetch the previous student count
+        const count = await getStudentCount();
+        const previousCount = await getPreviousStudentCount();
         setStudentCount(count);
         setPreviousStudentCount(previousCount);
       } catch (error) {
         console.error("Failed to fetch student count:", error);
-        setStudentCount(0); // Handle error gracefully
-        setPreviousStudentCount(0); // Handle error gracefully
+        setStudentCount(0);
+        setPreviousStudentCount(0);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -65,8 +66,14 @@ const StudentStatsCard = () => {
           Students
         </p>
         <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-          {studentCount !== null ? studentCount.toLocaleString() : "Loading..."}
-          {getArrowIcon()}
+          {loading ? (
+            <span className="animate-pulse text-gray-500">Loading...</span>
+          ) : (
+            <>
+              {studentCount?.toLocaleString()}
+              {getArrowIcon()}
+            </>
+          )}
         </p>
       </div>
     </div>
