@@ -29,7 +29,13 @@ function StudentSection() {
         const students = await getAllStudents();
 
         if (students.length === 0) {
-          toastr.error("No students found!");
+          toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-bottom-right",
+            timeOut: 5000, // 5 seconds
+          };
+          toastr.error("No students found!", "Error");
           setLoading(false);
           return;
         }
@@ -38,7 +44,13 @@ function StudentSection() {
         const girls = students.filter((student) => student.gender.toLowerCase() === "female").length;
 
         if (boys === 0 && girls === 0) {
-          toastr.error("No boys or girls found!");
+          toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-bottom-right",
+            timeOut: 5000, // 5 seconds
+          };
+          toastr.error("No boys or girls found!", "Error");
           setLoading(false);
           return;
         }
@@ -56,10 +68,22 @@ function StudentSection() {
           },
         ]);
 
-        toastr.success("Students data fetched successfully!");
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          positionClass: "toast-bottom-right",
+          timeOut: 3000, 
+        };
+        toastr.success("Students data fetched successfully!", "Success");
       } catch (error) {
         setError(error as string);
-        toastr.error("Error fetching students data: " + (error as string));
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          positionClass: "toast-bottom-right",
+          timeOut: 3000, 
+        };
+        toastr.error("Error fetching students data: " + (error as string), "Error");
       } finally {
         setLoading(false);
       }
