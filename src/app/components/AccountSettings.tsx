@@ -86,7 +86,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         city: updatedAccountData.city,
         address: updatedAccountData.address,
         username: updatedAccountData.username,
-        password: updatedAccountData.password, // Update the password field
+        password: updatedAccountData.password, 
         language: updatedAccountData.language,
       });
       setProfileImage(updatedAccountData.profileImage);
@@ -113,7 +113,7 @@ useEffect(() => {
         password: string;
       } = await getUserDetails({ token });
 
-      console.log("User details:", userDetails);
+      console.log("User   details:", userDetails);
       if (!userDetails.password) {
         console.error("Password field is empty in user details");
       }
@@ -127,20 +127,23 @@ useEffect(() => {
       if (userDetails.id) {
         const accountData = await getAccount(userDetails.id);
         console.log("Account data:", accountData);
-        if (!accountData.password) {
+        if (!accountData) {
+          console.error("Account data not found");
+        } else if (!accountData.password) {
           console.error("Password field is empty in account data");
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            schoolName: accountData.schoolName,
+            email: accountData.email,
+            mobile: accountData.mobile,
+            city: accountData.city,
+            address: accountData.address,
+            username: accountData.username,
+            language: accountData.language,
+          }));
+          setProfileImage(accountData.profileImage);
         }
-        setFormData((prevData) => ({
-          ...prevData,
-          schoolName: accountData.schoolName,
-          email: accountData.email,
-          mobile: accountData.mobile,
-          city: accountData.city,
-          address: accountData.address,
-          username: accountData.username,
-          language: accountData.language,
-        }));
-        setProfileImage(accountData.profileImage);
       }
     } catch (error) {
       console.error("Failed to fetch user details:", error);
@@ -155,21 +158,24 @@ useEffect(() => {
       try {
         const updatedAccountData = await getAccount(userId);
         console.log("Updated account data:", updatedAccountData);
-        if (!updatedAccountData.password) {
+        if (!updatedAccountData) {
+          console.error("Updated account data not found");
+        } else if (!updatedAccountData.password) {
           console.error("Password field is empty in updated account data");
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            schoolName: updatedAccountData.schoolName,
+            email: updatedAccountData.email,
+            mobile: updatedAccountData.mobile,
+            city: updatedAccountData.city,
+            address: updatedAccountData.address,
+            username: updatedAccountData.username,
+            password: updatedAccountData.password,
+            language: updatedAccountData.language,
+          }));
+          setProfileImage(updatedAccountData.profileImage);
         }
-        setFormData((prevData) => ({
-          ...prevData,
-          schoolName: updatedAccountData.schoolName,
-          email: updatedAccountData.email,
-          mobile: updatedAccountData.mobile,
-          city: updatedAccountData.city,
-          address: updatedAccountData.address,
-          username: updatedAccountData.username,
-          password: updatedAccountData.password,
-          language: updatedAccountData.language,
-        }));
-        setProfileImage(updatedAccountData.profileImage);
       } catch (error) {
         console.error("Failed to fetch updated account data:", error);
       }

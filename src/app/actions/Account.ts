@@ -18,16 +18,24 @@ const createAccount = async (data: AccountData) => {
     if (!data.schoolName || !data.email || !data.mobile || !data.city || !data.address || !data.username || !data.password || !data.language || !data.profileImage) {
       throw new Error('Missing required fields');
     }
-    const account = await Account.create({ ...data, id: undefined });
-    if (!account) {
-      throw new Error('Failed to create account');
-    }
-    return account.get({ plain: true }); // Convert the account instance to a plain object
+    const account = await Account.create({
+      schoolName: data.schoolName,
+      email: data.email,
+      mobile: data.mobile,
+      city: data.city,
+      address: data.address,
+      username: data.username,
+      password: data.password,
+      language: data.language,
+      profileImage: data.profileImage,
+    });
+    return account.get({ plain: true });
   } catch (error) {
     console.error('Error creating account:', error);
     throw error;
   }
 };
+
 
 const updateAccount = async (id: number, data: Partial<AccountData>) => {
   try {
@@ -46,13 +54,25 @@ const updateAccount = async (id: number, data: Partial<AccountData>) => {
 
 // Add a check to ensure userId is set before calling getAccount
 const getAccount = async (userId: number) => {
-  if (!userId) {
-    throw new Error("User  ID is required");
-  }
+  console.log('Getting account with ID:', userId);
   try {
     const account = await Account.findOne({ where: { id: userId } });
+    console.log('Account found:', account);
     if (!account) {
-      throw new Error('Account not found');
+      console.log('Account not found, creating new account');
+      const newAccount = await Account.create({
+        id: userId,
+        schoolName: 'Bhankid International Institute',
+        email: 'admin@example.com',
+        mobile: '1234567890',
+        city: 'Accra',
+        address: 'Greater-Accra',
+        username: 'School Admin',
+        password: 'default_password',
+        language: 'English',
+        profileImage: '/profile-picture.png',
+      });
+      return newAccount.get({ plain: true });
     }
     return account.get({ plain: true });
   } catch (error) {

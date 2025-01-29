@@ -1,20 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
-class Account extends Model {
-  public id!: number;
-  public schoolName!: string;
-  public email!: string;
-  public mobile!: string;
-  public city!: string;
-  public address!: string;
-  public username!: string;
-  public password!: string;
-  public language!: string;
-  public profileImage!: string;
-  public createdAt!: Date;
-  public updatedAt!: Date;
-}
+class Account extends Model {}
 
 Account.init({
   id: {
@@ -25,32 +12,41 @@ Account.init({
   schoolName: {
     type: DataTypes.STRING,
     field: 'school_name',
+    allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   mobile: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   city: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   address: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   username: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   password: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   language: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   profileImage: {
-  type: DataTypes.STRING(1000),
-  field: 'profile_image',
-},
+    type: DataTypes.STRING(1000),
+    field: 'profile_image',
+    allowNull: true,
+  },
   createdAt: {
     type: DataTypes.DATE,
     field: 'created_at',
@@ -62,7 +58,7 @@ Account.init({
 }, {
   sequelize,
   modelName: 'Account',
-  tableName: 'account',
+  tableName: 'Account',
 });
 
 export default Account;
