@@ -7,6 +7,7 @@ import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow ico
 const TeacherStatsCard = () => {
   const [teacherCount, setTeacherCount] = useState<number | null>(null);
   const [previousTeacherCount, setPreviousTeacherCount] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchTeacherCount() {
@@ -19,6 +20,8 @@ const TeacherStatsCard = () => {
         console.error("Failed to fetch teacher count:", err);
         setTeacherCount(0); // Handle error gracefully
         setPreviousTeacherCount(0); // Handle error gracefully
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -58,8 +61,14 @@ const TeacherStatsCard = () => {
       <div className="ml-4 sm:ml-6">
         <p className="text-gray-800 font-medium text-sm sm:text-base">Teachers</p>
         <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-          {teacherCount !== null ? teacherCount : "Loading..."}
-          {getArrowIcon()}
+          {loading ? (
+            <span className="animate-pulse text-gray-500">Loading...</span>
+          ) : (
+            <>
+              {teacherCount}
+              {getArrowIcon()}
+            </>
+          )}
         </p>
       </div>
     </div>
