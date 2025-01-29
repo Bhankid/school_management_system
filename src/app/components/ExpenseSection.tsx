@@ -32,7 +32,13 @@ function ExpenseSection() {
         const expenses = await getAllExpenses();
 
         if (expenses.length === 0) {
-          toastr.error("No expenses found!");
+          toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-bottom-right",
+            timeOut: 3000,
+          };
+          toastr.error("No expenses found!", "Error");
           setLoading(false);
           return;
         }
@@ -81,10 +87,22 @@ function ExpenseSection() {
           };
         });
 
-        toastr.success("Expenses data fetched successfully!");
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          positionClass: "toast-bottom-right",
+          timeOut: 3000, 
+        };
+        toastr.success("Expenses data fetched successfully!", "Success");
         setExpensesData(monthsData);
       } catch (error) {
-        toastr.error("Failed to fetch expenses data.");
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          positionClass: "toast-bottom-right",
+          timeOut: 3000, 
+        };
+        toastr.error("Failed to fetch expenses data.", "Error");
         console.error("Failed to fetch expenses:", error);
       } finally {
         setLoading(false);
