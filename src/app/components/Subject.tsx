@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { createSubject, getAllSubjects } from "../actions/subjectActions";
+import { createSubject, getAllSubjects, deleteSubject, updateSubject } from "../actions/subjectActions";
 import Swal from 'sweetalert2';
 
 interface SubjectType {
@@ -20,6 +20,13 @@ const Subject = () => {
   const [filteredResults, setFilteredResults] = useState<SubjectType[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const itemsPerPage = 5;
+  const [editingSubject, setEditingSubject] = useState<SubjectType | null>(null);
+  const [inputValues, setInputValues] = useState({
+    subjectName: "",
+    teacher: "",
+    classes: "",
+    days: "",
+  });
 
   useEffect(() => {
     fetchSubjects();
@@ -60,23 +67,55 @@ const Subject = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    try {
-      await createSubject(formData);
-      Swal.fire({
-        icon: 'success',
-        title: 'Subject added successfully',
-        showConfirmButton: false,
-        timer: 1500
-      });
-      await fetchSubjects();
-      formRef.current?.reset();
-    } catch {
-      Swal.fire({
-        icon: 'error',
-        title: 'Failed to add subject',
-        showConfirmButton: false,
-        timer: 1500
-      });
+    if (editingSubject) {
+      try {
+        await updateSubject(editingSubject.id, formData);
+        Swal.fire({
+          icon: 'success',
+          title: 'Subject updated successfully',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        await fetchSubjects();
+        setEditingSubject(null);
+        setInputValues({
+          subjectName: "",
+          teacher: "",
+          classes: "",
+          days: "",
+        });
+      } catch {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to update subject',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    } else {
+      try {
+        await createSubject(formData);
+        Swal.fire({
+          icon: 'success',
+          title: 'Subject added successfully',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        await fetchSubjects();
+        setInputValues({
+          subjectName: "",
+          teacher: "",
+          classes: "",
+          days: "",
+        });
+      } catch {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to add subject',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
     }
   };
 
@@ -91,6 +130,34 @@ const Subject = () => {
 
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+  const handleDeleteSubject = (subject: SubjectType) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed && subject.id !== undefined) {
+        deleteSubject(subject.id).then(() => {
+          fetchSubjects();
+        });
+      }
+    });
+  };
+
+  const handleEditSubject = (subject: SubjectType) => {
+    setEditingSubject(subject);
+    setInputValues({
+      subjectName: subject.subjectName,
+      teacher: subject.teacher,
+      classes: subject.classes,
+      days: subject.days,
+    });
+  };
+
   return (
     <div className="p-6 relative">
       <div className="mb-6">
@@ -104,42 +171,42 @@ const Subject = () => {
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-bold mb-4 text-gray-600">All Subjects</h2>
         <div className="grid grid-cols-3 gap-4 mb-4">
-  <input
-    type="text"
-    placeholder="Search by subject name or teacher..."
-    className="border border-gray-300 p-2 rounded mr-2 basis-1/3 focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-900"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
-  <select
-    className="basis-1/3 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg  text-gray-900"
-    value={selectedClass}
-    onChange={(e) => setSelectedClass(e.target.value)}
-  >
-    <option value="">Select Class</option>
-    <option value="Creche">Creche</option>
-    <option value="Nursery 1">Nursery 1</option>
-    <option value="Nursery 2">Nursery 2</option>
-    <option value="KG1">KG1</option>
-    <option value="KG2">KG2</option>
-    {[1, 2, 3, 4, 5, 6].map((num) => (
-      <option key={num} value={num.toString()}>
-        Class {num}
-      </option>
-    ))}
-    {[1, 2, 3].map((num) => (
-      <option key={num} value={`JHS ${num}`}>
-        JHS {num}
-      </option>
-    ))}
-  </select>
-  <button
-    className="bg-red-500 text-white p-2 rounded basis-1/3"
-    onClick={handleSearch}
-  >
-    SEARCH
-  </button>
-</div>
+          <input
+            type="text"
+            placeholder="Search by subject name or teacher..."
+            className="border border-gray-300 p-2 rounded mr-2 basis-1/3 focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-900"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select
+            className="basis-1/3 min-w-[200px] border p-2 rounded focus:ring-2 focus:ring-red-500 focus:outline-none text-lg  text-gray-900"
+            value={selectedClass}
+            onChange={(e) => setSelectedClass(e.target.value)}
+          >
+            <option value="">Select Class</option>
+            <option value="Creche">Creche</option>
+            <option value="Nursery 1">Nursery 1</option>
+            <option value="Nursery 2">Nursery 2</option>
+            <option value="KG1">KG1</option>
+            <option value="KG2">KG2</option>
+            {[1, 2, 3, 4, 5, 6].map((num) => (
+              <option key={num} value={num.toString()}>
+                Class {num}
+              </option>
+            ))}
+            {[1, 2, 3].map((num) => (
+              <option key={num} value={`JHS ${num}`}>
+                JHS {num}
+              </option>
+            ))}
+          </select>
+          <button
+            className="bg-red-500 text-white p-2 rounded basis-1/3"
+            onClick={handleSearch}
+          >
+            SEARCH
+          </button>
+        </div>
 
         <table className="w-full border-collapse">
           <thead>
@@ -150,6 +217,7 @@ const Subject = () => {
               <th className="border p-2 text-left text-red-500">Teacher</th>
               <th className="border p-2 text-left text-red-500">Classes</th>
               <th className="border p-2 text-left text-red-500">Days</th>
+              <th className="border p-2 text-left text-red-500">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -162,6 +230,14 @@ const Subject = () => {
                 <td className="border p-2 text-gray-800">{item.teacher}</td>
                 <td className="border p-2 text-gray-800">{item.classes}</td>
                 <td className="border p-2 text-gray-800">{item.days}</td>
+                <td className="border p-2 text-gray-800 flex justify-center">
+                  <button className="mr-2" onClick={() => handleEditSubject(item)}>
+                    <i className="fas fa-edit text-blue-500"></i>
+                  </button>
+                  <button onClick={() => handleDeleteSubject(item)}>
+                    <i className="fas fa-trash-alt text-red-500"></i>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -219,6 +295,14 @@ const Subject = () => {
               name="subjectName"
               placeholder="Subject Name *"
               required
+              value={editingSubject ? editingSubject.subjectName : inputValues.subjectName}
+              onChange={(e) => {
+                if (editingSubject) {
+                  setEditingSubject({ ...editingSubject, subjectName: e.target.value });
+                } else {
+                  setInputValues({ ...inputValues, subjectName: e.target.value });
+                }
+              }}
               className="border border-gray-300 p-2 rounded text-gray-800"
             />
             <input
@@ -226,6 +310,14 @@ const Subject = () => {
               name="teacher"
               placeholder="Teacher"
               required
+              value={editingSubject ? editingSubject.teacher : inputValues.teacher}
+              onChange={(e) => {
+                if (editingSubject) {
+                  setEditingSubject({ ...editingSubject, teacher: e.target.value });
+                } else {
+                  setInputValues({ ...inputValues, teacher: e.target.value });
+                }
+              }}
               className="border border-gray-300 p-2 rounded text-gray-800"
             />
             <input
@@ -233,6 +325,14 @@ const Subject = () => {
               name="classes"
               placeholder="Classes"
               required
+              value={editingSubject ? editingSubject.classes : inputValues.classes}
+              onChange={(e) => {
+                if (editingSubject) {
+                  setEditingSubject({ ...editingSubject, classes: e.target.value });
+                } else {
+                  setInputValues({ ...inputValues, classes: e.target.value });
+                }
+              }}
               className="border border-gray-300 p-2 rounded text-gray-800"
             />
             <input
@@ -240,6 +340,14 @@ const Subject = () => {
               name="days"
               placeholder="Days"
               required
+              value={editingSubject ? editingSubject.days : inputValues.days}
+              onChange={(e) => {
+                if (editingSubject) {
+                  setEditingSubject({ ...editingSubject, days: e.target.value });
+                } else {
+                  setInputValues({ ...inputValues, days: e.target.value });
+                }
+              }}
               className="border border-gray-300 p-2 rounded text-gray-800"
             />
           </div>
@@ -248,11 +356,19 @@ const Subject = () => {
               type="submit"
               className="bg-red-500 hover:bg-red-700 text-white p-2 rounded mr-2"
             >
-              Save
+              {editingSubject ? "Update" : "Save"}
             </button>
-            <button type="reset" className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded">
-              Reset
-            </button>
+                      <button type="reset" className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded" onClick={() => {
+            setInputValues({
+              subjectName: "",
+              teacher: "",
+              classes: "",
+              days: "",
+            });
+            setEditingSubject(null);
+          }}>
+            Reset
+          </button>
           </div>
         </form>
       </div>

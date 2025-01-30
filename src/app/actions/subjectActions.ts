@@ -41,3 +41,33 @@ export async function getAllSubjects() {
     throw new Error("Failed to fetch subjects");
   }
 }
+
+export async function deleteSubject(id: number): Promise<void> {
+  try {
+    await Subject.destroy({ where: { id } });
+    revalidatePath("/subjects");
+  } catch (err) {
+    console.error("Failed to delete subject:", err);
+    throw new Error("Failed to delete subject");
+  }
+}
+
+export async function updateSubject(id: number | undefined, formData: FormData): Promise<void> {
+  if (id === undefined) {
+    throw new Error("Subject ID is required");
+  }
+
+  try {
+    const subjectData = {
+      subjectName: formData.get("subjectName") as string,
+      teacher: formData.get("teacher") as string,
+      classes: formData.get("classes") as string,
+      days: formData.get("days") as string,
+    };
+
+    await Subject.update(subjectData, { where: { id } });
+  } catch (err) {
+    console.error("Failed to update subject:", err);
+    throw new Error("Failed to update subject");
+  }
+}
