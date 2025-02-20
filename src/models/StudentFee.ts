@@ -73,13 +73,28 @@ StudentFee.init(
     dueDate: {
       type: DataTypes.DATE,
       allowNull: true,
+      field: "due_date", 
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+      field: "created_at",
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+      field: "updated_at",
     },
   },
   {
     sequelize,
     modelName: "StudentFee",
+    tableName: "student_fees", 
     timestamps: true,
   }
 );
+
 
 export default StudentFee;

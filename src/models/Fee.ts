@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
-import FeeGroup from "./FeeGroup"; // Import the FeeGroup model
+import FeeGroup from "./FeeGroup";
 
 interface FeeAttributes {
   id: number;
@@ -42,11 +42,28 @@ Fee.init(
     feeGroupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "fee_groups",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
     sequelize,
     modelName: "Fee",
+    tableName: "fees", 
+    timestamps: true, 
   }
 );
 
