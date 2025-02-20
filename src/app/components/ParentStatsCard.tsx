@@ -1,32 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { getParentCount, getPreviousParentCount } from "../actions/parentActions"; // Import the server actions
-import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow icons
+import React from "react";
+import useSWR from "swr";
+import { getParentCount, getPreviousParentCount } from "../actions/parentActions"; 
+import { FaArrowUp, FaArrowDown } from "react-icons/fa"; 
+
+const fetcher = async () => {
+  const [parentCount, previousParentCount] = await Promise.all([
+    getParentCount(),
+    getPreviousParentCount(),
+  ]);
+  return { parentCount, previousParentCount };
+};
 
 const ParentStatsCard = () => {
-  const [parentCount, setParentCount] = useState<number | null>(null);
-  const [previousParentCount, setPreviousParentCount] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data, error, isLoading } = useSWR("parent-stats", fetcher, {
+    refreshInterval: 60 * 1000, // Refresh every minute
+  });
 
-  useEffect(() => {
-    async function fetchParentCount() {
-      try {
-        const count = await getParentCount(); // Fetch the current parent count
-        const previousCount = await getPreviousParentCount(); // Fetch the previous parent count
-        setParentCount(count);
-        setPreviousParentCount(previousCount);
-      } catch (err) {
-        console.error("Failed to fetch parent count:", err);
-        setParentCount(0); // Handle error gracefully
-        setPreviousParentCount(0); // Handle error gracefully
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchParentCount();
-  }, []);
+  const parentCount = data?.parentCount ?? null;
+  const previousParentCount = data?.previousParentCount ?? null;
 
   const getArrowIcon = () => {
     if (parentCount === null || previousParentCount === null) {
@@ -34,19 +27,9 @@ const ParentStatsCard = () => {
     }
 
     if (parentCount > previousParentCount) {
-      return (
-        <FaArrowUp
-          className="text-green-500 text-sm sm:text-base ml-1"
-          title="Increase in parent count"
-        />
-      );
+      return <FaArrowUp className="text-green-500 text-sm sm:text-base ml-1" title="Increase in parent count" />;
     } else if (parentCount < previousParentCount) {
-      return (
-        <FaArrowDown
-          className="text-red-500 text-sm sm:text-base ml-1"
-          title="Decrease in parent count"
-        />
-      );
+      return <FaArrowDown className="text-red-500 text-sm sm:text-base ml-1" title="Decrease in parent count" />;
     } else {
       return null;
     }
@@ -61,8 +44,10 @@ const ParentStatsCard = () => {
       <div className="ml-4 sm:ml-6">
         <p className="text-gray-800 font-medium text-sm sm:text-base">Parents</p>
         <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-          {loading ? (
+          {isLoading ? (
             <span className="animate-pulse text-gray-500">Loading...</span>
+          ) : error ? (
+            <span className="text-red-500">Error loading data</span>
           ) : (
             <>
               {parentCount}

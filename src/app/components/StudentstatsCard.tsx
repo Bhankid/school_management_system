@@ -1,58 +1,44 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-  getStudentCount,
-  getPreviousStudentCount,
-} from "../actions/studentActions";
+import React, { useEffect } from "react";
+import useSWR from "swr";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { getStudentCount, getPreviousStudentCount } from "../actions/studentActions";
+
+const fetcher = async () => {
+  const [studentCount, previousStudentCount] = await Promise.all([
+    getStudentCount(),
+    getPreviousStudentCount(),
+  ]);
+  return { studentCount, previousStudentCount };
+};
 
 const StudentStatsCard = () => {
-  const [studentCount, setStudentCount] = useState<number | null>(null);
-  const [previousStudentCount, setPreviousStudentCount] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data, error, isLoading } = useSWR("student-stats", fetcher, {
+    refreshInterval: 60 * 1000, // Refresh every minute
+  });
 
+  // Retrieve stored previous count from local storage
+  const storedPreviousCount = typeof window !== "undefined" ? Number(localStorage.getItem("previousStudentCount")) || 0 : 0;
+
+  // Ensure values are numbers, fallback to stored value if needed
+  const studentCount = data?.studentCount ?? 0;
+  const previousStudentCount = data?.previousStudentCount ?? storedPreviousCount;
+
+  // Store the latest student count in local storage
   useEffect(() => {
-    async function fetchStudentCount() {
-      try {
-        const count = await getStudentCount();
-        const previousCount = await getPreviousStudentCount();
-        setStudentCount(count);
-        setPreviousStudentCount(previousCount);
-      } catch (error) {
-        console.error("Failed to fetch student count:", error);
-        setStudentCount(0);
-        setPreviousStudentCount(0);
-      } finally {
-        setLoading(false);
-      }
+    if (studentCount !== 0) {
+      localStorage.setItem("previousStudentCount", String(studentCount));
     }
-
-    fetchStudentCount();
-  }, []);
+  }, [studentCount]);
 
   const getArrowIcon = () => {
-    if (studentCount === null || previousStudentCount === null) {
-      return null;
-    }
-
     if (studentCount > previousStudentCount) {
-      return (
-        <FaArrowUp
-          className="text-green-500 text-sm sm:text-base ml-1"
-          title="Increase in student count"
-        />
-      );
+      return <FaArrowUp className="text-green-500 text-sm sm:text-base ml-1" title="Increase in student count" />;
     } else if (studentCount < previousStudentCount) {
-      return (
-        <FaArrowDown
-          className="text-red-500 text-sm sm:text-base ml-1"
-          title="Decrease in student count"
-        />
-      );
-    } else {
-      return null;
+      return <FaArrowDown className="text-red-500 text-sm sm:text-base ml-1" title="Decrease in student count" />;
     }
+    return null; // No change
   };
 
   return (
@@ -62,15 +48,15 @@ const StudentStatsCard = () => {
         <div className="absolute left-[40px] sm:left-[50px] top-1/2 transform -translate-y-1/2 h-6 sm:h-8 w-0.5 bg-red-500"></div>
       </div>
       <div className="ml-4 sm:ml-6">
-        <p className="text-gray-800 font-medium text-sm sm:text-base">
-          Students
-        </p>
+        <p className="text-gray-800 font-medium text-sm sm:text-base">Students</p>
         <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-          {loading ? (
+          {isLoading ? (
             <span className="animate-pulse text-gray-500">Loading...</span>
+          ) : error ? (
+            <span className="text-red-500">Error loading data</span>
           ) : (
             <>
-              {studentCount?.toLocaleString()}
+              {studentCount.toLocaleString()}
               {getArrowIcon()}
             </>
           )}

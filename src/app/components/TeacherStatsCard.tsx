@@ -1,55 +1,34 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { getTeacherCount, getPreviousTeacherCount } from "../actions/teacherActions"; 
-import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // Import the arrow icons
+import React from "react";
+import useSWR from "swr";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { getTeacherCount, getPreviousTeacherCount } from "../actions/teacherActions";
+
+const fetcher = async () => {
+  const [teacherCount, previousTeacherCount] = await Promise.all([
+    getTeacherCount(),
+    getPreviousTeacherCount(),
+  ]);
+  return { teacherCount, previousTeacherCount };
+};
 
 const TeacherStatsCard = () => {
-  const [teacherCount, setTeacherCount] = useState<number | null>(null);
-  const [previousTeacherCount, setPreviousTeacherCount] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data, error, isLoading } = useSWR("teacher-stats", fetcher, {
+    refreshInterval: 60 * 1000, // Refresh every minute
+  });
 
-  useEffect(() => {
-    async function fetchTeacherCount() {
-      try {
-        const count = await getTeacherCount(); // Fetch the current teacher count
-        const previousCount = await getPreviousTeacherCount(); // Fetch the previous teacher count
-        setTeacherCount(count);
-        setPreviousTeacherCount(previousCount);
-      } catch (err) {
-        console.error("Failed to fetch teacher count:", err);
-        setTeacherCount(0); // Handle error gracefully
-        setPreviousTeacherCount(0); // Handle error gracefully
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchTeacherCount();
-  }, []);
+  // Ensure values are numbers, fallback to 0 if null/undefined
+  const teacherCount = data?.teacherCount ?? 0;
+  const previousTeacherCount = data?.previousTeacherCount ?? 0;
 
   const getArrowIcon = () => {
-    if (teacherCount === null || previousTeacherCount === null) {
-      return null;
-    }
-
     if (teacherCount > previousTeacherCount) {
-      return (
-        <FaArrowUp
-          className="text-green-500 text-sm sm:text-base ml-1"
-          title="Increase in teacher count"
-        />
-      );
+      return <FaArrowUp className="text-green-500 text-sm sm:text-base ml-1" title="Increase in teacher count" />;
     } else if (teacherCount < previousTeacherCount) {
-      return (
-        <FaArrowDown
-          className="text-red-500 text-sm sm:text-base ml-1"
-          title="Decrease in teacher count"
-        />
-      );
-    } else {
-      return null;
+      return <FaArrowDown className="text-red-500 text-sm sm:text-base ml-1" title="Decrease in teacher count" />;
     }
+    return null; // No change
   };
 
   return (
@@ -61,11 +40,13 @@ const TeacherStatsCard = () => {
       <div className="ml-4 sm:ml-6">
         <p className="text-gray-800 font-medium text-sm sm:text-base">Teachers</p>
         <p className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-          {loading ? (
+          {isLoading ? (
             <span className="animate-pulse text-gray-500">Loading...</span>
+          ) : error ? (
+            <span className="text-red-500">Error loading data</span>
           ) : (
             <>
-              {teacherCount}
+              {teacherCount.toLocaleString()}
               {getArrowIcon()}
             </>
           )}

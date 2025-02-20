@@ -75,18 +75,23 @@ export async function getTotalEarnings(): Promise<number> {
   }
 }
 
+
 export async function getPreviousTotalEarnings(): Promise<number> {
   try {
-    // Get the current date and the previous day's date
+    // Get yesterday's start and end time
     const currentDate = new Date();
-    const previousDate = new Date(currentDate);
-    previousDate.setDate(currentDate.getDate() - 1); // Subtract one day
+    const previousDateStart = new Date(currentDate);
+    previousDateStart.setDate(currentDate.getDate() - 1);
+    previousDateStart.setHours(0, 0, 0, 0); // Start of the previous day
 
-    // Fetch the sum of `amount` for fees created on the previous day
+    const previousDateEnd = new Date(previousDateStart);
+    previousDateEnd.setHours(23, 59, 59, 999); // End of the previous day
+
+    // Fetch the sum of `amount` for fees created only on the previous day
     const previousTotalEarnings = await StudentFee.sum("amount", {
       where: {
         createdAt: {
-          [Op.between]: [previousDate, currentDate], // Between previous day and current day
+          [Op.between]: [previousDateStart, previousDateEnd], // Only previous day
         },
       },
     });
@@ -94,7 +99,7 @@ export async function getPreviousTotalEarnings(): Promise<number> {
     return previousTotalEarnings || 0; // Return 0 if no data exists
   } catch (error) {
     console.error("Failed to fetch previous total earnings:", error);
-    throw new Error("Failed to fetch previous total earnings");
+    return 0; // Return 0 instead of throwing an error to avoid UI issues
   }
 }
 
