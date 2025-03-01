@@ -88,7 +88,7 @@ return (
                 <input
                   name="name"
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -97,7 +97,7 @@ return (
                 <label className="block text-gray-700">Gender *</label>
                 <select
                   name="gender"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 >
@@ -110,7 +110,7 @@ return (
                 <label className="block text-gray-700">Class *</label>
                <select
   name="class"
-  className="w-full p-2 border border-gray-300 rounded text-lg text-gray-900"
+  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded text-lg text-gray-900"
   required
 >
   <option value="">Please Select Class</option>
@@ -135,7 +135,7 @@ return (
                 <input
                   name="dateOfBirth"
                   type="date"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -145,7 +145,7 @@ return (
                 <input
                   name="bloodGroup"
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -154,7 +154,7 @@ return (
                 <label className="block text-gray-700">Religion *</label>
                 <select
                   name="religion"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 >
@@ -170,7 +170,7 @@ return (
                 <input
                   name="admissionDate"
                   type="date"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -188,7 +188,7 @@ return (
                 <input
                   name="fatherName"
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -200,7 +200,7 @@ return (
                 <input
                   name="motherName"
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -210,7 +210,7 @@ return (
                 <input
                   name="email"
                   type="email"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -220,7 +220,7 @@ return (
                 <input
                   name="phone"
                   type="tel"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -232,7 +232,7 @@ return (
                 <input
                   name="fatherOccupation"
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -242,7 +242,7 @@ return (
                 <input
                   name="address"
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 />
@@ -251,7 +251,7 @@ return (
                 <label className="block text-gray-700">Religion</label>
                 <select
                   name="parentReligion"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
                   required
                   style={{ color: '#080808FF' }}
                 >
