@@ -83,14 +83,14 @@ function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
-                  className="w-full p-3 mb-4 border border-gray-300 rounded"
+                  className="w-full p-3 mb-4 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 text-gray-900 rounded"
                 />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="w-full p-3 mb-4 border border-gray-300 rounded"
+                  className="w-full p-3 mb-4 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 text-gray-900 rounded"
                 />
                 <Link
                   href="/forgot-password" 
