@@ -13,7 +13,7 @@ export async function addTeacher(formData: FormData): Promise<void> {
 
     if (file) {
       // Define the path where you want to save the image
-      const uploadDir = path.join(process.cwd(), "public/uploads"); // Ensure this directory exists
+      const uploadDir = path.join(process.cwd(), "public/uploads"); 
       const filePath = path.join(uploadDir, file.name);
 
       // Create the uploads directory if it doesn't exist
@@ -26,7 +26,7 @@ export async function addTeacher(formData: FormData): Promise<void> {
       fs.writeFileSync(filePath, Buffer.from(buffer));
 
       // Set the photoUrl to the relative path
-      photoUrl = `/uploads/${file.name}`; // Adjust the path as necessary
+      photoUrl = `/uploads/${file.name}`;
     }
 
     const teacherData = {
@@ -89,7 +89,7 @@ export async function getTeacherCount(): Promise<number> {
   }
 }
 
-// Simple in-memory cache for the previous teacher count
+// In-memory cache for the previous teacher count
 let cachedPreviousTeacherCount: number | null = null;
 let cacheTimestamp: number | null = null;
 const CACHE_DURATION = 5 * 60 * 1000; // Cache duration: 5 minutes

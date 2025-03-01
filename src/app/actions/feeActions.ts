@@ -99,7 +99,7 @@ export async function getPreviousTotalEarnings(): Promise<number> {
     return previousTotalEarnings || 0; // Return 0 if no data exists
   } catch (error) {
     console.error("Failed to fetch previous total earnings:", error);
-    return 0; // Return 0 instead of throwing an error to avoid UI issues
+    return 0; // Return 0 instead of throwing an error
   }
 }
 

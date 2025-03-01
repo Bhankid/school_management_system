@@ -23,7 +23,7 @@ export async function addStudent(formData: FormData): Promise<void> {
     let photoUrl: string | null = null;
 
     if (file) {
-      // Define the path where you want to save the image
+      // Define the path to save the image
       const uploadDir = path.join(process.cwd(), "public/uploads");
       const filePath = path.join(uploadDir, file.name);
 
@@ -37,7 +37,7 @@ export async function addStudent(formData: FormData): Promise<void> {
       fs.writeFileSync(filePath, Buffer.from(buffer));
 
       // Set the photoUrl to the relative path
-      photoUrl = `/uploads/${file.name}`; // Adjust the path as necessary
+      photoUrl = `/uploads/${file.name}`;
     }
 
     const studentData = {
@@ -81,7 +81,7 @@ interface TransformedStudent {
   class: string;
   parents: string;
   address: string | undefined;
-  dateOfBirth: string; // Always as a string
+  dateOfBirth: string; 
   phone: string | undefined;
   photoUrl: string | null;
 }
@@ -132,7 +132,7 @@ export async function getStudentCount(): Promise<number> {
   }
 }
 
-// Simple in-memory cache for the previous student count
+// In-memory cache for the previous student count
 let cachedPreviousStudentCount: number | null = null;
 let cacheTimestamp: number | null = null;
 const CACHE_DURATION = 5 * 60 * 1000; // Cache duration: 5 minutes
@@ -145,16 +145,20 @@ export async function getPreviousStudentCount(): Promise<number> {
       return cachedPreviousStudentCount;
     }
 
-    // Get the current date and the previous day's date
+    // Get the previous day's start and end timestamps
     const currentDate = new Date();
-    const previousDate = new Date(currentDate);
-    previousDate.setDate(currentDate.getDate() - 1); // Subtract one day
+    const previousDateStart = new Date(currentDate);
+    previousDateStart.setDate(currentDate.getDate() - 1);
+    previousDateStart.setHours(0, 0, 0, 0); // Start of previous day
 
-    // Fetch the count of students created on the previous day
+    const previousDateEnd = new Date(previousDateStart);
+    previousDateEnd.setHours(23, 59, 59, 999); // End of previous day
+
+    // Fetch the count of students created only on the previous day
     const previousStudentCount = await Student.count({
       where: {
         createdAt: {
-          [Op.between]: [previousDate, currentDate], // Between previous day and current day
+          [Op.between]: [previousDateStart, previousDateEnd], // Between start & end of the previous day
         },
       },
     });
@@ -166,10 +170,9 @@ export async function getPreviousStudentCount(): Promise<number> {
     return previousStudentCount;
   } catch (err) {
     console.error("Failed to fetch previous student count:", err);
-    throw new Error("Failed to fetch previous student count");
+    return 0; // Return 0 instead of throwing an error
   }
 }
-
 export async function deleteStudent(studentId: number): Promise<void> {
   try {
     const student = await Student.findByPk(studentId);

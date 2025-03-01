@@ -38,7 +38,7 @@ const StudentsData = () => {
         name: student.name,
         gender: student.gender,
         class: student.class,
-        dateOfBirth: student.dateOfBirth, // Already transformed into a string on the server
+        dateOfBirth: student.dateOfBirth,
         photoUrl: student.photoUrl,
         Parent: {
           fatherName: student.parents.split(",")[0] || "",
@@ -107,8 +107,8 @@ const StudentsData = () => {
     <div className="p-6 relative">
       <div className="bg-white p-4 rounded shadow-md">
         <div className="flex items-center mb-4">
-          <h1 className="text-xl font-bold text-gray-700">Students</h1>
-          <span className="mx-2 text-gray-500">/</span>
+          <h1 className="text-xl font-bold text-gray-700">Students<i className="fas fa-chevron-right mx-2"></i></h1>
+          {/* <span className="mx-2 text-gray-500">/</span> */}
           <h2 className="text-red-500">All Students</h2>
         </div>
 

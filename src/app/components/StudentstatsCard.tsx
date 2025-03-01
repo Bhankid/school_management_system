@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import useSWR from "swr";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { getStudentCount, getPreviousStudentCount } from "../actions/studentActions";
@@ -18,19 +18,9 @@ const StudentStatsCard = () => {
     refreshInterval: 60 * 1000, // Refresh every minute
   });
 
-  // Retrieve stored previous count from local storage
-  const storedPreviousCount = typeof window !== "undefined" ? Number(localStorage.getItem("previousStudentCount")) || 0 : 0;
-
-  // Ensure values are numbers, fallback to stored value if needed
+  // Ensure values are numbers, fallback to 0 if null/undefined
   const studentCount = data?.studentCount ?? 0;
-  const previousStudentCount = data?.previousStudentCount ?? storedPreviousCount;
-
-  // Store the latest student count in local storage
-  useEffect(() => {
-    if (studentCount !== 0) {
-      localStorage.setItem("previousStudentCount", String(studentCount));
-    }
-  }, [studentCount]);
+  const previousStudentCount = data?.previousStudentCount ?? 0;
 
   const getArrowIcon = () => {
     if (studentCount > previousStudentCount) {
@@ -38,7 +28,7 @@ const StudentStatsCard = () => {
     } else if (studentCount < previousStudentCount) {
       return <FaArrowDown className="text-red-500 text-sm sm:text-base ml-1" title="Decrease in student count" />;
     }
-    return null; // No change
+    return null; 
   };
 
   return (

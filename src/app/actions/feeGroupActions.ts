@@ -44,7 +44,7 @@ export async function getAllFeeGroups(): Promise<FeeGroupData[]> {
       include: [
         {
           model: Fee,
-          as: "Fees", // Use the alias defined in the association
+          as: "Fees",
           attributes: ["type", "amount"],
         },
       ],
