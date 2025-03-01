@@ -99,7 +99,7 @@ function SignUp() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Full Name"
-                  className="w-full p-2 mb-3 border border-gray-300 rounded"
+                  className="w-full p-2 mb-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded text-gray-900"
                   required
                 />
                 <input
@@ -107,7 +107,7 @@ function SignUp() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email Address"
-                  className="w-full p-2 mb-3 border border-gray-300 rounded"
+                  className="w-full p-2 mb-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded text-gray-900"
                   required
                 />
                 <input
@@ -115,7 +115,7 @@ function SignUp() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Create Password"
-                  className="w-full p-2 mb-3 border border-gray-300 rounded"
+                  className="w-full p-2 mb-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded text-gray-900"
                   required
                 />
                 <input
@@ -123,7 +123,7 @@ function SignUp() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm Password"
-                  className="w-full p-2 mb-3 border border-gray-300 rounded"
+                  className="w-full p-2 mb-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 rounded text-gray-900"
                   required
                 />
                 {error && (
