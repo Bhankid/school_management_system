@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useSWR from "swr";
 import { getAllStudents } from "../actions/studentActions";
 import StudentProfileCard from "./StudentProfileCard";
 
@@ -21,41 +22,41 @@ interface StudentType {
 
 const ITEMS_PER_PAGE = 13;
 
+// Fetcher function for SWR
+const fetcher = async () => {
+  const data = await getAllStudents();
+  return data.map((student: any) => ({
+    id: student.id,
+    name: student.name,
+    gender: student.gender,
+    class: student.class,
+    dateOfBirth: student.dateOfBirth,
+    photoUrl: student.photoUrl,
+    Parent: {
+      fatherName: student.parents?.split(",")[0] || "",
+      motherName: student.parents?.split(",")[1] || "",
+      phone: student.phone || "",
+      address: student.address || "",
+    },
+  }));
+};
+
 const StudentsData = () => {
+  const { data: students = [], error, isLoading } = useSWR("students", fetcher, {
+    refreshInterval: 5 * 60 * 1000, // Refresh every 5 minutes
+  });
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [students, setStudents] = useState<StudentType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
-  const [filteredResults, setFilteredResults] = useState<StudentType[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<StudentType | null>(null);
   const [isProfileVisible, setIsProfileVisible] = useState(false);
 
-  useEffect(() => {
-    const loadStudents = async () => {
-      const data = await getAllStudents();
-      const transformedData: StudentType[] = data.map((student) => ({
-        id: student.id,
-        name: student.name,
-        gender: student.gender,
-        class: student.class,
-        dateOfBirth: student.dateOfBirth,
-        photoUrl: student.photoUrl,
-        Parent: {
-          fatherName: student.parents.split(",")[0] || "",
-          motherName: student.parents.split(",")[1] || "",
-          phone: student.phone || "",
-          address: student.address || "",
-        },
-      }));
-      setStudents(transformedData);
-      setFilteredResults(transformedData);
-    };
-    loadStudents();
-  }, []);
-
+  if (isLoading) return <p className="text-gray-500">Loading students...</p>;
+  if (error) return <p className="text-red-500">Failed to load student data.</p>;
 
   const handleSearch = () => {
-    const filtered = students.filter((student) => {
+    const filtered = students.filter((student: StudentType) => {
       const matchesSearch =
         searchTerm === "" ||
         student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -68,9 +69,15 @@ const StudentsData = () => {
 
       return matchesSearch && matchesClass;
     });
-    setFilteredResults(filtered);
-    setCurrentPage(1);
+
+    return filtered;
   };
+
+  const filteredResults = handleSearch();
+  const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentStudents = filteredResults.slice(startIndex, endIndex);
 
   const handleStudentClick = (student: StudentType) => {
     setSelectedStudent(student);
@@ -81,11 +88,6 @@ const StudentsData = () => {
     setIsProfileVisible(false);
     setTimeout(() => setSelectedStudent(null), 300);
   };
-
-  const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentStudents = filteredResults.slice(startIndex, endIndex);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -172,35 +174,24 @@ const StudentsData = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentStudents.map((student) => (
+                {currentStudents.map((student: StudentType) => (
                   <tr
                     key={student.id}
                     onClick={() => handleStudentClick(student)}
                     className="transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow cursor-pointer"
                   >
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {student.id}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {student.name}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {student.gender}
-                    </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {student.class}
-                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">{student.id}</td>
+                    <td className="py-2 px-4 border-b text-gray-800">{student.name}</td>
+                    <td className="py-2 px-4 border-b text-gray-800">{student.gender}</td>
+                    <td className="py-2 px-4 border-b text-gray-800">{student.class}</td>
                     <td className="py-2 px-4 border-b text-gray-800">
                       {`${student.Parent?.fatherName}, ${student.Parent?.motherName}`}
-                    </td ><td className="py-2 px-4 border-b text-gray-800">
-                      {student.Parent?.address}
                     </td>
+                    <td className="py-2 px-4 border-b text-gray-800">{student.Parent?.address}</td>
                     <td className="py-2 px-4 border-b text-gray-800">
                       {new Date(student.dateOfBirth).toLocaleDateString()}
                     </td>
-                    <td className="py-2 px-4 border-b text-gray-800">
-                      {student.Parent?.phone}
-                    </td>
+                    <td className="py-2 px-4 border-b text-gray-800">{student.Parent?.phone}</td>
                   </tr>
                 ))}
               </tbody>
