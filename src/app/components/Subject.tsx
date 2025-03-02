@@ -303,7 +303,7 @@ const Subject = () => {
                   setInputValues({ ...inputValues, subjectName: e.target.value });
                 }
               }}
-              className="border border-gray-300 p-2 rounded text-gray-800"
+              className="border border-gray-300 p-2 rounded text-gray-800 focus:outline-none focus:ring-1 focus:ring-red-500"
             />
             <input
               type="text"
@@ -318,7 +318,7 @@ const Subject = () => {
                   setInputValues({ ...inputValues, teacher: e.target.value });
                 }
               }}
-              className="border border-gray-300 p-2 rounded text-gray-800"
+              className="border border-gray-300 p-2 rounded text-gray-800 focus:outline-none focus:ring-1 focus:ring-red-500"
             />
             <input
               type="text"
@@ -333,7 +333,7 @@ const Subject = () => {
                   setInputValues({ ...inputValues, classes: e.target.value });
                 }
               }}
-              className="border border-gray-300 p-2 rounded text-gray-800"
+              className="border border-gray-300 p-2 rounded text-gray-800 focus:outline-none focus:ring-1 focus:ring-red-500"
             />
             <input
               type="text"
@@ -348,7 +348,7 @@ const Subject = () => {
                   setInputValues({ ...inputValues, days: e.target.value });
                 }
               }}
-              className="border border-gray-300 p-2 rounded text-gray-800"
+              className="border border-gray-300 p-2 rounded text-gray-800 focus:outline-none focus:ring-1 focus:ring-red-500"
             />
           </div>
           <div className="flex mt-4">
