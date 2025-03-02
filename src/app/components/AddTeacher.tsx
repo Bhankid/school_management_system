@@ -85,7 +85,7 @@ function AddTeacher() {
               type="text"
               name="firstName"
               required
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             />
           </div>
@@ -95,7 +95,7 @@ function AddTeacher() {
               type="text"
               name="lastName"
               required
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             />
           </div>
@@ -104,7 +104,7 @@ function AddTeacher() {
             <select
               name="gender"
               required
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             >
               <option value="">Please Select Gender</option>
@@ -118,7 +118,7 @@ function AddTeacher() {
               type="date"
               name="dateOfBirth"
               required
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             />
           </div>
@@ -128,7 +128,7 @@ function AddTeacher() {
               type="text"
               name="bloodGroup"
               required
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             />
           </div>
@@ -137,7 +137,7 @@ function AddTeacher() {
             <select
               name="religion"
               required
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             >
               <option value="">Please Select Religion</option>
@@ -152,7 +152,7 @@ function AddTeacher() {
             <input
               type="email"
               name="email"
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             />
           </div>
@@ -161,7 +161,7 @@ function AddTeacher() {
             <input
               type="text"
               name="phone"
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             />
           </div>
@@ -169,7 +169,7 @@ function AddTeacher() {
             <label className="block text-gray-700">Class *</label>
             <select
   name="class"
-  className="w-full p-2 border border-gray-300 rounded text-lg text-gray-900"
+  className="w-full p-2 border border-gray-300 rounded text-lg text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
   required
 >
   <option value="">Please Select Class</option>
@@ -195,7 +195,7 @@ function AddTeacher() {
               type="text"
               name="address"
               required
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             />
           </div>
@@ -205,7 +205,7 @@ function AddTeacher() {
               type="date"
               name="admissionDate"
               required
-              className="w-full mt-1 p-2 border rounded"
+              className="w-full mt-1 p-2 border rounded border-gray-300 text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500"
               style={{ color: '#080808FF' }}
             />
           </div>
