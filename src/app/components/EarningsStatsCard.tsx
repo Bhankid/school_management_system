@@ -14,7 +14,7 @@ const fetcher = async () => {
 
 const EarningsStatsCard = () => {
   const { data, error, isLoading } = useSWR("earnings-stats", fetcher, {
-    refreshInterval: 60 * 1000, // Refresh every minute
+    refreshInterval: 15 * 1000, // Refresh every 15 seconds
   });
 
   const earnings = data?.totalEarnings ?? null;
