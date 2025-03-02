@@ -15,7 +15,7 @@ const fetcher = async () => {
 
 const TeacherStatsCard = () => {
   const { data, error, isLoading } = useSWR("teacher-stats", fetcher, {
-    refreshInterval: 60 * 1000, // Refresh every minute
+   refreshInterval: 15 * 1000, // Refresh every 15 seconds
   });
 
   // Ensure values are numbers, fallback to 0 if null/undefined
