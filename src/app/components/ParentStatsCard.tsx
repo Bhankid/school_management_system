@@ -15,7 +15,7 @@ const fetcher = async () => {
 
 const ParentStatsCard = () => {
   const { data, error, isLoading } = useSWR("parent-stats", fetcher, {
-    refreshInterval: 60 * 1000, // Refresh every minute
+    refreshInterval: 15 * 1000, // Refresh every 15 seconds
   });
 
   const parentCount = data?.parentCount ?? null;
