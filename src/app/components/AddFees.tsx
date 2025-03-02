@@ -40,9 +40,9 @@ function AddFees() {
   };
 
   const inputClasses =
-    "mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500";
+    "mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 font-medium focus:outline-none  focus:ring-1 focus:ring-red-500";
   const selectClasses =
-    "mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500";
+    "mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-red-500";
 
   return (
     <div className="p-4 md:p-8">
