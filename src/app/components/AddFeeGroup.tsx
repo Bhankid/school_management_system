@@ -64,7 +64,7 @@ const AddFeeGroup = ({ onAdd }: { onAdd: (feeGroup: { id: number; name: string; 
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 focus:ring-red-500 focus:border-red-500"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500"
           />
         </div>
 
@@ -73,7 +73,7 @@ const AddFeeGroup = ({ onAdd }: { onAdd: (feeGroup: { id: number; name: string; 
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 focus:ring-red-500 focus:border-red-500"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500"
             rows={3}
           />
         </div>
@@ -97,14 +97,14 @@ const AddFeeGroup = ({ onAdd }: { onAdd: (feeGroup: { id: number; name: string; 
                 placeholder="Fee Type"
                 value={fee.type}
                 onChange={(e) => handleFeeChange(index, "type", e.target.value)}
-                className="flex-1 p-2 border border-gray-300 rounded text-gray-900 focus:ring-red-500 focus:border-red-500"
+                className="flex-1 p-2 border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
               <input
                 type="text"
                 placeholder="Amount"
                 value={fee.amount}
                 onChange={(e) => handleFeeChange(index, "amount", e.target.value)}
-                className="flex-1 p-2 border border-gray-300 rounded text-gray-900 focus:ring-red-500 focus:border-red-500"
+                className="flex-1 p-2 border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
               {fees.length > 1 && (
                 <button
